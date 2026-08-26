@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Sitemap estático: todas las rutas públicas de la web son fijas, así que no
+  hace falta generarlo. Si algún día hay páginas por slug (blog, fichas de
+  producto con URL propia) habrá que generarlo en el build.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://veta-estudio-creativo.web.app/</loc><priority>1.0</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/quienes-somos</loc><priority>0.7</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/papeleria-de-bodas</loc><priority>0.9</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/papeleria-de-bodas/invitaciones</loc><priority>0.8</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/papeleria-de-bodas/seating</loc><priority>0.8</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/papeleria-de-bodas/minutas</loc><priority>0.8</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/papeleria-de-bodas/marcasitios</loc><priority>0.8</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/papeleria-de-bodas/laminas</loc><priority>0.8</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/papeleria-de-bodas/pack</loc><priority>0.8</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/live-art</loc><priority>0.9</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/acuarelas-y-encargos</loc><priority>0.8</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/talleres</loc><priority>0.9</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/talleres/bonos</loc><priority>0.7</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/preguntas-frecuentes</loc><priority>0.6</priority></url>
+  <url><loc>https://veta-estudio-creativo.web.app/contacto</loc><priority>0.8</priority></url>
+</urlset>

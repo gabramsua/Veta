@@ -1,0 +1,67 @@
+<veta-panel-seccion
+  titulo="Portfolio"
+  descripcion="Las galerías de cada sección de la web. El orden que pongas aquí es el que se ve."
+  accion="Añadir imagen"
+  (pulsada)="anadir()"
+/>
+
+<nav class="por__pestanas" aria-label="Sección del portfolio">
+  @for (seccion of secciones; track seccion.valor) {
+    <button
+      type="button"
+      class="por__pestana"
+      [class.por__pestana--activa]="seccionActiva() === seccion.valor"
+      (click)="seccionActiva.set(seccion.valor)"
+    >
+      {{ seccion.etiqueta }} ({{ cuantasEn(seccion.valor) }})
+    </button>
+  }
+</nav>
+
+@if (deLaSeccion().length === 0) {
+  <veta-estado-vacio
+    titulo="Esta sección todavía no tiene imágenes"
+    pista="Pulsa «Añadir imagen» para elegir una de la biblioteca o subir una nueva."
+  />
+} @else {
+  <ul class="por__rejilla">
+    @for (pieza of deLaSeccion(); track pieza.id) {
+      <li class="por__ficha" [class.por__ficha--inactiva]="!pieza.activo">
+        <img class="por__imagen" [src]="pieza.imagen.url" [alt]="pieza.imagen.alt" loading="lazy" />
+
+        <div class="por__datos">
+          <label class="vt-solo-lectores" [attr.for]="'titulo-' + pieza.id">
+            Título de la imagen
+          </label>
+          <input
+            class="vt-input por__titulo"
+            [id]="'titulo-' + pieza.id"
+            type="text"
+            placeholder="Título (opcional)"
+            [value]="pieza.titulo"
+            (blur)="guardarTitulo(pieza, $event)"
+          />
+
+          <div class="por__controles">
+            <veta-ordenar
+              nombre="imagen"
+              [primero]="esPrimera(pieza)"
+              [ultimo]="esUltima(pieza)"
+              (subir)="mover(pieza, -1)"
+              (bajar)="mover(pieza, 1)"
+            />
+
+            <button type="button" class="vt-adm-boton vt-adm-boton--fantasma por__boton" (click)="alternarActivo(pieza)">
+              {{ pieza.activo ? 'Ocultar' : 'Mostrar' }}
+            </button>
+            <button type="button" class="vt-adm-boton vt-adm-boton--peligro por__boton" (click)="quitar(pieza)">
+              Quitar
+            </button>
+          </div>
+        </div>
+      </li>
+    }
+  </ul>
+}
+
+<veta-selector-medio />

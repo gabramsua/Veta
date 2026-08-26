@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /panel
+Disallow: /acceso
+Disallow: /aviso-legal
+Disallow: /politica-de-privacidad
+Disallow: /politica-de-cookies
+
+Sitemap: https://veta-estudio-creativo.web.app/sitemap.xml

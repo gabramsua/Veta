@@ -1,0 +1,50 @@
+<veta-cabecera-seccion
+  antetitulo="Ayuda"
+  titulo="Preguntas frecuentes"
+  entradilla="Lo que más nos preguntáis, resuelto. Si no encuentras tu duda, escríbenos."
+/>
+
+<section class="vt-seccion">
+  <div class="vt-contenedor faq__cuerpo">
+    @if (preguntas().length === 0) {
+      <p class="faq__vacio">Todavía no hemos publicado ninguna pregunta.</p>
+    } @else {
+      @for (grupo of grupos(); track grupo.categoria) {
+        <section class="faq__grupo">
+          @if (grupo.categoria) {
+            <h2 class="faq__categoria">{{ grupo.categoria }}</h2>
+          }
+
+          <ul class="faq__lista">
+            @for (item of grupo.preguntas; track item.id) {
+              <li class="faq__item">
+                <h3 class="faq__encabezado">
+                  <button
+                    type="button"
+                    class="faq__boton"
+                    [attr.aria-expanded]="abierta() === item.id"
+                    [attr.aria-controls]="'respuesta-' + item.id"
+                    (click)="alternar(item.id)"
+                  >
+                    <span>{{ item.pregunta }}</span>
+                    <span class="faq__signo" aria-hidden="true">
+                      {{ abierta() === item.id ? '−' : '+' }}
+                    </span>
+                  </button>
+                </h3>
+
+                @if (abierta() === item.id) {
+                  <div
+                    class="faq__respuesta"
+                    [id]="'respuesta-' + item.id"
+                    [innerHTML]="item.respuesta | htmlSeguro"
+                  ></div>
+                }
+              </li>
+            }
+          </ul>
+        </section>
+      }
+    }
+  </div>
+</section>

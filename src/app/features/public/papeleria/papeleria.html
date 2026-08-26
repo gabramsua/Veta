@@ -1,0 +1,64 @@
+<veta-cabecera-seccion
+  antetitulo="Bodas"
+  titulo="Papelería de bodas"
+  [entradilla]="textos()['entradilla']"
+/>
+
+@if (textos()['texto']) {
+  <section class="vt-seccion pap__intro">
+    <div class="vt-contenedor">
+      <veta-bloque-texto [html]="textos()['texto']" />
+    </div>
+  </section>
+}
+
+<section class="vt-seccion vt-seccion--crema">
+  <div class="vt-contenedor">
+    <ul class="pap__rejilla">
+      @for (categoria of categorias(); track categoria.clave) {
+        <li>
+          <a class="pap__tarjeta" [routerLink]="categoria.ruta">
+            @if (categoria.imagen) {
+              <img
+                class="pap__imagen"
+                [src]="categoria.imagen.url"
+                [alt]="categoria.imagen.alt"
+                [attr.width]="categoria.imagen.width"
+                [attr.height]="categoria.imagen.height"
+                loading="lazy"
+                decoding="async"
+              />
+            } @else {
+              <span class="vt-marcador pap__imagen">{{ categoria.etiqueta }}</span>
+            }
+
+            <span class="pap__datos">
+              <span class="pap__titulo">{{ categoria.etiqueta }}</span>
+              <span class="pap__precio">
+                @if (categoria.desde !== null) {
+                  desde {{ categoria.desde }} € / {{ categoria.unidad }}
+                } @else {
+                  Pide presupuesto
+                }
+              </span>
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+
+    @if (textos()['notaPrecios']) {
+      <p class="pap__nota">{{ textos()['notaPrecios'] }}</p>
+    }
+  </div>
+</section>
+
+<section class="vt-seccion pap__cta">
+  <div class="vt-contenedor pap__cta-cuerpo">
+    <h2 class="vt-titulo">¿Hablamos de vuestra boda?</h2>
+    <p class="vt-entradilla">
+      Cuéntanos qué tenéis en mente y os preparamos un presupuesto a medida, sin compromiso.
+    </p>
+    <a class="vt-boton" routerLink="/solicitar/papeleria">Pedir presupuesto</a>
+  </div>
+</section>

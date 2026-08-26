@@ -1,0 +1,204 @@
+<section class="hero">
+  @if (imagenes()['heroImagen']; as portada) {
+    <img
+      class="hero__media"
+      [src]="portada.url"
+      [alt]="portada.alt"
+      [attr.width]="portada.width"
+      [attr.height]="portada.height"
+      fetchpriority="high"
+      decoding="async"
+    />
+  } @else {
+    <div class="hero__media vt-marcador">Imagen principal</div>
+  }
+
+  <div class="hero__texto vt-contenedor">
+    <p class="hero__antetitulo">{{ textos()['heroAntetitulo'] }}</p>
+    <h1 class="hero__titulo">
+      @for (linea of lineasHero(); track $index) {
+        {{ linea }}@if (!$last) {<br />}
+      }
+    </h1>
+    <a class="vt-boton vt-boton--claro" routerLink="/papeleria-de-bodas">Descubre nuestro trabajo</a>
+  </div>
+</section>
+
+<section class="vt-seccion vt-seccion--crema manifiesto">
+  <div class="vt-contenedor manifiesto__cuerpo">
+    <p class="vt-antetitulo">{{ textos()['manifiestoAntetitulo'] }}</p>
+    <p class="manifiesto__frase">
+      @for (linea of lineasManifiesto(); track $index) {
+        {{ linea }}@if (!$last) {<br />}
+      }
+    </p>
+    @if (textos()['manifiestoTexto']) {
+      <p class="vt-entradilla manifiesto__texto">{{ textos()['manifiestoTexto'] }}</p>
+    }
+    <a class="vt-enlace-sub" routerLink="/quienes-somos">Conócenos</a>
+  </div>
+</section>
+
+@if (destacados().length > 0) {
+  <section class="vt-seccion destacados">
+    <div class="vt-contenedor">
+      <div class="destacados__intro">
+        <p class="vt-antetitulo">Piezas con alma</p>
+        <h2 class="vt-titulo">Lo que más nos piden</h2>
+      </div>
+
+      <div class="destacados__rejilla">
+        @for (pieza of destacados(); track pieza.id; let primero = $first) {
+          <article class="destacado" [class.destacado--ancho]="primero">
+            <img
+              class="destacado__media"
+              [src]="pieza.imagenes[0].url"
+              [alt]="pieza.imagenes[0].alt"
+              [attr.width]="pieza.imagenes[0].width"
+              [attr.height]="pieza.imagenes[0].height"
+              loading="lazy"
+              decoding="async"
+            />
+            <h3 class="destacado__titulo">{{ pieza.titulo }}</h3>
+            <p class="destacado__pie">desde {{ pieza.precioDesde }} € / {{ pieza.unidad }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </section>
+}
+
+<section class="vt-seccion vt-seccion--arena papeleria">
+  <div class="vt-contenedor">
+    <div class="papeleria__intro">
+      <div>
+        <p class="vt-antetitulo">Bodas</p>
+        <h2 class="vt-titulo">{{ textos()['papeleriaTitulo'] }}</h2>
+      </div>
+      <p class="vt-entradilla">{{ textos()['papeleriaTexto'] }}</p>
+    </div>
+
+    <ul class="papeleria__rejilla">
+      @for (item of categoriasPapeleria(); track item.clave) {
+        <li class="papeleria__item">
+          <a class="papeleria__enlace" [routerLink]="item.ruta">
+            @if (item.imagen) {
+              <img
+                class="papeleria__media"
+                [src]="item.imagen.url"
+                [alt]="item.imagen.alt"
+                [attr.width]="item.imagen.width"
+                [attr.height]="item.imagen.height"
+                loading="lazy"
+                decoding="async"
+              />
+            } @else {
+              <span class="vt-marcador papeleria__media">{{ item.etiqueta }}</span>
+            }
+            <span class="papeleria__titulo">{{ item.etiqueta }}</span>
+            <span class="papeleria__precio">
+              @if (item.desde !== null) {
+                desde {{ item.desde }} € / {{ item.unidad }}
+              } @else {
+                Pide presupuesto
+              }
+            </span>
+          </a>
+        </li>
+      }
+    </ul>
+  </div>
+</section>
+
+@if (ajustes().secciones.liveart) {
+  <section class="liveart">
+    @if (imagenes()['liveartImagen']; as foto) {
+      <img
+        class="liveart__media"
+        [src]="foto.url"
+        [alt]="foto.alt"
+        [attr.width]="foto.width"
+        [attr.height]="foto.height"
+        loading="lazy"
+        decoding="async"
+      />
+    } @else {
+      <div class="liveart__media vt-marcador">Live art</div>
+    }
+    <div class="liveart__texto">
+      <p class="vt-antetitulo">Un recuerdo que trasciende</p>
+      <h2 class="vt-titulo">{{ textos()['liveartTitulo'] }}</h2>
+      @if (textos()['liveartTexto']) {
+        <p class="vt-entradilla">{{ textos()['liveartTexto'] }}</p>
+      }
+      <a class="vt-boton" routerLink="/live-art">Descubre el servicio</a>
+    </div>
+  </section>
+}
+
+@if (ajustes().secciones.talleres && sesiones().length > 0) {
+  <section class="vt-seccion talleres">
+    <div class="vt-contenedor">
+      <div class="talleres__intro">
+        <div>
+          <p class="vt-antetitulo">En el estudio</p>
+          <h2 class="vt-titulo">Próximos talleres</h2>
+        </div>
+        <a class="vt-enlace-sub" routerLink="/talleres">Ver todos</a>
+      </div>
+
+      <ul class="talleres__lista">
+        @for (item of sesiones(); track item.sesion.id) {
+          <li class="sesion">
+            <div class="sesion__info">
+              <h3 class="sesion__titulo">{{ item.taller.titulo }}</h3>
+              <p class="sesion__fecha">{{ formatearFecha(item.sesion.fechaInicio) }}</p>
+            </div>
+            <p class="sesion__plazas">
+              @if (item.plazasLibres > 0) {
+                {{ item.plazasLibres }} plaza(s) libre(s)
+              } @else {
+                Completo
+              }
+            </p>
+            <a class="vt-boton vt-boton--contorno sesion__cta" [routerLink]="item.plazasLibres > 0 ? ['/reservar', item.sesion.id] : ['/talleres']">
+              {{ item.plazasLibres > 0 ? 'Reservar' : 'Ver taller' }}
+            </a>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+}
+
+@if (frases().length > 0) {
+  <section class="vt-seccion vt-seccion--oliva testimonios">
+    <div class="vt-contenedor">
+      <p class="vt-antetitulo testimonios__ante">Nos han confiado</p>
+      <h2 class="vt-titulo testimonios__titulo">Lo que dicen de Veta</h2>
+
+      <ul class="testimonios__lista">
+        @for (frase of frases(); track frase.id) {
+          <li class="testimonio">
+            <blockquote class="testimonio__texto">{{ frase.texto }}</blockquote>
+            <p class="testimonio__autor">{{ frase.autor }}</p>
+            @if (frase.contexto) {
+              <p class="testimonio__contexto">{{ frase.contexto }}</p>
+            }
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+}
+
+<section class="vt-seccion cierre">
+  <div class="vt-contenedor cierre__cuerpo">
+    <p class="vt-antetitulo">No te pierdas nada</p>
+    <h2 class="vt-titulo">{{ textos()['cierreTitulo'] }}</h2>
+    <p class="vt-entradilla">{{ textos()['cierreTexto'] }}</p>
+    <div class="cierre__acciones">
+      <a class="vt-boton" routerLink="/solicitar/contacto">Contactar</a>
+    </div>
+  </div>
+</section>

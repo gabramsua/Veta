@@ -1,0 +1,48 @@
+<veta-cabecera-seccion
+  antetitulo="En el estudio"
+  titulo="Bonos mensuales"
+  entradilla="Ven cada semana. Los bonos no tienen calendario: nos escribes, lo hablamos y reservamos tu sitio."
+/>
+
+@if (bonos().length === 0) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor bon__vacio">
+      <p>Todavía no hemos publicado los bonos.</p>
+      <a class="vt-boton" routerLink="/solicitar/contacto">Pregúntanos</a>
+    </div>
+  </section>
+} @else {
+  <section class="vt-seccion vt-seccion--crema">
+    <div class="vt-contenedor">
+      <ul class="bon__rejilla">
+        @for (bono of bonos(); track bono.id) {
+          <li class="bon__tarjeta">
+            <p class="vt-antetitulo">{{ nombreCategoria(bono.categoria) }}</p>
+            <h2 class="bon__titulo">{{ bono.titulo }}</h2>
+
+            <p class="bon__precio">
+              {{ bono.precioMes }} €<span class="bon__mes">/mes</span>
+            </p>
+            <p class="bon__detalle">
+              {{ bono.sesionesMes }} sesiones al mes · {{ porSesion(bono.precioMes, bono.sesionesMes) }}
+            </p>
+
+            <veta-bloque-texto [html]="bono.descripcion" />
+
+            <a class="vt-boton bon__cta" routerLink="/solicitar/bono" [queryParams]="{ bono: bono.id }">Me interesa</a>
+          </li>
+        }
+      </ul>
+    </div>
+  </section>
+}
+
+<section class="vt-seccion bon__cta-final">
+  <div class="vt-contenedor bon__cta-cuerpo">
+    <h2 class="vt-titulo">¿Prefieres probar antes?</h2>
+    <p class="vt-entradilla">
+      Apúntate a un taller suelto y, si te gusta, luego pasas a bono.
+    </p>
+    <a class="vt-boton vt-boton--contorno" routerLink="/talleres">Ver talleres sueltos</a>
+  </div>
+</section>

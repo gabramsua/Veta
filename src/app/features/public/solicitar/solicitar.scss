@@ -1,0 +1,55 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.sol__cuerpo {
+  display: grid;
+  gap: var(--esp-5);
+  max-width: 78rem;
+}
+
+.sol__campo {
+  display: grid;
+  gap: var(--esp-2);
+}
+
+.sol__etiqueta {
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+}
+
+.sol__select {
+  width: 100%;
+  padding: var(--esp-3);
+  font-size: var(--txt-base);
+  background-color: var(--veta-blanco);
+  border: 1px solid var(--veta-arena-osc);
+  border-radius: var(--radio-md);
+
+  &:focus {
+    border-color: var(--veta-terracota);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--veta-terracota) 18%, transparent);
+  }
+}
+
+.sol__sin-bonos {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+
+  a {
+    color: var(--veta-terracota);
+    text-decoration: underline;
+  }
+}
+
+.sol__error {
+  padding: var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-error);
+  background-color: color-mix(in srgb, var(--veta-error) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--veta-error) 30%, transparent);
+  border-radius: var(--radio-md);
+}

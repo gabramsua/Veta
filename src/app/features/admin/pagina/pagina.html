@@ -1,0 +1,146 @@
+@if (!definicion()) {
+  <div class="vt-adm-vacio">
+    <p class="vt-adm-vacio__icono" aria-hidden="true">◇</p>
+    <p>Esta página no existe.</p>
+    <a class="vt-adm-boton vt-adm-boton--fantasma" routerLink="/panel/inicio">Volver al inicio</a>
+  </div>
+} @else {
+  <header class="pag__cabecera">
+    <div>
+      <h1 class="vt-adm-titulo">{{ definicion()!.nombre }}</h1>
+      <p class="pag__ruta">
+        Se ve en
+        <a [href]="definicion()!.ruta" target="_blank" rel="noopener">{{ definicion()!.ruta }}</a>
+      </p>
+    </div>
+
+    <a class="vt-adm-boton vt-adm-boton--fantasma" [href]="definicion()!.ruta" target="_blank" rel="noopener">
+      Ver la página
+    </a>
+  </header>
+
+  @if (cargando()) {
+    <section class="vt-adm-tarjeta pag__cargando">Cargando…</section>
+  } @else {
+    <form class="pag__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <p class="pag__pista-general">
+        Los bloques están en el mismo orden en el que se ven al bajar por la página.
+        Lo que dejes vacío se rellena con el texto que trae de serie.
+      </p>
+
+      @for (bloque of definicion()!.bloques; track bloque.nombre) {
+        <section class="vt-adm-tarjeta">
+          <h2 class="pag__bloque">{{ bloque.nombre }}</h2>
+          @if (bloque.ayuda) {
+            <p class="pag__bloque-ayuda">{{ bloque.ayuda }}</p>
+          }
+
+          <div class="pag__campos" formGroupName="textos">
+            @for (campo of bloque.campos; track campo.clave) {
+              @if (campo.tipo === 'imagen') {
+                <div class="vt-campo">
+                  <span class="vt-campo__etiqueta">{{ campo.etiqueta }}</span>
+
+                  @if (imagen(campo.clave); as elegida) {
+                    <div class="pag__imagen">
+                      <img [src]="elegida.url" [alt]="elegida.alt" />
+                      <div class="pag__imagen-acciones">
+                        <p class="pag__imagen-alt">{{ elegida.alt || 'Sin texto alternativo' }}</p>
+                        <div class="pag__imagen-botones">
+                          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma pag__boton" (click)="elegirImagen(campo)">
+                            Cambiar
+                          </button>
+                          <button type="button" class="vt-adm-boton vt-adm-boton--peligro pag__boton" (click)="quitarImagen(campo.clave)">
+                            Quitar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  } @else {
+                    <button type="button" class="pag__sin-imagen" (click)="elegirImagen(campo)">
+                      <span class="pag__sin-imagen-icono" aria-hidden="true">+</span>
+                      <span>Elegir imagen</span>
+                    </button>
+                  }
+
+                  @if (campo.pista) {
+                    <p class="vt-campo__pista">{{ campo.pista }}</p>
+                  }
+                </div>
+              } @else {
+                <div class="vt-campo">
+                  <label class="vt-campo__etiqueta" [attr.for]="'campo-' + campo.clave">
+                    {{ campo.etiqueta }}
+                  </label>
+
+                  @switch (campo.tipo) {
+                    @case ('texto') {
+                      <input class="vt-input" [id]="'campo-' + campo.clave" type="text" [formControlName]="campo.clave" />
+                    }
+                    @case ('parrafo') {
+                      <textarea class="vt-textarea pag__parrafo" [id]="'campo-' + campo.clave" [formControlName]="campo.clave"></textarea>
+                    }
+                    @default {
+                      <veta-editor-texto [etiqueta]="campo.etiqueta" [formControlName]="campo.clave" />
+                    }
+                  }
+
+                  @if (campo.pista) {
+                    <p class="vt-campo__pista">{{ campo.pista }}</p>
+                  }
+                </div>
+              }
+            }
+          </div>
+        </section>
+      }
+
+      @if (definicion()!.relacionado.length > 0) {
+        <section class="vt-adm-tarjeta pag__relacionado">
+          <h2 class="pag__bloque">En esta página también sale…</h2>
+          <p class="pag__bloque-ayuda">Esto se gestiona en otro sitio, porque se reutiliza.</p>
+
+          <ul class="pag__enlaces">
+            @for (enlace of definicion()!.relacionado; track enlace.ruta) {
+              <li>
+                <a class="pag__enlace" [routerLink]="enlace.ruta">
+                  <span class="pag__enlace-titulo">{{ enlace.etiqueta }}</span>
+                  <span class="pag__enlace-ayuda">{{ enlace.ayuda }}</span>
+                </a>
+              </li>
+            }
+          </ul>
+        </section>
+      }
+
+      <section class="vt-adm-tarjeta" formGroupName="seo">
+        <h2 class="pag__bloque">Buscadores</h2>
+        <p class="pag__bloque-ayuda">
+          Lo que aparece en Google y al compartir el enlace. Si lo dejas vacío se genera solo.
+        </p>
+
+        <div class="pag__campos">
+          <div class="vt-campo">
+            <label class="vt-campo__etiqueta" for="seo-title">Título</label>
+            <input id="seo-title" class="vt-input" type="text" formControlName="title" maxlength="70" />
+            <p class="vt-campo__pista">Máximo 70 caracteres.</p>
+          </div>
+
+          <div class="vt-campo">
+            <label class="vt-campo__etiqueta" for="seo-description">Descripción</label>
+            <textarea id="seo-description" class="vt-textarea pag__parrafo" formControlName="description" maxlength="165"></textarea>
+            <p class="vt-campo__pista">Máximo 165 caracteres.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="pag__acciones">
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar cambios' }}
+        </button>
+      </div>
+    </form>
+  }
+}
+
+<veta-selector-medio />

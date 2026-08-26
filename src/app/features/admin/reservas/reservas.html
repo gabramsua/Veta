@@ -1,0 +1,162 @@
+<veta-panel-seccion
+  titulo="Reservas"
+  descripcion="Solicitudes de plaza en talleres y de bonos mensuales. Las plazas se descuentan al confirmar."
+/>
+
+@if (pendientes() > 0) {
+  <p class="res__pendientes">
+    Tienes <strong>{{ pendientes() }}</strong> reserva(s) sin confirmar.
+  </p>
+}
+
+<section class="vt-adm-tarjeta res__filtros">
+  <div class="vt-campo">
+    <label class="vt-campo__etiqueta" for="res-buscar">Buscar</label>
+    <input
+      id="res-buscar"
+      class="vt-input"
+      type="search"
+      placeholder="Nombre, correo o teléfono"
+      [value]="busqueda()"
+      (input)="busqueda.set($any($event.target).value)"
+    />
+  </div>
+
+  <div class="vt-campo">
+    <label class="vt-campo__etiqueta" for="res-estado">Estado</label>
+    <select
+      id="res-estado"
+      class="vt-select"
+      [value]="filtroEstado()"
+      (change)="filtroEstado.set($any($event.target).value)"
+    >
+      <option value="">Todos</option>
+      <option value="pendiente">Pendientes</option>
+      <option value="confirmada">Confirmadas</option>
+      <option value="cancelada">Canceladas</option>
+    </select>
+  </div>
+
+  <div class="vt-campo">
+    <label class="vt-campo__etiqueta" for="res-tipo">Tipo</label>
+    <select
+      id="res-tipo"
+      class="vt-select"
+      [value]="filtroTipo()"
+      (change)="filtroTipo.set($any($event.target).value)"
+    >
+      <option value="">Todos</option>
+      <option value="taller">Talleres</option>
+      <option value="bono">Bonos</option>
+    </select>
+  </div>
+</section>
+
+@if (filtradas().length === 0) {
+  <veta-estado-vacio
+    [titulo]="lista().length === 0 ? 'Todavía no hay reservas' : 'Ninguna reserva coincide'"
+    [pista]="
+      lista().length === 0
+        ? 'Aquí aparecerán las solicitudes que lleguen desde la web.'
+        : 'Prueba a quitar algún filtro.'
+    "
+  />
+} @else {
+  <ul class="res__lista">
+    @for (reserva of filtradas(); track reserva.id) {
+      <li class="vt-adm-tarjeta res__item" [class.res__item--cancelada]="reserva.status === 'cancelada'">
+        <button
+          type="button"
+          class="res__cabecera"
+          [attr.aria-expanded]="abierta() === reserva.id"
+          (click)="alternar(reserva.id)"
+        >
+          <span class="res__persona">
+            <span class="res__nombre">{{ reserva.nombre }}</span>
+            <span class="res__que">{{ queEs(reserva) }} · {{ cuando(reserva) }}</span>
+          </span>
+
+          <span class="res__personas">{{ reserva.nPersonas }} pers.</span>
+
+          <span
+            class="vt-etiqueta-estado res__estado"
+            [class.res__estado--pendiente]="reserva.status === 'pendiente'"
+            [class.vt-etiqueta-estado--activo]="reserva.status === 'confirmada'"
+            [class.vt-etiqueta-estado--inactivo]="reserva.status === 'cancelada'"
+          >
+            {{ etiquetaEstado(reserva.status) }}
+          </span>
+
+          <span class="res__flecha" aria-hidden="true">
+            {{ abierta() === reserva.id ? '−' : '+' }}
+          </span>
+        </button>
+
+        @if (abierta() === reserva.id) {
+          <div class="res__detalle">
+            <div class="res__contacto">
+              <p><a [href]="'mailto:' + reserva.email">{{ reserva.email }}</a></p>
+              <p><a [href]="'tel:' + reserva.telefono">{{ reserva.telefono }}</a></p>
+              <p class="res__recibida">Recibida el {{ formatearFecha(reserva.createdAt) }}</p>
+            </div>
+
+            <veta-respuestas [datos]="reserva.respuestas" />
+
+            <div class="vt-campo">
+              <label class="vt-campo__etiqueta" [attr.for]="'notas-' + reserva.id">
+                Notas internas
+              </label>
+              <textarea
+                class="vt-textarea res__notas"
+                [id]="'notas-' + reserva.id"
+                [value]="reserva.notasInternas"
+                (blur)="guardarNotas(reserva, $event)"
+              ></textarea>
+              <p class="vt-campo__pista">Solo las veis vosotras. Se guardan al salir del campo.</p>
+            </div>
+
+            <div class="res__acciones">
+              @if (reserva.status !== 'confirmada') {
+                <button
+                  type="button"
+                  class="vt-adm-boton"
+                  [disabled]="procesando() === reserva.id"
+                  (click)="confirmar(reserva)"
+                >
+                  {{ procesando() === reserva.id ? 'Confirmando…' : 'Confirmar plaza' }}
+                </button>
+              }
+
+              @if (reserva.status !== 'cancelada') {
+                <button
+                  type="button"
+                  class="vt-adm-boton vt-adm-boton--fantasma"
+                  [disabled]="procesando() === reserva.id"
+                  (click)="cancelar(reserva)"
+                >
+                  Cancelar reserva
+                </button>
+              }
+
+              <a class="vt-adm-boton vt-adm-boton--fantasma" [href]="'mailto:' + reserva.email">
+                Escribirle
+              </a>
+
+              <button type="button" class="vt-adm-boton vt-adm-boton--peligro" (click)="borrar(reserva)">
+                Borrar
+              </button>
+            </div>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+
+  @if (hayMas()) {
+    <div class="res__mas">
+      <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cargarMas()">
+        Cargar más reservas
+      </button>
+    </div>
+  }
+}

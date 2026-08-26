@@ -1,0 +1,90 @@
+@use 'tokens' as *;
+
+:host {
+  display: grid;
+  gap: var(--esp-5);
+}
+
+.adms__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-4);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.adms__sub {
+  margin-top: var(--esp-1);
+  color: var(--veta-tinta-suave);
+}
+
+.adms__form-titulo {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.adms__form {
+  display: grid;
+  gap: var(--esp-4);
+  max-width: 52rem;
+}
+
+.adms__acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+  margin-top: var(--esp-2);
+}
+
+.adms__tu {
+  padding: 0.1rem var(--esp-2);
+  margin-left: var(--esp-2);
+  font-size: var(--txt-xs);
+  color: var(--veta-oliva);
+  background-color: var(--veta-crema);
+  border-radius: var(--radio-full);
+}
+
+.adms__celda-accion {
+  text-align: right;
+}
+
+.adms__boton-fila {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+}
+
+.adms__pista {
+  font-size: var(--txt-xs);
+}
+
+@include hasta($bp-tablet) {
+  .vt-tabla,
+  .vt-tabla tbody,
+  .vt-tabla tr,
+  .vt-tabla td {
+    display: block;
+    width: 100%;
+  }
+
+  .vt-tabla thead {
+    display: none;
+  }
+
+  .vt-tabla tr {
+    padding: var(--esp-3) 0;
+    border-bottom: 1px solid var(--veta-arena);
+  }
+
+  .vt-tabla td {
+    padding: var(--esp-1) 0;
+    border: none;
+  }
+
+  .adms__celda-accion {
+    margin-top: var(--esp-2);
+    text-align: left;
+  }
+}

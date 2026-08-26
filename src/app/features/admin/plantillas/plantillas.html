@@ -1,0 +1,73 @@
+<veta-panel-seccion
+  titulo="Plantillas de email"
+  descripcion="Los correos automáticos que salen de la web. Si no editas una, se usa la que viene de serie."
+/>
+
+<div class="pla__cuerpo">
+  <nav class="pla__lista" aria-label="Plantillas">
+    @for (item of conocidas; track item.id) {
+      <button
+        type="button"
+        class="pla__item"
+        [class.pla__item--activa]="activa() === item.id"
+        (click)="seleccionar(item.id)"
+      >
+        <span class="pla__item-nombre">{{ item.nombre }}</span>
+        <span class="pla__item-cuando">{{ item.cuando }}</span>
+      </button>
+    }
+  </nav>
+
+  <section class="vt-adm-tarjeta pla__editor">
+    <header class="pla__cabecera">
+      <div>
+        <h2 class="pla__titulo">{{ definicion().nombre }}</h2>
+        <p class="pla__cuando">{{ definicion().cuando }}</p>
+      </div>
+
+      @if (personalizada()) {
+        <span class="vt-etiqueta-estado vt-etiqueta-estado--activo">Personalizada</span>
+      } @else {
+        <span class="vt-etiqueta-estado vt-etiqueta-estado--inactivo">De serie</span>
+      }
+    </header>
+
+    <div class="pla__variables">
+      <p class="pla__variables-titulo">Puedes usar estos huecos en el asunto y en el texto:</p>
+      <ul class="pla__variables-lista">
+        @for (hueco of huecos(); track hueco) {
+          <li><code>{{ hueco }}</code></li>
+        }
+      </ul>
+      <p class="pla__variables-nota">
+        Se sustituyen por los datos reales al enviar. Si escribes un hueco que no existe, sale vacío.
+      </p>
+    </div>
+
+    <form class="pla__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="pla-subject">Asunto</label>
+        <input id="pla-subject" class="vt-input" type="text" formControlName="subject" />
+        @if (subject.touched && subject.invalid) {
+          <p class="vt-campo__error">El asunto es obligatorio.</p>
+        }
+      </div>
+
+      <div class="vt-campo">
+        <span class="vt-campo__etiqueta">Cuerpo del correo</span>
+        <veta-editor-texto etiqueta="Cuerpo del correo" formControlName="html" />
+      </div>
+
+      <div class="pla__acciones">
+        @if (personalizada()) {
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="restaurar()">
+            Volver al original
+          </button>
+        }
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar plantilla' }}
+        </button>
+      </div>
+    </form>
+  </section>
+</div>

@@ -1,0 +1,117 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.pla__cuerpo {
+  display: grid;
+  grid-template-columns: 30rem 1fr;
+  gap: var(--esp-4);
+  align-items: start;
+
+  @include hasta($bp-escritorio) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pla__lista {
+  display: grid;
+  gap: var(--esp-2);
+}
+
+.pla__item {
+  display: grid;
+  gap: var(--esp-1);
+  padding: var(--esp-3) var(--esp-4);
+  text-align: left;
+  background-color: #fff;
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-md);
+  transition: border-color var(--trans-rapida);
+
+  &:hover {
+    border-color: var(--veta-arena-osc);
+  }
+}
+
+.pla__item--activa {
+  border-color: var(--veta-terracota);
+  box-shadow: inset 3px 0 0 var(--veta-terracota);
+}
+
+.pla__item-nombre {
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+}
+
+.pla__item-cuando {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pla__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--esp-4);
+}
+
+.pla__titulo {
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.pla__cuando {
+  margin-top: var(--esp-1);
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pla__variables {
+  padding: var(--esp-4);
+  margin-bottom: var(--esp-5);
+  background-color: var(--veta-crema);
+  border-radius: var(--radio-md);
+}
+
+.pla__variables-titulo {
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+}
+
+.pla__variables-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  padding: 0;
+  margin: var(--esp-3) 0;
+  list-style: none;
+
+  code {
+    padding: 0.2rem var(--esp-2);
+    font-family: ui-monospace, monospace;
+    font-size: var(--txt-xs);
+    background-color: #fff;
+    border-radius: var(--radio-sm);
+  }
+}
+
+.pla__variables-nota {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pla__form {
+  display: grid;
+  gap: var(--esp-4);
+}
+
+.pla__acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+}

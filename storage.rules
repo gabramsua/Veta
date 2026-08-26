@@ -1,0 +1,34 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function esAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function imagenValida() {
+      return request.resource.size < 10 * 1024 * 1024
+        && request.resource.contentType.matches('image/.*');
+    }
+
+    function documentoValido() {
+      return request.resource.size < 20 * 1024 * 1024
+        && request.resource.contentType == 'application/pdf';
+    }
+
+    match /media/{allPaths=**} {
+      allow read: if true;
+      allow write: if esAdmin() && (imagenValida() || documentoValido());
+    }
+
+    match /portfolio/{allPaths=**} {
+      allow read: if true;
+      allow write: if esAdmin() && imagenValida();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

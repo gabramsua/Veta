@@ -1,0 +1,80 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.con__cuerpo {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--esp-8);
+  align-items: start;
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+    gap: var(--esp-6);
+  }
+}
+
+.con__texto {
+  display: grid;
+  gap: var(--esp-5);
+}
+
+.con__aviso {
+  display: grid;
+  gap: var(--esp-2);
+  padding: var(--esp-5);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+  background-color: var(--veta-crema);
+  border-left: 3px solid var(--veta-terracota);
+  border-radius: var(--radio-md);
+}
+
+.con__aviso-titulo {
+  font-weight: var(--peso-medio);
+  color: var(--veta-tinta);
+}
+
+.con__datos {
+  padding: var(--esp-6);
+  background-color: var(--veta-arena);
+  border-radius: var(--radio-lg);
+}
+
+.con__datos-titulo {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-lg);
+}
+
+.con__lista {
+  display: grid;
+  gap: var(--esp-4);
+  margin: 0;
+}
+
+.con__dato dt {
+  font-size: var(--txt-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--veta-tinta-suave);
+}
+
+.con__dato dd {
+  margin: var(--esp-1) 0 0;
+  font-size: var(--txt-base);
+}
+
+.con__dato a:hover {
+  color: var(--veta-terracota);
+}
+
+.con__error {
+  padding: var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-error);
+  background-color: color-mix(in srgb, var(--veta-error) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--veta-error) 30%, transparent);
+  border-radius: var(--radio-md);
+}

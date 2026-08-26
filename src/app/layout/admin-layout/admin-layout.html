@@ -1,0 +1,89 @@
+<div class="vt-adm" [class.vt-adm--barra-abierta]="barraAbierta()">
+  <header class="topbar">
+    <button type="button" class="topbar__menu" (click)="alternarBarra()">
+      <span class="vt-solo-lectores">Abrir menú lateral</span>
+      <span class="topbar__menu-icono" aria-hidden="true"></span>
+    </button>
+
+    <a class="topbar__marca" routerLink="/panel/inicio">
+      <img src="assets/marca/veta-logo.png" alt="Veta" width="7757" height="1010" />
+      <span class="topbar__etiqueta">Panel</span>
+    </a>
+
+    <div class="topbar__acciones">
+      @if (sesion(); as usuaria) {
+        <span class="topbar__usuaria">{{ usuaria.nombre }}</span>
+      }
+      <button type="button" class="topbar__accion" (click)="salir()">Cerrar sesión</button>
+    </div>
+  </header>
+
+  <div class="vt-adm__cuerpo">
+    <aside class="barra" aria-label="Menú del panel">
+      <nav class="barra__nav">
+        <ul class="barra__lista">
+          @for (grupo of grupos; track grupo.etiqueta) {
+            <li class="barra__item">
+              @if (grupo.ruta) {
+                <a
+                  class="barra__enlace"
+                  [routerLink]="grupo.ruta"
+                  routerLinkActive="barra__enlace--activo"
+                  ariaCurrentWhenActive="page"
+                  (click)="cerrarBarra()"
+                >
+                  <span class="barra__icono" aria-hidden="true"></span>
+                  {{ grupo.etiqueta }}
+                </a>
+              } @else {
+                <button
+                  type="button"
+                  class="barra__enlace barra__enlace--grupo"
+                  [attr.aria-expanded]="grupoAbierto() === grupo.etiqueta"
+                  (click)="alternarGrupo(grupo.etiqueta)"
+                >
+                  <span class="barra__icono" aria-hidden="true"></span>
+                  <span class="barra__etiqueta">
+                    {{ grupo.etiqueta }}
+                    @if (grupo.ayuda) {
+                      <span class="barra__ayuda">{{ grupo.ayuda }}</span>
+                    }
+                  </span>
+                  <span class="barra__flecha" aria-hidden="true">
+                    {{ grupoAbierto() === grupo.etiqueta ? '−' : '+' }}
+                  </span>
+                </button>
+
+                @if (grupoAbierto() === grupo.etiqueta) {
+                  <ul class="barra__sublista">
+                    @for (hijo of grupo.hijos; track hijo.etiqueta) {
+                      <li>
+                        <a
+                          class="barra__subenlace"
+                          [routerLink]="hijo.ruta"
+                          routerLinkActive="barra__subenlace--activo"
+                          ariaCurrentWhenActive="page"
+                          (click)="cerrarBarra()"
+                        >
+                          {{ hijo.etiqueta }}
+                        </a>
+                      </li>
+                    }
+                  </ul>
+                }
+              }
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <a class="barra__web" routerLink="/" target="_blank" rel="noopener">
+        Abrir la web pública
+      </a>
+    </aside>
+
+    <main class="vt-adm__contenido">
+      <router-outlet />
+    </main>
+  </div>
+</div>

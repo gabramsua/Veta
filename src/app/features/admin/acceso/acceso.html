@@ -1,0 +1,90 @@
+<div class="acc">
+  <main class="acc__panel">
+    <img
+      class="acc__marca"
+      src="assets/marca/veta-logo.png"
+      alt="Veta · Estudio Creativo"
+      width="7757"
+      height="1010"
+    />
+
+    <div class="acc__intro">
+      <h1 class="acc__titulo">Acceso al panel</h1>
+      <p class="acc__sub">Entra con tu correo y contraseña.</p>
+    </div>
+
+    <form class="acc__form" [formGroup]="formulario" (ngSubmit)="enviar($event)" novalidate>
+      @if (error()) {
+        <p class="acc__alerta" role="alert">{{ error() }}</p>
+      }
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="email">Correo electrónico</label>
+        <input
+          id="email"
+          class="vt-input"
+          type="email"
+          formControlName="email"
+          autocomplete="username"
+          [attr.aria-invalid]="email.touched && email.invalid"
+          [attr.aria-describedby]="email.touched && email.invalid ? 'error-email' : null"
+        />
+        @if (email.touched && email.invalid) {
+          <p class="vt-campo__error" id="error-email">
+            @if (email.hasError('required')) {
+              El correo es obligatorio.
+            } @else {
+              Escribe un correo con formato válido.
+            }
+          </p>
+        }
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="password">Contraseña</label>
+        <div class="acc__password">
+          <input
+            id="password"
+            class="vt-input"
+            [type]="verPassword() ? 'text' : 'password'"
+            formControlName="password"
+            autocomplete="current-password"
+            [attr.aria-invalid]="password.touched && password.invalid"
+            [attr.aria-describedby]="password.touched && password.invalid ? 'error-password' : null"
+          />
+          <button
+            type="button"
+            class="acc__ojo"
+            [attr.aria-pressed]="verPassword()"
+            (click)="alternarPassword()"
+          >
+            {{ verPassword() ? 'Ocultar' : 'Ver' }}
+          </button>
+        </div>
+        @if (password.touched && password.invalid) {
+          <p class="vt-campo__error" id="error-password">
+            @if (password.hasError('required')) {
+              La contraseña es obligatoria.
+            } @else {
+              La contraseña tiene al menos 6 caracteres.
+            }
+          </p>
+        }
+      </div>
+
+      <label class="vt-check">
+        <input type="checkbox" formControlName="recordar" />
+        Mantener la sesión iniciada en este equipo
+      </label>
+
+      <button class="vt-adm-boton acc__enviar" type="submit" [disabled]="enviando()">
+        {{ enviando() ? 'Entrando…' : 'Entrar' }}
+      </button>
+    </form>
+
+    <p class="acc__pie">
+      ¿Has olvidado la contraseña? Pídele a la otra administradora que te la restablezca desde el
+      panel.
+    </p>
+  </main>
+</div>

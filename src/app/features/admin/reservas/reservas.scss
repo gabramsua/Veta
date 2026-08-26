@@ -1,0 +1,153 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.res__pendientes {
+  padding: var(--esp-3) var(--esp-4);
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-aviso);
+  background-color: color-mix(in srgb, var(--veta-aviso) 12%, transparent);
+  border-radius: var(--radio-md);
+}
+
+.res__filtros {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--esp-4);
+  align-items: end;
+  margin-bottom: var(--esp-4);
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.res__lista {
+  display: grid;
+  gap: var(--esp-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.res__item {
+  padding: 0;
+  overflow: hidden;
+}
+
+.res__item--cancelada {
+  opacity: 0.65;
+}
+
+.res__cabecera {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: var(--esp-4);
+  align-items: center;
+  width: 100%;
+  padding: var(--esp-4) var(--esp-5);
+  text-align: left;
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr auto;
+    gap: var(--esp-2);
+  }
+}
+
+.res__persona {
+  display: grid;
+  gap: var(--esp-1);
+  min-width: 0;
+}
+
+.res__nombre {
+  font-size: var(--txt-base);
+  font-weight: var(--peso-medio);
+}
+
+.res__que {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.res__personas {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.res__estado--pendiente {
+  color: var(--veta-aviso);
+  background-color: color-mix(in srgb, var(--veta-aviso) 14%, transparent);
+}
+
+.res__flecha {
+  font-size: var(--txt-md);
+  color: var(--veta-tinta-suave);
+}
+
+.res__detalle {
+  display: grid;
+  gap: var(--esp-5);
+  padding: var(--esp-5);
+  border-top: 1px solid var(--veta-crema);
+}
+
+.res__contacto {
+  display: grid;
+  gap: var(--esp-1);
+  font-size: var(--txt-sm);
+
+  a {
+    color: var(--veta-terracota);
+  }
+}
+
+.res__recibida {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.res__notas {
+  min-height: 7rem;
+}
+
+.res__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+}
+
+.res__mas {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--esp-4);
+}
+
+@include hasta($bp-tablet) {
+  .res__cabecera {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--esp-2);
+  }
+
+  .res__personas,
+  .res__estado {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .res__flecha {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .res__acciones .vt-adm-boton {
+    flex: 1 1 14rem;
+  }
+}

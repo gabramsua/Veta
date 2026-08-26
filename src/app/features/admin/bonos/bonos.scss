@@ -1,0 +1,85 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.bon__form-tarjeta {
+  margin-bottom: var(--esp-5);
+}
+
+.bon__form-titulo {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.bon__form {
+  display: grid;
+  gap: var(--esp-5);
+}
+
+.bon__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: var(--esp-4);
+}
+
+.bon__acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+}
+
+.bon__lista {
+  display: grid;
+  gap: var(--esp-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.bon__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--esp-4);
+  align-items: center;
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.bon__item--inactivo {
+  background-color: #fbfaf8;
+}
+
+.bon__datos {
+  display: grid;
+  gap: var(--esp-1);
+  justify-items: start;
+}
+
+.bon__titulo {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-md);
+  font-weight: var(--peso-fuerte);
+}
+
+.bon__meta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.bon__controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  align-items: center;
+}
+
+.bon__boton {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+}

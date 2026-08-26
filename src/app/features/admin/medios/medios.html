@@ -1,0 +1,217 @@
+<veta-panel-seccion
+  titulo="Biblioteca de medios"
+  descripcion="Aquí viven todas las imágenes y PDF de la web. Sube una vez y reutiliza donde quieras."
+/>
+
+<section class="vt-adm-tarjeta med__subida">
+  <label class="med__soltar" [class.med__soltar--ocupado]="subiendo()">
+    <input
+      type="file"
+      class="vt-solo-lectores"
+      multiple
+      accept="image/*,application/pdf"
+      [disabled]="subiendo()"
+      (change)="subirArchivos($event)"
+    />
+    <span class="med__soltar-icono" aria-hidden="true">↑</span>
+    <span class="med__soltar-texto">
+      {{ subiendo() ? progreso() : 'Haz clic para elegir archivos' }}
+    </span>
+    <span class="med__soltar-pista">
+      Imágenes hasta 10 MB · PDF hasta 20 MB. Puedes seleccionar varios a la vez.
+    </span>
+  </label>
+</section>
+
+<section class="vt-adm-tarjeta med__filtros">
+  <div class="vt-campo med__filtro">
+    <label class="vt-campo__etiqueta" for="buscar">Buscar</label>
+    <input
+      id="buscar"
+      class="vt-input"
+      type="search"
+      placeholder="Nombre del archivo"
+      [ngModel]="busqueda()"
+      (ngModelChange)="busqueda.set($event)"
+    />
+  </div>
+
+  <div class="vt-campo med__filtro">
+    <label class="vt-campo__etiqueta" for="filtro-tipo">Tipo</label>
+    <select
+      id="filtro-tipo"
+      class="vt-select"
+      [ngModel]="filtroTipo()"
+      (ngModelChange)="filtroTipo.set($event)"
+    >
+      <option value="">Todos</option>
+      <option value="imagen">Imágenes</option>
+      <option value="pdf">PDF</option>
+    </select>
+  </div>
+
+  <div class="vt-campo med__filtro">
+    <label class="vt-campo__etiqueta" for="filtro-categoria">Categoría</label>
+    <select
+      id="filtro-categoria"
+      class="vt-select"
+      [ngModel]="filtroCategoria()"
+      (ngModelChange)="filtroCategoria.set($event)"
+    >
+      <option value="">Todas</option>
+      @for (categoria of listaCategorias(); track categoria.id) {
+        <option [value]="categoria.id">{{ categoria.nombre }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="med__filtro-accion">
+    @if (!formCategoriaAbierto()) {
+      <button
+        type="button"
+        class="vt-adm-boton vt-adm-boton--fantasma"
+        (click)="abrirFormCategoria()"
+      >
+        Nueva categoría
+      </button>
+    }
+  </div>
+</section>
+
+@if (formCategoriaAbierto()) {
+  <section class="vt-adm-tarjeta">
+    <form class="med__form-categoria" (ngSubmit)="crearCategoria($event)">
+      <div class="vt-campo med__filtro">
+        <label class="vt-campo__etiqueta" for="cat-nombre">Nombre de la categoría</label>
+        <input
+          id="cat-nombre"
+          class="vt-input"
+          type="text"
+          [ngModel]="nombreCategoriaNueva()"
+          (ngModelChange)="nombreCategoriaNueva.set($event)"
+          name="nombreCategoria"
+        />
+      </div>
+      <div class="med__form-acciones">
+        <button
+          type="button"
+          class="vt-adm-boton vt-adm-boton--fantasma"
+          (click)="cerrarFormCategoria()"
+        >
+          Cancelar
+        </button>
+        <button type="submit" class="vt-adm-boton">Crear</button>
+      </div>
+    </form>
+
+    @if (listaCategorias().length > 0) {
+      <ul class="med__categorias">
+        @for (categoria of listaCategorias(); track categoria.id) {
+          <li class="med__categoria">
+            {{ categoria.nombre }}
+            <button
+              type="button"
+              class="med__categoria-borrar"
+              [attr.aria-label]="'Borrar categoría ' + categoria.nombre"
+              (click)="borrarCategoria(categoria.id, categoria.nombre)"
+            >
+              ×
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}
+
+@if (filtrados().length === 0) {
+  <veta-estado-vacio
+    [titulo]="lista().length === 0 ? 'Todavía no has subido nada' : 'Ningún archivo coincide'"
+    [pista]="
+      lista().length === 0
+        ? 'Sube las fotos de talleres, papelería y portfolio. Después podrás elegirlas desde cualquier sección.'
+        : 'Prueba a quitar algún filtro.'
+    "
+  />
+} @else {
+  <ul class="med__galeria">
+    @for (medio of filtrados(); track medio.id) {
+      <li class="med__ficha">
+        <button
+          type="button"
+          class="med__previa"
+          [attr.aria-label]="'Ampliar ' + medio.nombre"
+          (click)="ampliar(medio)"
+        >
+          @if (medio.tipo === 'imagen') {
+            <img [src]="medio.url" [alt]="medio.alt || medio.nombre" loading="lazy" />
+          } @else {
+            <span class="med__pdf">PDF</span>
+          }
+        </button>
+
+        <div class="med__datos">
+          <p class="med__nombre" [title]="medio.nombre">{{ medio.nombre }}</p>
+          <p class="med__meta">
+            {{ enMegas(medio.bytes) }}
+            @if (medio.width) {
+              · {{ medio.width }}×{{ medio.height }}
+            }
+          </p>
+
+          <label class="vt-solo-lectores" [attr.for]="'alt-' + medio.id">
+            Texto alternativo de {{ medio.nombre }}
+          </label>
+          <input
+            class="vt-input med__input-pequeno"
+            [id]="'alt-' + medio.id"
+            type="text"
+            placeholder="Texto alternativo"
+            [value]="medio.alt"
+            (blur)="guardarAlt(medio, $event)"
+          />
+
+          <label class="vt-solo-lectores" [attr.for]="'cat-' + medio.id">
+            Categoría de {{ medio.nombre }}
+          </label>
+          <select
+            class="vt-select med__input-pequeno"
+            [id]="'cat-' + medio.id"
+            [value]="medio.categoriaId ?? ''"
+            (change)="cambiarCategoria(medio, $event)"
+          >
+            <option value="">Sin categoría</option>
+            @for (categoria of listaCategorias(); track categoria.id) {
+              <option [value]="categoria.id">{{ categoria.nombre }}</option>
+            }
+          </select>
+
+          <button
+            type="button"
+            class="vt-adm-boton vt-adm-boton--peligro med__borrar"
+            (click)="borrar(medio)"
+          >
+            Borrar
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+}
+
+@if (ampliado(); as medio) {
+  <div class="med__lightbox" role="dialog" aria-modal="true" [attr.aria-label]="medio.nombre">
+    <button type="button" class="med__cerrar" (click)="cerrarAmpliado()">
+      <span class="vt-solo-lectores">Cerrar</span>
+      <span aria-hidden="true">×</span>
+    </button>
+
+    @if (medio.tipo === 'imagen') {
+      <img class="med__ampliada" [src]="medio.url" [alt]="medio.alt || medio.nombre" />
+    } @else {
+      <a class="vt-adm-boton" [href]="medio.url" target="_blank" rel="noopener">Abrir el PDF</a>
+    }
+
+    <p class="med__pie-lightbox">{{ medio.nombre }}</p>
+  </div>
+}

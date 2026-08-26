@@ -1,0 +1,129 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function esAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function texto(campo, maxLong) {
+      return campo is string && campo.size() > 0 && campo.size() <= maxLong;
+    }
+
+    function emailValido(campo) {
+      return campo is string
+        && campo.size() <= 200
+        && campo.matches('^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$');
+    }
+
+    // --- Contenido público: lectura abierta, escritura solo admin ---
+    match /workshops/{id}        { allow read: if true; allow write: if esAdmin(); }
+    match /bonos/{id}            { allow read: if true; allow write: if esAdmin(); }
+    match /products/{id}         { allow read: if true; allow write: if esAdmin(); }
+    match /portfolio/{id}        { allow read: if true; allow write: if esAdmin(); }
+    match /pages/{id}            { allow read: if true; allow write: if esAdmin(); }
+    match /faqs/{id}             { allow read: if true; allow write: if esAdmin(); }
+    match /quotes/{id}           { allow read: if true; allow write: if esAdmin(); }
+    match /settings/{id}         { allow read: if true; allow write: if esAdmin(); }
+    match /formQuestions/{id}    { allow read: if true; allow write: if esAdmin(); }
+    match /media/{id}            { allow read: if true; allow write: if esAdmin(); }
+    match /mediaCategories/{id}  { allow read: if true; allow write: if esAdmin(); }
+
+    // --- Solo panel ---
+    match /vacations/{id}  { allow read, write: if esAdmin(); }
+    match /templates/{id}  { allow read, write: if esAdmin(); }
+
+    match /admins/{uid} {
+      allow read: if esAdmin();
+      allow write: if false; // solo la Function createAdminUser
+    }
+
+    // --- Sesiones ---
+    //
+    // `plazasConfirmadas` es un contador que solo debe moverse dentro de la
+    // transacción de `confirmBooking`. Desde el cliente se rechaza cualquier
+    // cambio: si se pudiera tocar a mano, el cupo acabaría descuadrado y la
+    // sesión sobrevendida sin que nadie se entere.
+    match /sessions/{id} {
+      allow read: if true;
+      allow create: if esAdmin() && request.resource.data.plazasConfirmadas == 0;
+      allow update: if esAdmin()
+        && request.resource.data.plazasConfirmadas == resource.data.plazasConfirmadas;
+      allow delete: if esAdmin();
+    }
+
+    // --- Reservas: alta pública validada, resto solo admin ---
+    match /bookings/{id} {
+      allow read: if esAdmin();
+
+      // Confirmar o cancelar mueve plazas, así que va por `confirmBooking`, que
+      // usa Admin SDK y se salta estas reglas. Desde el cliente solo se pueden
+      // editar las notas internas.
+      allow update: if esAdmin()
+        && request.resource.data.status == resource.data.status
+        && request.resource.data.confirmadaAt == resource.data.confirmadaAt;
+
+      // Borrar una reserva confirmada dejaría sus plazas ocupadas para siempre.
+      // Hay que cancelarla primero, que sí las devuelve.
+      allow delete: if esAdmin() && resource.data.status != 'confirmada';
+
+      allow create: if
+        request.resource.data.status == 'pendiente'
+        && request.resource.data.confirmadaAt == null
+        && request.resource.data.notasInternas == ''
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.tipo in ['taller', 'bono']
+        && texto(request.resource.data.nombre, 120)
+        && emailValido(request.resource.data.email)
+        && texto(request.resource.data.telefono, 30)
+        && request.resource.data.nPersonas is int
+        && request.resource.data.nPersonas >= 1
+        && request.resource.data.nPersonas <= 20
+        && request.resource.data.respuestas is map
+        // Cada respuesta guarda también su etiqueta, por eso el doble de claves.
+        && request.resource.data.respuestas.keys().size() <= 60
+        && request.resource.data.keys().hasOnly([
+             'tipo', 'sessionId', 'bonoId', 'nombre', 'email', 'telefono',
+             'nPersonas', 'respuestas', 'status', 'createdAt',
+             'confirmadaAt', 'notasInternas'
+           ]);
+    }
+
+    // --- Solicitudes de presupuesto ---
+    match /requests/{id} {
+      allow read, update, delete: if esAdmin();
+
+      allow create: if
+        request.resource.data.status == 'nueva'
+        && request.resource.data.notasInternas == ''
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.tipo in ['papeleria', 'liveart', 'encargo', 'contacto']
+        && texto(request.resource.data.nombre, 120)
+        && emailValido(request.resource.data.email)
+        && request.resource.data.telefono is string
+        && request.resource.data.telefono.size() <= 30
+        && request.resource.data.respuestas is map
+        // Cada respuesta guarda también su etiqueta, por eso el doble de claves.
+        && request.resource.data.respuestas.keys().size() <= 60
+        && request.resource.data.keys().hasOnly([
+             'tipo', 'nombre', 'email', 'telefono', 'respuestas',
+             'status', 'createdAt', 'notasInternas'
+           ]);
+    }
+
+    // --- Cola de correo: exclusiva de Cloud Functions ---
+    match /mail/{id} {
+      allow read, write: if false;
+    }
+
+    // --- Registro de los datos de ejemplo: solo scripts con Admin SDK ---
+    match /_semilla/{id} {
+      allow read, write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

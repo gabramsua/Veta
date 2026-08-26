@@ -1,0 +1,208 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-cabecera);
+  display: flex;
+  gap: var(--esp-4);
+  align-items: center;
+  min-height: 6.4rem;
+  padding-inline: var(--esp-5);
+  background-color: #fff;
+  border-bottom: 1px solid var(--veta-arena);
+}
+
+.topbar__menu {
+  display: none;
+  padding: var(--esp-2);
+
+  @include hasta($bp-escritorio) {
+    display: block;
+  }
+}
+
+.topbar__menu-icono {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--veta-tinta);
+  box-shadow:
+    0 -7px 0 var(--veta-tinta),
+    0 7px 0 var(--veta-tinta);
+}
+
+.topbar__marca {
+  display: flex;
+  gap: var(--esp-3);
+  align-items: center;
+
+  img {
+    width: auto;
+    height: 2.4rem;
+  }
+}
+
+.topbar__etiqueta {
+  padding: 0.2rem var(--esp-2);
+  font-size: var(--txt-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--veta-oliva);
+  background-color: var(--veta-crema);
+  border-radius: var(--radio-full);
+}
+
+.topbar__acciones {
+  margin-left: auto;
+}
+
+.topbar__accion {
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  color: var(--veta-terracota);
+}
+
+.barra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  padding: var(--esp-4) var(--esp-3);
+  background-color: #fff;
+  border-right: 1px solid var(--veta-arena);
+
+  @include hasta($bp-escritorio) {
+    position: fixed;
+    inset: 6.4rem auto 0 0;
+    z-index: var(--z-overlay);
+    width: 26rem;
+    overflow-y: auto;
+    box-shadow: var(--sombra-lg);
+    transform: translateX(-100%);
+    transition: transform var(--trans-media);
+  }
+}
+
+.vt-adm--barra-abierta .barra {
+  transform: translateX(0);
+}
+
+.barra__nav {
+  flex: 1;
+}
+
+.barra__lista,
+.barra__sublista {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.barra__item {
+  margin-bottom: 0.2rem;
+}
+
+.barra__enlace {
+  display: flex;
+  gap: var(--esp-3);
+  align-items: center;
+  width: 100%;
+  padding: var(--esp-3);
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  color: var(--veta-tinta);
+  text-align: left;
+  border-radius: var(--radio-md);
+  transition: background-color var(--trans-rapida), color var(--trans-rapida);
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+}
+
+.barra__enlace--activo {
+  color: var(--veta-terracota);
+  background-color: var(--veta-crema);
+}
+
+.barra__icono {
+  width: 1.6rem;
+  height: 1.6rem;
+  background-color: currentcolor;
+  border-radius: var(--radio-sm);
+  opacity: 0.45;
+}
+
+.barra__flecha {
+  margin-left: auto;
+  color: var(--veta-tinta-suave);
+}
+
+.barra__sublista {
+  padding-left: var(--esp-6);
+}
+
+.barra__subenlace {
+  display: block;
+  padding: var(--esp-2) var(--esp-3);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+  border-radius: var(--radio-md);
+
+  &:hover {
+    color: var(--veta-tinta);
+    background-color: var(--veta-crema);
+  }
+}
+
+.barra__subenlace--activo {
+  color: var(--veta-terracota);
+  font-weight: var(--peso-medio);
+}
+
+.barra__web {
+  padding: var(--esp-3);
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  color: var(--veta-oliva);
+  text-align: center;
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-md);
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+}
+
+.topbar__acciones {
+  display: flex;
+  gap: var(--esp-4);
+  align-items: center;
+}
+
+.topbar__usuaria {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+
+  @include hasta($bp-movil) {
+    display: none;
+  }
+}
+
+.barra__etiqueta {
+  display: grid;
+  gap: 0.1rem;
+  text-align: left;
+}
+
+// Una línea de contexto bajo el nombre del grupo: «La web» solo dice a medias
+// lo que hay dentro; «por orden de aparición» lo completa.
+.barra__ayuda {
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-normal);
+  color: var(--veta-tinta-suave);
+}

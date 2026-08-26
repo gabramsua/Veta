@@ -1,0 +1,79 @@
+@if (enviado()) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor">
+      <veta-envio-correcto
+        titulo="Solicitud recibida"
+        texto="Te escribiremos en breve para confirmarte la plaza y contarte cómo hacer el pago. Hasta entonces la plaza no está reservada del todo."
+      />
+    </div>
+  </section>
+} @else if (!elegida()) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor res__error">
+      <p class="vt-antetitulo">Vaya</p>
+      <h1 class="vt-titulo">Esta sesión ya no está disponible</h1>
+      <p class="vt-entradilla">
+        Puede que se haya llenado, que la fecha haya pasado o que la hayamos cancelado.
+      </p>
+      <a class="vt-boton" routerLink="/talleres">Ver otras fechas</a>
+    </div>
+  </section>
+} @else if (plazasLibres() === 0) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor res__error">
+      <p class="vt-antetitulo">Sin plazas</p>
+      <h1 class="vt-titulo">Esta sesión está completa</h1>
+      <p class="vt-entradilla">
+        Se han agotado las plazas de {{ elegida()!.taller.titulo }} para esa fecha. Mira las
+        siguientes o escríbenos y te avisamos cuando saquemos nuevas.
+      </p>
+      <div class="res__acciones-vacio">
+        <a class="vt-boton" routerLink="/talleres">Ver otras fechas</a>
+        <a class="vt-enlace-sub" routerLink="/solicitar/contacto">Avisadme</a>
+      </div>
+    </div>
+  </section>
+} @else {
+  <veta-cabecera-seccion
+    antetitulo="Reservar plaza"
+    [titulo]="elegida()!.taller.titulo"
+    [entradilla]="
+      formatearFecha(elegida()!.sesion.fechaInicio) +
+      ' · ' +
+      elegida()!.taller.precio +
+      ' € por persona · ' +
+      elegida()!.taller.duracionMin +
+      ' minutos'
+    "
+  />
+
+  <section class="vt-seccion">
+    <div class="vt-contenedor res__cuerpo">
+      <div class="res__formulario">
+        <div class="res__resumen">
+          <p class="res__plazas">
+            Quedan {{ plazasLibres() }} de {{ elegida()!.sesion.plazasTotales }} plazas
+          </p>
+          <p class="res__nota">
+            Al enviar el formulario nos llega tu solicitud. Te confirmamos por correo y te decimos
+            cómo pagar: en el estudio o por Bizum. <strong>La plaza no queda reservada hasta que te
+            confirmemos.</strong>
+          </p>
+        </div>
+
+        @if (error()) {
+          <p class="res__error-envio" role="alert">{{ error() }}</p>
+        }
+
+        <veta-formulario-solicitud
+          formulario="taller"
+          [pedirPersonas]="true"
+          [maxPersonas]="plazasLibres()"
+          [enviando]="enviando()"
+          textoBoton="Solicitar plaza"
+          (enviado)="enviar($event)"
+        />
+      </div>
+    </div>
+  </section>
+}

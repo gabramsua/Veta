@@ -1,0 +1,83 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.cal__leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-4);
+  margin-bottom: var(--esp-4);
+}
+
+.cal__marca {
+  display: inline-flex;
+  gap: var(--esp-2);
+  align-items: center;
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+
+  &::before {
+    width: 1.2rem;
+    height: 1.2rem;
+    content: '';
+    border-radius: var(--radio-sm);
+  }
+}
+
+.cal__marca--libre::before {
+  background-color: var(--veta-oliva);
+}
+
+.cal__marca--casi::before {
+  background-color: var(--veta-terracota);
+}
+
+.cal__marca--lleno::before {
+  background-color: var(--veta-arena);
+}
+
+.cal__marca--vacaciones::before {
+  background-color: var(--veta-arena-osc);
+}
+
+.cal__caja--oculta {
+  display: none;
+}
+
+.cal__cargando {
+  padding: var(--esp-6);
+  color: var(--veta-tinta-suave);
+  text-align: center;
+}
+
+// FullCalendar pinta su propio DOM, así que sus estilos se ajustan con las
+// variables que expone en lugar de reescribir sus clases.
+.cal__contenedor {
+  --fc-border-color: var(--veta-arena);
+  --fc-today-bg-color: color-mix(in srgb, var(--veta-terracota) 8%, transparent);
+  --fc-page-bg-color: #fff;
+  --fc-neutral-bg-color: var(--veta-crema);
+  --fc-event-border-color: transparent;
+
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-sm);
+}
+
+// FullCalendar amontona su barra de botones en pantallas estrechas.
+@include hasta($bp-tablet) {
+  .cal__contenedor {
+    --fc-small-font-size: 1.2rem;
+  }
+
+  .cal__contenedor .fc-header-toolbar {
+    display: grid;
+    gap: var(--esp-2);
+    justify-items: center;
+  }
+
+  .cal__contenedor .fc-toolbar-title {
+    font-size: var(--txt-md);
+  }
+}

@@ -1,0 +1,64 @@
+<veta-cabecera-seccion
+  antetitulo="Hablemos"
+  titulo="Contacto"
+  [entradilla]="textos()['entradilla']"
+/>
+
+<section class="vt-seccion">
+  <div class="vt-contenedor con__cuerpo">
+    <div class="con__texto">
+      @if (textos()['texto']) {
+        <veta-bloque-texto [html]="textos()['texto']" />
+      }
+
+      @if (enviado()) {
+        <veta-envio-correcto
+          titulo="Mensaje recibido"
+          texto="Te respondemos lo antes posible al correo que nos has dejado."
+        />
+      } @else {
+        @if (error()) {
+          <p class="con__error" role="alert">{{ error() }}</p>
+        }
+
+        <veta-formulario-solicitud
+          formulario="contacto"
+          [enviando]="enviando()"
+          textoBoton="Enviar mensaje"
+          (enviado)="enviar($event)"
+        />
+      }
+    </div>
+
+    <aside class="con__datos">
+      <h2 class="con__datos-titulo">Dónde encontrarnos</h2>
+
+      <dl class="con__lista">
+        @if (ajustes().contacto.email) {
+          <div class="con__dato">
+            <dt>Correo</dt>
+            <dd><a [href]="'mailto:' + ajustes().contacto.email">{{ ajustes().contacto.email }}</a></dd>
+          </div>
+        }
+        @if (ajustes().contacto.telefono) {
+          <div class="con__dato">
+            <dt>Teléfono</dt>
+            <dd><a [href]="'tel:' + ajustes().contacto.telefono">{{ ajustes().contacto.telefono }}</a></dd>
+          </div>
+        }
+        @if (ajustes().contacto.direccion) {
+          <div class="con__dato">
+            <dt>Estudio</dt>
+            <dd>{{ ajustes().contacto.direccion }}</dd>
+          </div>
+        }
+        @if (ajustes().contacto.horario) {
+          <div class="con__dato">
+            <dt>Horario</dt>
+            <dd>{{ ajustes().contacto.horario }}</dd>
+          </div>
+        }
+      </dl>
+    </aside>
+  </div>
+</section>

@@ -1,0 +1,61 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.bon__vacio,
+.bon__cta-cuerpo {
+  display: grid;
+  gap: var(--esp-4);
+  justify-items: center;
+  max-width: 68rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.bon__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  gap: var(--esp-5);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.bon__tarjeta {
+  display: grid;
+  gap: var(--esp-3);
+  align-content: start;
+  justify-items: start;
+  padding: var(--esp-6);
+  background-color: var(--veta-blanco);
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-lg);
+}
+
+.bon__titulo {
+  font-size: var(--txt-lg);
+}
+
+.bon__precio {
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-2xl);
+  line-height: 1;
+  color: var(--veta-terracota);
+}
+
+.bon__mes {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-base);
+  color: var(--veta-tinta-suave);
+}
+
+.bon__detalle {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.bon__cta {
+  margin-top: var(--esp-3);
+}

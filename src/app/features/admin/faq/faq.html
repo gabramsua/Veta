@@ -1,0 +1,99 @@
+<veta-panel-seccion
+  titulo="Preguntas frecuentes"
+  descripcion="Lo que más os preguntan. Cuanto mejor esté aquí, menos correos de dudas."
+  accion="Nueva pregunta"
+  (pulsada)="abrir()"
+/>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta faq__form-tarjeta">
+    <h2 class="faq__form-titulo">{{ tituloForm() }}</h2>
+
+    <form class="faq__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="faq-pregunta">Pregunta</label>
+        <input id="faq-pregunta" class="vt-input" type="text" formControlName="pregunta" />
+        @if (pregunta.touched && pregunta.invalid) {
+          <p class="vt-campo__error">La pregunta es obligatoria.</p>
+        }
+      </div>
+
+      <div class="vt-campo">
+        <span class="vt-campo__etiqueta">Respuesta</span>
+        <veta-editor-texto etiqueta="Respuesta" formControlName="respuesta" />
+      </div>
+
+      <div class="vt-campo faq__campo-categoria">
+        <label class="vt-campo__etiqueta" for="faq-categoria">Categoría</label>
+        <input id="faq-categoria" class="vt-input" type="text" formControlName="categoria" />
+        <p class="vt-campo__pista">Opcional. Ej. Talleres, Bodas, Envíos.</p>
+      </div>
+
+      <label class="vt-check">
+        <input type="checkbox" formControlName="activa" />
+        Visible en la web
+      </label>
+
+      <div class="faq__acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">Cancelar</button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (lista().length === 0) {
+  <veta-estado-vacio
+    titulo="Todavía no hay preguntas"
+    pista="Empieza por las de siempre: cómo se reserva, cómo se paga, qué pasa si no puedo ir, cuánto tarda un encargo."
+  />
+} @else {
+  <ul class="faq__lista">
+    @for (faq of lista(); track faq.id; let i = $index) {
+      <li class="vt-adm-tarjeta faq__item" [class.faq__item--inactiva]="!faq.activa">
+        <div class="faq__cabecera">
+          <button
+            type="button"
+            class="faq__pregunta"
+            [attr.aria-expanded]="desplegada() === faq.id"
+            (click)="alternarDesplegada(faq.id)"
+          >
+            <span>{{ faq.pregunta }}</span>
+            <span class="faq__flecha" aria-hidden="true">
+              {{ desplegada() === faq.id ? '−' : '+' }}
+            </span>
+          </button>
+
+          <div class="faq__controles">
+            <veta-ordenar
+              nombre="pregunta"
+              [primero]="i === 0"
+              [ultimo]="i === lista().length - 1"
+              (subir)="mover(i, -1)"
+              (bajar)="mover(i, 1)"
+            />
+            <button type="button" class="vt-adm-boton vt-adm-boton--fantasma faq__boton" (click)="alternarActiva(faq)">
+              {{ faq.activa ? 'Ocultar' : 'Mostrar' }}
+            </button>
+            <button type="button" class="vt-adm-boton vt-adm-boton--fantasma faq__boton" (click)="abrir(faq)">
+              Editar
+            </button>
+            <button type="button" class="vt-adm-boton vt-adm-boton--peligro faq__boton" (click)="borrar(faq)">
+              Borrar
+            </button>
+          </div>
+        </div>
+
+        @if (desplegada() === faq.id) {
+          <div class="faq__respuesta" [innerHTML]="faq.respuesta | htmlSeguro"></div>
+        }
+
+        @if (faq.categoria) {
+          <p class="faq__categoria">{{ faq.categoria }}</p>
+        }
+      </li>
+    }
+  </ul>
+}

@@ -1,0 +1,236 @@
+:root {
+  --veta-terracota: #b0592b;
+  --veta-terracota-osc: #8e4620;
+  --veta-terracota-clr: #d18455;
+  --veta-oliva: #5a6248;
+  --veta-oliva-osc: #434a34;
+  --veta-oliva-clr: #7d8568;
+  --veta-crema: #f2ebe1;
+  --veta-arena: #e3d5c4;
+  --veta-arena-osc: #cbb9a3;
+  --veta-tinta: #2e2a26;
+  --veta-tinta-suave: #6b635b;
+  --veta-blanco: #fbf8f4;
+
+  --veta-exito: #4f7a4a;
+  --veta-aviso: #b8892f;
+  --veta-error: #a33a2a;
+
+  --fuente-titular: 'Laima', 'Georgia', serif;
+  --fuente-cuerpo: 'Karla', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --peso-normal: 400;
+  --peso-medio: 500;
+  --peso-fuerte: 700;
+
+  --txt-xs: 1.2rem;
+  --txt-sm: 1.4rem;
+  --txt-base: 1.6rem;
+  --txt-md: 1.8rem;
+  --txt-lg: 2.4rem;
+  --txt-xl: 3.2rem;
+  --txt-2xl: 4.4rem;
+  --txt-3xl: 6.4rem;
+  --txt-4xl: 9.6rem;
+
+  --esp-1: 0.4rem;
+  --esp-2: 0.8rem;
+  --esp-3: 1.2rem;
+  --esp-4: 1.6rem;
+  --esp-5: 2.4rem;
+  --esp-6: 3.2rem;
+  --esp-7: 4.8rem;
+  --esp-8: 6.4rem;
+  --esp-9: 9.6rem;
+  --esp-10: 12.8rem;
+
+  --radio-sm: 0.2rem;
+  --radio-md: 0.4rem;
+  --radio-lg: 0.8rem;
+  --radio-full: 999rem;
+
+  --sombra-sm: 0 1px 2px rgb(46 42 38 / 6%);
+  --sombra-md: 0 2px 8px rgb(46 42 38 / 8%);
+  --sombra-lg: 0 8px 32px rgb(46 42 38 / 12%);
+
+  --ancho-max: 132rem;
+  --ancho-texto: 68rem;
+
+  --trans-rapida: 150ms ease;
+  --trans-media: 280ms ease;
+  --trans-lenta: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  --z-sticky: 100;
+  --z-cabecera: 200;
+  --z-overlay: 300;
+  --z-modal: 400;
+}
+@font-face {
+  font-family: 'Laima';
+  src: url('/assets/fonts/Laima-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Laima';
+  src: url('/assets/fonts/Laima-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Laima';
+  src: url('/assets/fonts/Laima-Thin.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Laima';
+  src: url('/assets/fonts/Laima-Hairline.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-base);
+  font-weight: var(--peso-normal);
+  line-height: 1.65;
+  color: var(--veta-tinta);
+  background-color: var(--veta-crema);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--fuente-titular);
+  font-weight: var(--peso-normal);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+}
+
+p,
+ul,
+ol,
+figure,
+blockquote {
+  margin: 0;
+}
+
+img,
+picture,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+input,
+textarea,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--veta-terracota);
+  outline-offset: 3px;
+}
+
+::selection {
+  color: var(--veta-crema);
+  background-color: var(--veta-terracota);
+}
+
+.vt-contenedor {
+  width: 100%;
+  max-width: var(--ancho-max);
+  padding-inline: var(--esp-5);
+  margin-inline: auto;
+}
+
+.vt-salto-contenido {
+  position: absolute;
+  top: var(--esp-3);
+  left: var(--esp-3);
+  z-index: var(--z-modal);
+  padding: var(--esp-3) var(--esp-4);
+  color: var(--veta-crema);
+  background-color: var(--veta-tinta);
+  border-radius: var(--radio-md);
+  transform: translateY(-200%);
+
+  &:focus {
+    transform: translateY(0);
+  }
+}
+
+.vt-solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
+/* Nada de una regla global tipo `img[width][height] { height: auto }`.
+   Un selector de atributo pesa lo mismo que una clase, así que ganaba a cosas
+   como `.pie__marca img { height: 3.6rem }` y reventaba el tamaño de todos los
+   logos. Las imágenes de contenido ya controlan su forma con `aspect-ratio` y
+   `object-fit`, que es donde debe decidirse. */

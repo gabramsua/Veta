@@ -1,0 +1,231 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.med__subida {
+  padding: 0;
+  margin-bottom: var(--esp-4);
+  overflow: hidden;
+}
+
+.med__soltar {
+  display: grid;
+  gap: var(--esp-2);
+  place-items: center;
+  padding: var(--esp-7) var(--esp-5);
+  text-align: center;
+  cursor: pointer;
+  border: 2px dashed var(--veta-arena-osc);
+  border-radius: var(--radio-lg);
+  transition: border-color var(--trans-rapida), background-color var(--trans-rapida);
+
+  &:hover,
+  &:focus-within {
+    background-color: var(--veta-crema);
+    border-color: var(--veta-terracota);
+  }
+}
+
+.med__soltar--ocupado {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+.med__soltar-icono {
+  display: grid;
+  place-items: center;
+  width: 4.4rem;
+  height: 4.4rem;
+  font-size: var(--txt-lg);
+  color: var(--veta-terracota);
+  background-color: var(--veta-crema);
+  border-radius: var(--radio-full);
+}
+
+.med__soltar-texto {
+  font-size: var(--txt-base);
+  font-weight: var(--peso-medio);
+}
+
+.med__soltar-pista {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.med__filtros {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr auto;
+  gap: var(--esp-4);
+  align-items: end;
+  margin-bottom: var(--esp-4);
+
+  @include hasta($bp-escritorio) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.med__form-categoria {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--esp-4);
+  align-items: end;
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.med__form-acciones {
+  display: flex;
+  gap: var(--esp-2);
+}
+
+.med__categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  padding: 0;
+  margin-top: var(--esp-5);
+  list-style: none;
+}
+
+.med__categoria {
+  display: inline-flex;
+  gap: var(--esp-2);
+  align-items: center;
+  padding: var(--esp-1) var(--esp-3);
+  font-size: var(--txt-xs);
+  background-color: var(--veta-crema);
+  border-radius: var(--radio-full);
+}
+
+.med__categoria-borrar {
+  font-size: var(--txt-base);
+  line-height: 1;
+  color: var(--veta-tinta-suave);
+
+  &:hover {
+    color: var(--veta-error);
+  }
+}
+
+.med__galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(22rem, 1fr));
+  gap: var(--esp-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.med__ficha {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background-color: #fff;
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-lg);
+}
+
+.med__previa {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background-color: var(--veta-crema);
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--trans-media);
+  }
+
+  &:hover img {
+    transform: scale(1.04);
+  }
+}
+
+.med__pdf {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-lg);
+  letter-spacing: 0.12em;
+  color: var(--veta-arena-osc);
+}
+
+.med__datos {
+  display: grid;
+  gap: var(--esp-2);
+  padding: var(--esp-3);
+}
+
+.med__nombre {
+  overflow: hidden;
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.med__meta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.med__input-pequeno {
+  padding: var(--esp-2);
+  font-size: var(--txt-xs);
+}
+
+.med__borrar {
+  padding: var(--esp-2);
+  font-size: var(--txt-xs);
+}
+
+.med__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  gap: var(--esp-4);
+  place-content: center;
+  place-items: center;
+  padding: var(--esp-6);
+  background-color: rgb(46 42 38 / 88%);
+}
+
+.med__ampliada {
+  max-width: min(92vw, 120rem);
+  max-height: 78vh;
+  object-fit: contain;
+}
+
+.med__pie-lightbox {
+  font-size: var(--txt-sm);
+  color: var(--veta-crema);
+}
+
+.med__cerrar {
+  position: absolute;
+  top: var(--esp-4);
+  right: var(--esp-4);
+  width: 4.4rem;
+  height: 4.4rem;
+  font-size: var(--txt-lg);
+  color: var(--veta-crema);
+  border: 1px solid color-mix(in srgb, var(--veta-crema) 40%, transparent);
+  border-radius: var(--radio-full);
+
+  &:hover {
+    background-color: color-mix(in srgb, var(--veta-crema) 15%, transparent);
+  }
+}

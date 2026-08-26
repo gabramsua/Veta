@@ -1,0 +1,123 @@
+<veta-cabecera-seccion
+  antetitulo="En el estudio"
+  titulo="Talleres"
+  [entradilla]="textos()['entradilla']"
+/>
+
+@if (textos()['texto']) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor">
+      <veta-bloque-texto [html]="textos()['texto']" />
+    </div>
+  </section>
+}
+
+@if (talleres().length === 0) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor tal__vacio">
+      <p>Ahora mismo no hay talleres publicados.</p>
+      <a class="vt-boton" routerLink="/contacto">Avísame cuando haya</a>
+    </div>
+  </section>
+} @else {
+  <section class="vt-seccion vt-seccion--crema">
+    <div class="vt-contenedor tal__lista">
+      @for (taller of conCalendario(); track taller.id) {
+        <article class="tal__taller">
+          <div class="tal__media">
+            @if (taller.imagenes.length > 0) {
+              <img
+                [src]="taller.imagenes[0].url"
+                [alt]="taller.imagenes[0].alt"
+                [attr.width]="taller.imagenes[0].width"
+                [attr.height]="taller.imagenes[0].height"
+                loading="lazy"
+                decoding="async"
+              />
+            } @else {
+              <span class="vt-marcador">{{ taller.titulo }}</span>
+            }
+          </div>
+
+          <div class="tal__texto">
+            <p class="vt-antetitulo">{{ nombreCategoria(taller.categoria) }}</p>
+            <h2 class="tal__titulo">{{ taller.titulo }}</h2>
+            <p class="tal__meta">{{ taller.precio }} € por persona · {{ taller.duracionMin }} minutos</p>
+
+            <veta-bloque-texto [html]="taller.descripcion" />
+
+            @if (ajustes().secciones.reservas) {
+              @if (sesionesDe(taller.id).length === 0) {
+                <p class="tal__sin-fechas">
+                  Sin fechas programadas ahora mismo. Escríbenos y te avisamos de la próxima.
+                </p>
+                <a class="vt-enlace-sub" routerLink="/solicitar/contacto">Avísame</a>
+              } @else {
+                <ul class="tal__fechas">
+                  @for (item of sesionesDe(taller.id); track item.sesion.id) {
+                    <li class="tal__fecha" [class.tal__fecha--completa]="item.plazasLibres === 0">
+                      <div>
+                        <p class="tal__fecha-texto">{{ formatearFecha(item.sesion.fechaInicio) }}</p>
+                        <p class="tal__fecha-plazas">
+                          @if (item.plazasLibres > 0) {
+                            {{ item.plazasLibres }} de {{ item.sesion.plazasTotales }} plazas libres
+                          } @else {
+                            Completo
+                          }
+                        </p>
+                      </div>
+
+                      @if (item.plazasLibres > 0) {
+                        <a class="vt-boton vt-boton--contorno tal__reservar" [routerLink]="['/reservar', item.sesion.id]">
+                          Solicitar plaza
+                        </a>
+                      }
+                    </li>
+                  }
+                </ul>
+              }
+            }
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  @if (aMedida().length > 0) {
+    <section class="vt-seccion">
+      <div class="vt-contenedor">
+        <p class="vt-antetitulo">A medida</p>
+        <h2 class="vt-titulo tal__subtitulo">Talleres para eventos privados</h2>
+
+        <div class="tal__medida">
+          @for (taller of aMedida(); track taller.id) {
+            <article class="tal__tarjeta">
+              <h3 class="tal__tarjeta-titulo">{{ taller.titulo }}</h3>
+              <veta-bloque-texto [html]="taller.descripcion" />
+              <a class="vt-enlace-sub" routerLink="/solicitar/encargo">Pedir presupuesto</a>
+            </article>
+          }
+        </div>
+      </div>
+    </section>
+  }
+}
+
+@if (textos()['comoReservar']) {
+  <section class="vt-seccion vt-seccion--arena">
+    <div class="vt-contenedor">
+      <h2 class="vt-titulo tal__subtitulo">Cómo se reserva</h2>
+      <veta-bloque-texto [html]="textos()['comoReservar']" />
+    </div>
+  </section>
+}
+
+@if (ajustes().secciones.bonos) {
+  <section class="vt-seccion tal__cta">
+    <div class="vt-contenedor tal__cta-cuerpo">
+      <h2 class="vt-titulo">¿Vienes cada semana?</h2>
+      <p class="vt-entradilla">Con los bonos mensuales sale mejor de precio.</p>
+      <a class="vt-boton" routerLink="/talleres/bonos">Ver bonos mensuales</a>
+    </div>
+  </section>
+}

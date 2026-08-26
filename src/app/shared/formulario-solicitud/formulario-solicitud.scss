@@ -1,0 +1,112 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.fs {
+  display: grid;
+  gap: var(--esp-5);
+}
+
+.fs__rejilla,
+.fs__extras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(26rem, 1fr));
+  gap: var(--esp-4);
+}
+
+.fs__extras {
+  grid-template-columns: 1fr;
+}
+
+.fs__campo {
+  display: grid;
+  gap: var(--esp-2);
+}
+
+.fs__etiqueta {
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+}
+
+.fs__input {
+  width: 100%;
+  padding: var(--esp-3);
+  font-size: var(--txt-base);
+  background-color: var(--veta-blanco);
+  border: 1px solid var(--veta-arena-osc);
+  border-radius: var(--radio-md);
+  transition: border-color var(--trans-rapida), box-shadow var(--trans-rapida);
+
+  &:focus {
+    border-color: var(--veta-terracota);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--veta-terracota) 18%, transparent);
+  }
+
+  &[aria-invalid='true'] {
+    border-color: var(--veta-error);
+  }
+}
+
+.fs__textarea {
+  min-height: 12rem;
+  resize: vertical;
+}
+
+.fs__pista {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.fs__error {
+  font-size: var(--txt-xs);
+  color: var(--veta-error);
+}
+
+// Fuera de la pantalla, no con display:none: algunos bots ignoran lo oculto.
+.fs__trampa {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.fs__privacidad {
+  display: flex;
+  gap: var(--esp-3);
+  align-items: flex-start;
+  font-size: var(--txt-sm);
+  cursor: pointer;
+
+  input {
+    width: 1.8rem;
+    height: 1.8rem;
+    margin-top: 0.2rem;
+    accent-color: var(--veta-terracota);
+  }
+
+  a {
+    color: var(--veta-terracota);
+    text-decoration: underline;
+  }
+}
+
+.fs__aviso {
+  padding: var(--esp-3) var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-error);
+  background-color: color-mix(in srgb, var(--veta-error) 10%, transparent);
+  border-radius: var(--radio-md);
+}
+
+.fs__enviar {
+  justify-self: start;
+}
+
+.fs__nota {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}

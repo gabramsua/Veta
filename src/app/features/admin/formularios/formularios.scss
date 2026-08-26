@@ -1,0 +1,140 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.frm__pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-3);
+}
+
+.frm__pestana {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  color: var(--veta-tinta-suave);
+  background-color: #fff;
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-full);
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+}
+
+.frm__pestana--activa {
+  color: var(--veta-crema);
+  background-color: var(--veta-terracota);
+  border-color: var(--veta-terracota);
+}
+
+.frm__descripcion {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.frm__form-tarjeta {
+  margin-bottom: var(--esp-4);
+}
+
+.frm__form-titulo {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.frm__form {
+  display: grid;
+  gap: var(--esp-4);
+  max-width: 60rem;
+}
+
+.frm__campo-tipo {
+  max-width: 32rem;
+}
+
+.frm__opciones {
+  min-height: 10rem;
+}
+
+.frm__checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-5);
+}
+
+.frm__acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+}
+
+.frm__lista {
+  display: grid;
+  gap: var(--esp-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.frm__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--esp-4);
+  align-items: center;
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.frm__item--inactiva {
+  background-color: #fbfaf8;
+}
+
+.frm__datos {
+  display: grid;
+  gap: var(--esp-1);
+}
+
+.frm__pregunta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  align-items: center;
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-base);
+  font-weight: var(--peso-medio);
+}
+
+.frm__obligatoria {
+  padding: 0.1rem var(--esp-2);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-normal);
+  color: var(--veta-terracota);
+  background-color: color-mix(in srgb, var(--veta-terracota) 12%, transparent);
+  border-radius: var(--radio-full);
+}
+
+.frm__meta,
+.frm__opciones-texto {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.frm__controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  align-items: center;
+}
+
+.frm__boton {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+}

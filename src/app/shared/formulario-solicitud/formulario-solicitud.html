@@ -1,0 +1,143 @@
+<form class="fs" [formGroup]="grupo" (ngSubmit)="enviar($event)" novalidate>
+  <div class="fs__rejilla">
+    <div class="fs__campo">
+      <label class="fs__etiqueta" for="fs-nombre">Nombre y apellidos *</label>
+      <input
+        id="fs-nombre"
+        class="fs__input"
+        type="text"
+        formControlName="nombre"
+        autocomplete="name"
+        [attr.aria-invalid]="nombre.touched && nombre.invalid"
+      />
+      @if (nombre.touched && nombre.invalid) {
+        <p class="fs__error">Necesitamos tu nombre.</p>
+      }
+    </div>
+
+    <div class="fs__campo">
+      <label class="fs__etiqueta" for="fs-email">Correo electrónico *</label>
+      <input
+        id="fs-email"
+        class="fs__input"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        [attr.aria-invalid]="email.touched && email.invalid"
+      />
+      @if (email.touched && email.invalid) {
+        <p class="fs__error">Escribe un correo válido: es por donde te responderemos.</p>
+      }
+    </div>
+
+    <div class="fs__campo">
+      <label class="fs__etiqueta" for="fs-telefono">Teléfono *</label>
+      <input
+        id="fs-telefono"
+        class="fs__input"
+        type="tel"
+        formControlName="telefono"
+        autocomplete="tel"
+        [attr.aria-invalid]="telefono.touched && telefono.invalid"
+      />
+      @if (telefono.touched && telefono.invalid) {
+        <p class="fs__error">Necesitamos un teléfono de contacto.</p>
+      }
+    </div>
+
+    @if (pedirPersonas()) {
+      <div class="fs__campo">
+        <label class="fs__etiqueta" for="fs-personas">Número de personas *</label>
+        <input
+          id="fs-personas"
+          class="fs__input"
+          type="number"
+          min="1"
+          [max]="maxPersonas()"
+          formControlName="nPersonas"
+        />
+        <p class="fs__pista">Quedan {{ maxPersonas() }} plazas libres en esta sesión.</p>
+      </div>
+    }
+  </div>
+
+  @if (preguntas().length > 0) {
+    <div class="fs__extras">
+      @for (pregunta of preguntas(); track pregunta.id) {
+        <div class="fs__campo">
+          <label class="fs__etiqueta" [attr.for]="'fs-' + pregunta.id">
+            {{ pregunta.etiqueta }}@if (pregunta.obligatoria) { *}
+          </label>
+
+          @switch (pregunta.tipo) {
+            @case ('textarea') {
+              <textarea
+                class="fs__input fs__textarea"
+                [id]="'fs-' + pregunta.id"
+                [value]="valor(pregunta.id)"
+                [attr.aria-invalid]="falta(pregunta.id)"
+                (input)="actualizar(pregunta.id, $event)"
+              ></textarea>
+            }
+            @case ('opciones') {
+              <select
+                class="fs__input"
+                [id]="'fs-' + pregunta.id"
+                [value]="valor(pregunta.id)"
+                [attr.aria-invalid]="falta(pregunta.id)"
+                (change)="actualizar(pregunta.id, $event)"
+              >
+                <option value="">Elige una opción</option>
+                @for (opcion of pregunta.opciones; track opcion) {
+                  <option [value]="opcion">{{ opcion }}</option>
+                }
+              </select>
+            }
+            @default {
+              <input
+                class="fs__input"
+                type="text"
+                [id]="'fs-' + pregunta.id"
+                [value]="valor(pregunta.id)"
+                [attr.aria-invalid]="falta(pregunta.id)"
+                (input)="actualizar(pregunta.id, $event)"
+              />
+            }
+          }
+
+          @if (falta(pregunta.id)) {
+            <p class="fs__error">Esta pregunta es obligatoria.</p>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <div class="fs__trampa" aria-hidden="true">
+    <label for="fs-web">No rellenes este campo</label>
+    <input id="fs-web" type="text" formControlName="web" tabindex="-1" autocomplete="off" />
+  </div>
+
+  <label class="fs__privacidad">
+    <input type="checkbox" formControlName="privacidad" />
+    <span>
+      He leído y acepto la
+      <a href="/politica-de-privacidad" target="_blank" rel="noopener">política de privacidad</a>. *
+    </span>
+  </label>
+  @if (privacidad.touched && privacidad.invalid) {
+    <p class="fs__error">Hay que aceptar la política de privacidad para poder escribirte.</p>
+  }
+
+  @if (hayErrores()) {
+    <p class="fs__aviso" role="alert">Revisa los campos marcados: falta algo por rellenar.</p>
+  }
+
+  <button type="submit" class="vt-boton fs__enviar" [disabled]="enviando()">
+    {{ enviando() ? 'Enviando…' : textoBoton() }}
+  </button>
+
+  <p class="fs__nota">
+    Los campos con * son obligatorios. Usaremos tus datos solo para responderte.
+  </p>
+</form>

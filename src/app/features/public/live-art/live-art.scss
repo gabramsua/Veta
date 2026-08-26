@@ -1,0 +1,37 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.sec__galeria-titulo,
+.sec__subtitulo {
+  margin-bottom: var(--esp-6);
+}
+
+.sec__cta {
+  display: grid;
+  gap: var(--esp-4);
+  justify-items: center;
+  max-width: 68rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.sec__intro {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--esp-7);
+  align-items: center;
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+    gap: var(--esp-5);
+  }
+}
+
+.sec__imagen {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}

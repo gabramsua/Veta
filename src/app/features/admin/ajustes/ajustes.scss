@@ -1,0 +1,75 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.ajs__cabecera {
+  margin-bottom: var(--esp-5);
+}
+
+.ajs__sub {
+  margin-top: var(--esp-1);
+  color: var(--veta-tinta-suave);
+}
+
+.ajs__form {
+  display: grid;
+  gap: var(--esp-5);
+  max-width: 88rem;
+}
+
+.ajs__titulo {
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.ajs__ayuda {
+  margin-block: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.ajs__interruptores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+  gap: var(--esp-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ajs__interruptor .vt-check {
+  align-items: flex-start;
+}
+
+.ajs__interruptor-etiqueta {
+  display: block;
+  font-weight: var(--peso-medio);
+}
+
+.ajs__interruptor-desc {
+  display: block;
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.ajs__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+  gap: var(--esp-4);
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ajs__check-aviso {
+  margin-bottom: var(--esp-4);
+}
+
+.ajs__acciones {
+  display: flex;
+  justify-content: flex-end;
+}

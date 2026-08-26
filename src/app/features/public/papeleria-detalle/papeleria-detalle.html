@@ -1,0 +1,75 @@
+@if (!existe()) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor pd__error">
+      <p class="vt-antetitulo">No encontrado</p>
+      <h1 class="vt-titulo">Esta subsección no existe</h1>
+      <a class="vt-boton" routerLink="/papeleria-de-bodas">Ver toda la papelería</a>
+    </div>
+  </section>
+} @else {
+  <veta-cabecera-seccion
+    antetitulo="Papelería de bodas"
+    [titulo]="etiqueta()"
+    [entradilla]="entradilla()"
+  />
+
+  @if (deLaCategoria().length === 0) {
+    <section class="vt-seccion">
+      <div class="vt-contenedor pd__vacio">
+        <p>Todavía no hemos publicado modelos de esta sección.</p>
+        <a class="vt-boton" routerLink="/solicitar/papeleria">Pedir presupuesto</a>
+      </div>
+    </section>
+  } @else {
+    <section class="vt-seccion">
+      <div class="vt-contenedor pd__lista">
+        @for (producto of deLaCategoria(); track producto.id) {
+          <article class="pd__producto">
+            <div class="pd__media">
+              @if (producto.imagenes.length > 0) {
+                <img
+                  [src]="producto.imagenes[0].url"
+                  [alt]="producto.imagenes[0].alt"
+                  [attr.width]="producto.imagenes[0].width"
+                  [attr.height]="producto.imagenes[0].height"
+                  loading="lazy"
+                  decoding="async"
+                />
+              } @else {
+                <span class="vt-marcador">{{ producto.titulo }}</span>
+              }
+            </div>
+
+            <div class="pd__texto">
+              <h2 class="pd__titulo">{{ producto.titulo }}</h2>
+              <p class="pd__precio">desde {{ producto.precioDesde }} € / {{ producto.unidad }}</p>
+              <veta-bloque-texto [html]="producto.descripcion" />
+              <a class="vt-enlace-sub" routerLink="/solicitar/papeleria">Pedir presupuesto</a>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+
+  @if (galeria().length > 0) {
+    <section class="vt-seccion vt-seccion--crema">
+      <div class="vt-contenedor">
+        <p class="vt-antetitulo">Trabajos anteriores</p>
+        <h2 class="vt-titulo pd__galeria-titulo">Así queda</h2>
+        <veta-galeria [piezas]="galeria()" />
+      </div>
+    </section>
+  }
+
+  <section class="vt-seccion pd__cta">
+    <div class="vt-contenedor pd__cta-cuerpo">
+      <h2 class="vt-titulo">Cada boda es distinta</h2>
+      <p class="vt-entradilla">
+        Contadnos vuestra idea, la fecha y cuántas invitaciones necesitáis, y os preparamos un
+        presupuesto cerrado.
+      </p>
+      <a class="vt-boton" routerLink="/solicitar/papeleria">Pedir presupuesto</a>
+    </div>
+  </section>
+}

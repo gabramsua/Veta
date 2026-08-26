@@ -1,0 +1,69 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.pap__rejilla {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--esp-5);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include hasta($bp-escritorio) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pap__tarjeta {
+  display: grid;
+  gap: var(--esp-3);
+}
+
+.pap__imagen {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  transition: opacity var(--trans-media);
+
+  .pap__tarjeta:hover & {
+    opacity: 0.86;
+  }
+}
+
+.pap__datos {
+  display: grid;
+  gap: var(--esp-1);
+}
+
+.pap__titulo {
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-lg);
+}
+
+.pap__precio {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.pap__nota {
+  max-width: var(--ancho-texto);
+  margin-top: var(--esp-7);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.pap__cta-cuerpo {
+  display: grid;
+  gap: var(--esp-4);
+  justify-items: center;
+  max-width: 68rem;
+  margin-inline: auto;
+  text-align: center;
+}

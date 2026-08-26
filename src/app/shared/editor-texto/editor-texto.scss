@@ -1,0 +1,26 @@
+// El CSS propio de Jodit no se importa aquí: se compila como bundle aparte
+// (`jodit.css`, declarado en angular.json con `inject: false`) y el componente
+// lo enlaza al inicializarse. Así no viaja en el CSS de la parte pública.
+
+veta-editor-texto {
+  display: block;
+}
+
+.jodit-container:not(.jodit_inline) {
+  border-color: var(--veta-arena-osc);
+  border-radius: var(--radio-md);
+}
+
+.jodit-toolbar__box:not(:empty) {
+  background-color: var(--veta-crema);
+  border-bottom: 1px solid var(--veta-arena);
+}
+
+.jodit-workplace {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-base);
+}
+
+.jodit-status-bar {
+  background-color: var(--veta-crema);
+}

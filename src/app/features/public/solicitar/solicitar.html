@@ -1,0 +1,54 @@
+@if (enviado()) {
+  <section class="vt-seccion sol__gracias">
+    <div class="vt-contenedor">
+      <veta-envio-correcto titulo="Recibido" [texto]="definicion().confirmacion" />
+    </div>
+  </section>
+} @else {
+  <veta-cabecera-seccion
+    [antetitulo]="definicion().antetitulo"
+    [titulo]="definicion().titulo"
+    [entradilla]="definicion().entradilla"
+  />
+
+  <section class="vt-seccion">
+    <div class="vt-contenedor sol__cuerpo">
+      @if (esBono()) {
+        @if (bonos().length === 0) {
+          <p class="sol__sin-bonos">
+            Todavía no hay bonos publicados.
+            <a routerLink="/contacto">Escríbenos</a> y te contamos.
+          </p>
+        } @else {
+          <div class="sol__campo">
+            <label class="sol__etiqueta" for="sol-bono">¿Qué bono te interesa? *</label>
+            <select
+              id="sol-bono"
+              class="sol__select"
+              [value]="bonoElegido()"
+              (change)="bonoElegido.set($any($event.target).value)"
+            >
+              <option value="">Elige un bono</option>
+              @for (item of bonos(); track item.id) {
+                <option [value]="item.id">
+                  {{ item.titulo }} · {{ item.precioMes }} €/mes
+                </option>
+              }
+            </select>
+          </div>
+        }
+      }
+
+      @if (error()) {
+        <p class="sol__error" role="alert">{{ error() }}</p>
+      }
+
+      <veta-formulario-solicitud
+        [formulario]="definicion().formulario"
+        [enviando]="enviando()"
+        [textoBoton]="definicion().boton"
+        (enviado)="enviar($event)"
+      />
+    </div>
+  </section>
+}

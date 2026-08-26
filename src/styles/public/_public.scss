@@ -1,0 +1,147 @@
+@use 'tokens' as *;
+
+.vt-pub {
+  --alto-cabecera: 8rem;
+
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.vt-pub__main {
+  flex: 1;
+}
+
+.vt-seccion {
+  padding-block: var(--esp-9);
+
+  @include hasta($bp-tablet) {
+    padding-block: var(--esp-7);
+  }
+}
+
+.vt-seccion--crema {
+  background-color: var(--veta-crema);
+}
+
+/* La cabecera de sección ya tiene su propio aire abajo: si la sección que va
+   justo detrás comparte fondo, el hueco se duplica. */
+.vt-seccion--crema:first-of-type {
+  padding-top: var(--esp-6);
+}
+
+.vt-seccion--arena {
+  background-color: var(--veta-arena);
+}
+
+.vt-seccion--oliva {
+  color: var(--veta-crema);
+  background-color: var(--veta-oliva);
+}
+
+.vt-antetitulo {
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--veta-terracota);
+}
+
+.vt-titulo {
+  font-size: clamp(var(--txt-xl), 5vw, var(--txt-2xl));
+}
+
+.vt-titulo--grande {
+  font-size: clamp(var(--txt-2xl), 8vw, var(--txt-4xl));
+  font-weight: 300;
+  line-height: 1.02;
+}
+
+.vt-entradilla {
+  max-width: var(--ancho-texto);
+  font-size: var(--txt-md);
+  color: var(--veta-tinta-suave);
+}
+
+.vt-boton {
+  display: inline-flex;
+  gap: var(--esp-2);
+  align-items: center;
+  justify-content: center;
+  padding: var(--esp-3) var(--esp-6);
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--veta-crema);
+  background-color: var(--veta-terracota);
+  border: 1px solid var(--veta-terracota);
+  border-radius: var(--radio-full);
+  transition:
+    background-color var(--trans-rapida),
+    border-color var(--trans-rapida),
+    color var(--trans-rapida);
+
+  &:hover {
+    background-color: var(--veta-terracota-osc);
+    border-color: var(--veta-terracota-osc);
+  }
+}
+
+.vt-boton--contorno {
+  color: var(--veta-terracota);
+  background-color: transparent;
+
+  &:hover {
+    color: var(--veta-crema);
+    background-color: var(--veta-terracota);
+  }
+}
+
+.vt-boton--claro {
+  color: var(--veta-tinta);
+  background-color: var(--veta-crema);
+  border-color: var(--veta-crema);
+
+  &:hover {
+    color: var(--veta-crema);
+    background-color: transparent;
+    border-color: var(--veta-crema);
+  }
+}
+
+.vt-enlace-sub {
+  position: relative;
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid currentcolor;
+  padding-bottom: var(--esp-1);
+}
+
+.vt-marcador {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 4 / 3;
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-sm);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--veta-arena-osc);
+  background-color: var(--veta-arena);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 12px,
+    rgb(255 255 255 / 40%) 12px,
+    rgb(255 255 255 / 40%) 24px
+  );
+}
+
+// El menú móvil sigue en el DOM aunque esté cerrado: `inert` lo saca del orden
+// de tabulación y de los lectores de pantalla, pero conviene ocultarlo también
+// para el ratón mientras se desliza fuera de pantalla.
+[inert] {
+  pointer-events: none;
+}

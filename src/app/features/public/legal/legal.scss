@@ -1,0 +1,28 @@
+:host {
+  display: block;
+}
+
+.leg__cuerpo {
+  max-width: 78rem;
+}
+
+.leg__pendiente {
+  display: grid;
+  gap: 1.2rem;
+  padding: 2.4rem;
+  font-size: 1.5rem;
+  color: var(--veta-tinta-suave);
+  background-color: var(--veta-crema);
+  border-left: 3px solid var(--veta-terracota);
+  border-radius: 0.4rem;
+}
+
+.leg__pendiente-titulo {
+  font-weight: 500;
+  color: var(--veta-tinta);
+}
+
+.leg__pendiente a {
+  color: var(--veta-terracota);
+  text-decoration: underline;
+}

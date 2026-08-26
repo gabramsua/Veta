@@ -1,0 +1,153 @@
+<veta-panel-seccion
+  titulo="Sesiones"
+  descripcion="Las fechas concretas de cada taller, con sus plazas. Las plazas se descuentan al confirmar una reserva, no al recibirla."
+  accion="Nueva sesión"
+  (pulsada)="abrir()"
+/>
+
+@if (listaTalleres().length === 0) {
+  <veta-estado-vacio
+    titulo="Primero hacen falta talleres"
+    pista="Una sesión es una fecha de un taller. Crea al menos un taller antes de programar fechas."
+  />
+} @else {
+  @if (formVisible()) {
+    <section class="vt-adm-tarjeta ses__form-tarjeta">
+      <h2 class="ses__form-titulo">{{ tituloForm() }}</h2>
+
+      <form class="ses__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+        <div class="ses__rejilla">
+          <div class="vt-campo">
+            <label class="vt-campo__etiqueta" for="workshopId">Taller</label>
+            <select id="workshopId" class="vt-select" formControlName="workshopId">
+              <option value="">Elige un taller</option>
+              @for (taller of listaTalleres(); track taller.id) {
+                <option [value]="taller.id">{{ taller.titulo }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="vt-campo">
+            <label class="vt-campo__etiqueta" for="plazas">Plazas</label>
+            <input id="plazas" class="vt-input" type="number" min="1" max="60" formControlName="plazasTotales" />
+            <p class="vt-campo__pista">Cada fecha puede tener un número distinto.</p>
+          </div>
+
+          <div class="vt-campo">
+            <label class="vt-campo__etiqueta" for="inicio">Empieza</label>
+            <input id="inicio" class="vt-input" type="datetime-local" formControlName="fechaInicio" />
+          </div>
+
+          <div class="vt-campo">
+            <label class="vt-campo__etiqueta" for="fin">Termina</label>
+            <input id="fin" class="vt-input" type="datetime-local" formControlName="fechaFin" />
+          </div>
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="notas">Notas internas</label>
+          <textarea id="notas" class="vt-textarea ses__notas" formControlName="notasInternas"></textarea>
+          <p class="vt-campo__pista">Solo las veis vosotras. No aparecen en la web.</p>
+        </div>
+
+        <label class="vt-check">
+          <input type="checkbox" formControlName="activa" />
+          Abierta a reservas
+        </label>
+
+        <div class="ses__acciones">
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">
+            Cancelar
+          </button>
+          <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+            {{ guardando() ? 'Guardando…' : 'Guardar' }}
+          </button>
+        </div>
+      </form>
+    </section>
+  }
+
+  <section class="vt-adm-tarjeta ses__filtros">
+    <div class="vt-campo ses__filtro">
+      <label class="vt-campo__etiqueta" for="filtro-taller">Taller</label>
+      <select
+        id="filtro-taller"
+        class="vt-select"
+        [value]="filtroTaller()"
+        (change)="filtroTaller.set($any($event.target).value)"
+      >
+        <option value="">Todos</option>
+        @for (taller of listaTalleres(); track taller.id) {
+          <option [value]="taller.id">{{ taller.titulo }}</option>
+        }
+      </select>
+    </div>
+
+    <label class="vt-check ses__check">
+      <input type="checkbox" [checked]="verPasadas()" (change)="verPasadas.set($any($event.target).checked)" />
+      Mostrar también las fechas pasadas
+    </label>
+  </section>
+
+  @if (filtradas().length === 0) {
+    <veta-estado-vacio
+      titulo="No hay sesiones que mostrar"
+      [pista]="
+        lista().length === 0
+          ? 'Programa la primera fecha con el botón de arriba.'
+          : 'Prueba a cambiar el filtro o a mostrar las fechas pasadas.'
+      "
+    />
+  } @else {
+    <ul class="ses__lista">
+      @for (sesion of filtradas(); track sesion.id) {
+        <li
+          class="vt-adm-tarjeta ses__item"
+          [class.ses__item--pasada]="esPasada(sesion)"
+          [class.ses__item--inactiva]="!sesion.activa"
+        >
+          <div class="ses__datos">
+            <h2 class="ses__titulo">{{ nombreTaller(sesion.workshopId) }}</h2>
+            <p class="ses__fecha">{{ formatearFecha(sesion.fechaInicio) }}</p>
+            @if (sesion.notasInternas) {
+              <p class="ses__notas-texto">{{ sesion.notasInternas }}</p>
+            }
+          </div>
+
+          <div class="ses__plazas">
+            <p class="ses__plazas-numero">{{ plazasLibres(sesion) }}</p>
+            <p class="ses__plazas-etiqueta">
+              libres de {{ sesion.plazasTotales }}
+            </p>
+          </div>
+
+          <div class="ses__estado">
+            @if (esPasada(sesion)) {
+              <span class="vt-etiqueta-estado vt-etiqueta-estado--inactivo">Pasada</span>
+            } @else {
+              <span
+                class="vt-etiqueta-estado"
+                [class.vt-etiqueta-estado--activo]="sesion.activa"
+                [class.vt-etiqueta-estado--inactivo]="!sesion.activa"
+              >
+                {{ sesion.activa ? 'Abierta' : 'Cerrada' }}
+              </span>
+            }
+          </div>
+
+          <div class="ses__controles">
+            <button type="button" class="vt-adm-boton vt-adm-boton--fantasma ses__boton" (click)="alternarActiva(sesion)">
+              {{ sesion.activa ? 'Cerrar' : 'Abrir' }}
+            </button>
+            <button type="button" class="vt-adm-boton vt-adm-boton--fantasma ses__boton" (click)="abrir(sesion)">
+              Editar
+            </button>
+            <button type="button" class="vt-adm-boton vt-adm-boton--peligro ses__boton" (click)="borrar(sesion)">
+              Borrar
+            </button>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+}

@@ -1,0 +1,151 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.pro__form-tarjeta {
+  margin-bottom: var(--esp-5);
+}
+
+.pro__form-titulo {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.pro__form {
+  display: grid;
+  gap: var(--esp-5);
+}
+
+.pro__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: var(--esp-4);
+}
+
+.pro__checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-5);
+}
+
+.pro__acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+}
+
+.pro__pestanas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-4);
+}
+
+.pro__pestana {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  color: var(--veta-tinta-suave);
+  background-color: #fff;
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-full);
+  transition: all var(--trans-rapida);
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+}
+
+.pro__pestana--activa {
+  color: var(--veta-crema);
+  background-color: var(--veta-terracota);
+  border-color: var(--veta-terracota);
+}
+
+.pro__lista {
+  display: grid;
+  gap: var(--esp-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.pro__item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--esp-4);
+  align-items: center;
+
+  @include hasta($bp-escritorio) {
+    grid-template-columns: auto 1fr;
+  }
+}
+
+.pro__item--inactivo {
+  background-color: #fbfaf8;
+}
+
+.pro__miniatura {
+  width: 7.2rem;
+  height: 7.2rem;
+  object-fit: cover;
+  border-radius: var(--radio-md);
+}
+
+.pro__miniatura--vacia {
+  display: grid;
+  place-items: center;
+  font-size: var(--txt-lg);
+  color: var(--veta-arena-osc);
+  background-color: var(--veta-crema);
+}
+
+.pro__datos {
+  display: grid;
+  gap: var(--esp-1);
+  justify-items: start;
+  min-width: 0;
+}
+
+.pro__titulo {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-md);
+  font-weight: var(--peso-fuerte);
+}
+
+.pro__meta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pro__etiquetas {
+  display: flex;
+  gap: var(--esp-2);
+}
+
+.pro__destacado {
+  color: var(--veta-terracota);
+  background-color: color-mix(in srgb, var(--veta-terracota) 12%, transparent);
+}
+
+.pro__controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+  align-items: center;
+  justify-content: flex-end;
+
+  @include hasta($bp-escritorio) {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
+.pro__boton {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+}

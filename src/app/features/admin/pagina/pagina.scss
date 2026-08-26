@@ -1,0 +1,181 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.pag__cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-4);
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--esp-4);
+}
+
+.pag__ruta {
+  margin-top: var(--esp-1);
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+
+  a {
+    color: var(--veta-terracota);
+    text-decoration: underline;
+  }
+}
+
+.pag__pista-general {
+  padding: var(--esp-3) var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+  background-color: var(--veta-crema);
+  border-left: 3px solid var(--veta-terracota);
+  border-radius: var(--radio-md);
+}
+
+.pag__cargando {
+  color: var(--veta-tinta-suave);
+}
+
+.pag__form {
+  display: grid;
+  gap: var(--esp-4);
+  max-width: 88rem;
+}
+
+.pag__bloque {
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.pag__bloque-ayuda {
+  margin-top: var(--esp-1);
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pag__campos {
+  display: grid;
+  gap: var(--esp-5);
+  margin-top: var(--esp-5);
+}
+
+.pag__parrafo {
+  min-height: 8rem;
+}
+
+.pag__imagen {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--esp-4);
+  align-items: center;
+  padding: var(--esp-3);
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-md);
+
+  img {
+    width: 16rem;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: var(--radio-sm);
+  }
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pag__imagen-acciones {
+  display: grid;
+  gap: var(--esp-3);
+  justify-items: start;
+}
+
+.pag__imagen-alt {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pag__imagen-botones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+}
+
+.pag__boton {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+}
+
+.pag__sin-imagen {
+  display: grid;
+  gap: var(--esp-2);
+  place-items: center;
+  width: 100%;
+  padding: var(--esp-6);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+  border: 2px dashed var(--veta-arena-osc);
+  border-radius: var(--radio-md);
+  transition: border-color var(--trans-rapida), background-color var(--trans-rapida);
+
+  &:hover {
+    color: var(--veta-tinta);
+    background-color: var(--veta-crema);
+    border-color: var(--veta-terracota);
+  }
+}
+
+.pag__sin-imagen-icono {
+  display: grid;
+  place-items: center;
+  width: 3.6rem;
+  height: 3.6rem;
+  font-size: var(--txt-lg);
+  color: var(--veta-terracota);
+  background-color: var(--veta-crema);
+  border-radius: var(--radio-full);
+}
+
+.pag__relacionado {
+  background-color: #fdfcfa;
+}
+
+.pag__enlaces {
+  display: grid;
+  gap: var(--esp-2);
+  padding: 0;
+  margin-top: var(--esp-4);
+  list-style: none;
+}
+
+.pag__enlace {
+  display: grid;
+  gap: var(--esp-1);
+  padding: var(--esp-3) var(--esp-4);
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-md);
+  transition: border-color var(--trans-rapida), background-color var(--trans-rapida);
+
+  &:hover {
+    background-color: var(--veta-crema);
+    border-color: var(--veta-arena-osc);
+  }
+}
+
+.pag__enlace-titulo {
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  color: var(--veta-terracota);
+}
+
+.pag__enlace-ayuda {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pag__acciones {
+  display: flex;
+  justify-content: flex-end;
+}

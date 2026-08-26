@@ -1,0 +1,36 @@
+@if (piezas().length > 0) {
+  <ul class="gal">
+    @for (pieza of piezas(); track pieza.id) {
+      <li class="gal__item">
+        <button type="button" class="gal__boton" (click)="ampliar(pieza)">
+          <img
+            class="gal__imagen"
+            [src]="pieza.imagen.url"
+            [alt]="pieza.imagen.alt || pieza.titulo"
+            [attr.width]="pieza.imagen.width"
+            [attr.height]="pieza.imagen.height"
+            loading="lazy"
+            decoding="async"
+            sizes="(max-width: 480px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          />
+          @if (pieza.titulo) {
+            <span class="gal__pie">{{ pieza.titulo }}</span>
+          }
+        </button>
+      </li>
+    }
+  </ul>
+}
+
+@if (ampliada(); as pieza) {
+  <div class="gal__lightbox" role="dialog" aria-modal="true" [attr.aria-label]="pieza.titulo">
+    <button type="button" class="gal__cerrar" (click)="cerrar()">
+      <span class="vt-solo-lectores">Cerrar</span>
+      <span aria-hidden="true">×</span>
+    </button>
+    <img class="gal__ampliada" [src]="pieza.imagen.url" [alt]="pieza.imagen.alt || pieza.titulo" />
+    @if (pieza.titulo) {
+      <p class="gal__pie-lightbox">{{ pieza.titulo }}</p>
+    }
+  </div>
+}

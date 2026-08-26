@@ -1,0 +1,53 @@
+<veta-cabecera-seccion
+  antetitulo="Encargos"
+  titulo="Acuarelas y encargos"
+  [entradilla]="textos()['entradilla']"
+/>
+
+@if (textos()['texto'] || imagenes()['imagen']) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor sec__intro">
+      @if (imagenes()['imagen']; as foto) {
+        <img
+          class="sec__imagen"
+          [src]="foto.url"
+          [alt]="foto.alt"
+          [attr.width]="foto.width"
+          [attr.height]="foto.height"
+          loading="lazy"
+          decoding="async"
+        />
+      }
+      <veta-bloque-texto [html]="textos()['texto']" />
+    </div>
+  </section>
+}
+
+@if (galeria().length > 0) {
+  <section class="vt-seccion vt-seccion--crema">
+    <div class="vt-contenedor">
+      <p class="vt-antetitulo">Algunos trabajos</p>
+      <h2 class="vt-titulo sec__galeria-titulo">Nuestro portfolio</h2>
+      <veta-galeria [piezas]="galeria()" />
+    </div>
+  </section>
+}
+
+@if (textos()['proceso']) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor">
+      <h2 class="vt-titulo sec__subtitulo">Cómo trabajamos</h2>
+      <veta-bloque-texto [html]="textos()['proceso']" />
+    </div>
+  </section>
+}
+
+<section class="vt-seccion vt-seccion--arena">
+  <div class="vt-contenedor sec__cta">
+    <h2 class="vt-titulo">¿Lo hablamos?</h2>
+    <p class="vt-entradilla">
+      Cuéntanos qué necesitas y te respondemos con un presupuesto a medida.
+    </p>
+    <a class="vt-boton" routerLink="/solicitar/encargo">Pedir presupuesto</a>
+  </div>
+</section>

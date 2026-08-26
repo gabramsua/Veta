@@ -1,0 +1,166 @@
+<veta-panel-seccion
+  titulo="Papelería de bodas"
+  descripcion="Los modelos que se enseñan en cada subsección, con su precio orientativo. Desde la web se pide presupuesto, no se compra."
+  accion="Nuevo producto"
+  (pulsada)="abrir()"
+/>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta pro__form-tarjeta">
+    <h2 class="pro__form-titulo">{{ tituloForm() }}</h2>
+
+    <form class="pro__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="pro__rejilla">
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="pro-titulo">Título</label>
+          <input id="pro-titulo" class="vt-input" type="text" formControlName="titulo" />
+          @if (titulo.touched && titulo.invalid) {
+            <p class="vt-campo__error">El título es obligatorio.</p>
+          }
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="pro-categoria">Subsección</label>
+          <select id="pro-categoria" class="vt-select" formControlName="categoria">
+            @for (categoria of categorias; track categoria[0]) {
+              <option [value]="categoria[0]">{{ categoria[1] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="pro-precio">Precio desde (€)</label>
+          <input id="pro-precio" class="vt-input" type="number" min="0" step="0.1" formControlName="precioDesde" />
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="pro-unidad">Unidad</label>
+          <input id="pro-unidad" class="vt-input" type="text" formControlName="unidad" />
+          <p class="vt-campo__pista">Se muestra como «desde 2,30 € / unidad». Ej. unidad, pack de 25, juego.</p>
+        </div>
+      </div>
+
+      <div class="vt-campo">
+        <span class="vt-campo__etiqueta">Descripción</span>
+        <veta-editor-texto etiqueta="Descripción del producto" formControlName="descripcion" />
+      </div>
+
+      <div class="vt-campo">
+        <span class="vt-campo__etiqueta">Imágenes</span>
+        <veta-lista-imagenes
+          [imagenes]="imagenes()"
+          (anadir)="anadirImagen()"
+          (quitar)="quitarImagen($event)"
+          (mover)="moverImagen($event)"
+        />
+      </div>
+
+      <div class="pro__checks">
+        <label class="vt-check">
+          <input type="checkbox" formControlName="activo" />
+          Visible en la web
+        </label>
+        <label class="vt-check">
+          <input type="checkbox" formControlName="destacado" />
+          Destacar en la portada
+        </label>
+      </div>
+
+      <div class="pro__acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">Cancelar</button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+<nav class="pro__pestanas" aria-label="Filtrar por subsección">
+  <button
+    type="button"
+    class="pro__pestana"
+    [class.pro__pestana--activa]="filtroCategoria() === ''"
+    (click)="filtroCategoria.set('')"
+  >
+    Todas ({{ lista().length }})
+  </button>
+  @for (categoria of categorias; track categoria[0]) {
+    <button
+      type="button"
+      class="pro__pestana"
+      [class.pro__pestana--activa]="filtroCategoria() === categoria[0]"
+      (click)="filtroCategoria.set(categoria[0])"
+    >
+      {{ categoria[1] }} ({{ cuantosEn(categoria[0]) }})
+    </button>
+  }
+</nav>
+
+@if (filtrados().length === 0) {
+  <veta-estado-vacio
+    titulo="No hay productos aquí"
+    [pista]="
+      lista().length === 0
+        ? 'Añade los modelos de invitaciones, meseros, minutas… con sus precios orientativos.'
+        : 'Esta subsección todavía está vacía. Prueba con otra o crea un producto.'
+    "
+  />
+} @else {
+  <ul class="pro__lista">
+    @for (producto of filtrados(); track producto.id) {
+      <li class="vt-adm-tarjeta pro__item" [class.pro__item--inactivo]="!producto.activo">
+        @if (producto.imagenes.length > 0) {
+          <img class="pro__miniatura" [src]="producto.imagenes[0].url" [alt]="producto.imagenes[0].alt" loading="lazy" />
+        } @else {
+          <span class="pro__miniatura pro__miniatura--vacia" aria-hidden="true">◇</span>
+        }
+
+        <div class="pro__datos">
+          <h2 class="pro__titulo">{{ producto.titulo }}</h2>
+          <p class="pro__meta">
+            {{ nombreCategoria(producto.categoria) }} ·
+            desde {{ producto.precioDesde }} € / {{ producto.unidad }} ·
+            {{ producto.imagenes.length }} imagen(es)
+          </p>
+          <div class="pro__etiquetas">
+            <span
+              class="vt-etiqueta-estado"
+              [class.vt-etiqueta-estado--activo]="producto.activo"
+              [class.vt-etiqueta-estado--inactivo]="!producto.activo"
+            >
+              {{ producto.activo ? 'Visible' : 'Oculto' }}
+            </span>
+            @if (producto.destacado) {
+              <span class="vt-etiqueta-estado pro__destacado">Destacado</span>
+            }
+          </div>
+        </div>
+
+        <div class="pro__controles">
+          <veta-ordenar
+            [nombre]="producto.titulo"
+            [primero]="esPrimero(producto)"
+            [ultimo]="esUltimo(producto)"
+            (subir)="mover(producto, -1)"
+            (bajar)="mover(producto, 1)"
+          />
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma pro__boton" (click)="alternarDestacado(producto)">
+            {{ producto.destacado ? 'No destacar' : 'Destacar' }}
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma pro__boton" (click)="alternarActivo(producto)">
+            {{ producto.activo ? 'Ocultar' : 'Mostrar' }}
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma pro__boton" (click)="abrir(producto)">
+            Editar
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--peligro pro__boton" (click)="borrar(producto)">
+            Borrar
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+}
+
+<veta-selector-medio />

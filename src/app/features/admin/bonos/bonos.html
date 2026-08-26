@@ -1,0 +1,109 @@
+<veta-panel-seccion
+  titulo="Bonos mensuales"
+  descripcion="Los bonos no tienen calendario: la clienta rellena el cuestionario y vosotras la contactáis."
+  accion="Nuevo bono"
+  (pulsada)="abrir()"
+/>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta bon__form-tarjeta">
+    <h2 class="bon__form-titulo">{{ tituloForm() }}</h2>
+
+    <form class="bon__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="bon__rejilla">
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="bono-titulo">Título</label>
+          <input id="bono-titulo" class="vt-input" type="text" formControlName="titulo" />
+          @if (titulo.touched && titulo.invalid) {
+            <p class="vt-campo__error">El título es obligatorio.</p>
+          }
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="bono-categoria">Categoría</label>
+          <select id="bono-categoria" class="vt-select" formControlName="categoria">
+            @for (categoria of categorias; track categoria[0]) {
+              <option [value]="categoria[0]">{{ categoria[1] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="bono-precio">Precio al mes (€)</label>
+          <input id="bono-precio" class="vt-input" type="number" min="0" step="0.5" formControlName="precioMes" />
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="bono-sesiones">Sesiones al mes</label>
+          <input id="bono-sesiones" class="vt-input" type="number" min="1" max="31" formControlName="sesionesMes" />
+        </div>
+      </div>
+
+      <div class="vt-campo">
+        <span class="vt-campo__etiqueta">Descripción</span>
+        <veta-editor-texto etiqueta="Descripción del bono" formControlName="descripcion" />
+      </div>
+
+      <label class="vt-check">
+        <input type="checkbox" formControlName="activo" />
+        Visible en la web
+      </label>
+
+      <div class="bon__acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">Cancelar</button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (lista().length === 0) {
+  <veta-estado-vacio
+    titulo="Todavía no hay bonos"
+    pista="Bono cerámica, bono pintura, bono infantil… Cada uno con su precio mensual y cuántas sesiones incluye."
+  />
+} @else {
+  <ul class="bon__lista">
+    @for (bono of lista(); track bono.id; let i = $index) {
+      <li class="vt-adm-tarjeta bon__item" [class.bon__item--inactivo]="!bono.activo">
+        <div class="bon__datos">
+          <h2 class="bon__titulo">{{ bono.titulo }}</h2>
+          <p class="bon__meta">
+            {{ nombreCategoria(bono.categoria) }} ·
+            {{ bono.precioMes }} €/mes ·
+            {{ bono.sesionesMes }} sesiones ·
+            {{ precioPorSesion(bono) }}
+          </p>
+          <span
+            class="vt-etiqueta-estado"
+            [class.vt-etiqueta-estado--activo]="bono.activo"
+            [class.vt-etiqueta-estado--inactivo]="!bono.activo"
+          >
+            {{ bono.activo ? 'Visible' : 'Oculto' }}
+          </span>
+        </div>
+
+        <div class="bon__controles">
+          <veta-ordenar
+            [nombre]="bono.titulo"
+            [primero]="i === 0"
+            [ultimo]="i === lista().length - 1"
+            (subir)="mover(i, -1)"
+            (bajar)="mover(i, 1)"
+          />
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma bon__boton" (click)="alternarActivo(bono)">
+            {{ bono.activo ? 'Ocultar' : 'Mostrar' }}
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma bon__boton" (click)="abrir(bono)">
+            Editar
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--peligro bon__boton" (click)="borrar(bono)">
+            Borrar
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+}

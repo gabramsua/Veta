@@ -1,0 +1,161 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.sol__nuevas {
+  padding: var(--esp-3) var(--esp-4);
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-terracota);
+  background-color: color-mix(in srgb, var(--veta-terracota) 12%, transparent);
+  border-radius: var(--radio-md);
+}
+
+.sol__filtros {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--esp-4);
+  align-items: end;
+  margin-bottom: var(--esp-4);
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.sol__lista {
+  display: grid;
+  gap: var(--esp-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.sol__item {
+  padding: 0;
+  overflow: hidden;
+}
+
+.sol__item--nueva {
+  box-shadow: inset 3px 0 0 var(--veta-terracota);
+}
+
+.sol__cabecera {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: var(--esp-4);
+  align-items: center;
+  width: 100%;
+  padding: var(--esp-4) var(--esp-5);
+  text-align: left;
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+}
+
+.sol__persona {
+  display: grid;
+  gap: var(--esp-1);
+  min-width: 0;
+}
+
+.sol__nombre {
+  font-size: var(--txt-base);
+  font-weight: var(--peso-medio);
+}
+
+.sol__meta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.sol__estado--nueva {
+  color: var(--veta-terracota);
+  background-color: color-mix(in srgb, var(--veta-terracota) 14%, transparent);
+}
+
+.sol__estado--en-curso {
+  color: var(--veta-aviso);
+  background-color: color-mix(in srgb, var(--veta-aviso) 14%, transparent);
+}
+
+.sol__estado--respondida {
+  color: var(--veta-exito);
+  background-color: color-mix(in srgb, var(--veta-exito) 14%, transparent);
+}
+
+.sol__estado--cerrada {
+  color: var(--veta-tinta-suave);
+  background-color: var(--veta-arena);
+}
+
+.sol__flecha {
+  font-size: var(--txt-md);
+  color: var(--veta-tinta-suave);
+}
+
+.sol__detalle {
+  display: grid;
+  gap: var(--esp-5);
+  padding: var(--esp-5);
+  border-top: 1px solid var(--veta-crema);
+}
+
+.sol__contacto {
+  display: grid;
+  gap: var(--esp-1);
+  font-size: var(--txt-sm);
+
+  a {
+    color: var(--veta-terracota);
+  }
+}
+
+.sol__campos {
+  display: grid;
+  gap: var(--esp-4);
+}
+
+.sol__campo-estado {
+  max-width: 42rem;
+}
+
+.sol__notas {
+  min-height: 7rem;
+}
+
+.sol__acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+}
+
+.sol__mas {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--esp-4);
+}
+
+@include hasta($bp-tablet) {
+  .sol__cabecera {
+    grid-template-columns: 1fr auto;
+    row-gap: var(--esp-2);
+  }
+
+  .sol__estado {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .sol__flecha {
+    grid-row: 1;
+    grid-column: 2;
+  }
+
+  .sol__acciones .vt-adm-boton {
+    flex: 1 1 14rem;
+  }
+}

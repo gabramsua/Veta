@@ -1,0 +1,31 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.qs__cuerpo {
+  display: grid;
+  gap: var(--esp-9);
+}
+
+.qs__bloque {
+  display: grid;
+  gap: var(--esp-4);
+}
+
+.qs__titulo {
+  max-width: 20ch;
+}
+
+.qs__pendiente {
+  font-style: italic;
+  color: var(--veta-arena-osc);
+}
+
+.qs__imagen {
+  width: 100%;
+  max-height: 52rem;
+  object-fit: cover;
+  margin-bottom: var(--esp-3);
+}

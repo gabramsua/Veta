@@ -1,0 +1,21 @@
+/node_modules
+/dist
+/out-tsc
+/.angular
+/.firebase
+*.log
+.DS_Store
+.env
+
+# Config de las Functions: lleva la cuenta de correo real.
+# La contraseña nunca está aquí, va en Secret Manager.
+functions/.env.*
+!functions/.env.example
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Clave de cuenta de servicio de Firebase: da acceso total al proyecto
+clave-servicio.json
+*-firebase-adminsdk-*.json
+serviceAccountKey.json

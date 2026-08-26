@@ -1,0 +1,96 @@
+<veta-panel-seccion
+  titulo="Frases y testimonios"
+  descripcion="Lo que dicen vuestras clientas. Se muestran en la portada."
+  accion="Nuevo testimonio"
+  (pulsada)="abrir()"
+/>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta fra__form-tarjeta">
+    <h2 class="fra__form-titulo">{{ tituloForm() }}</h2>
+
+    <form class="fra__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="fra-texto">Texto</label>
+        <textarea id="fra-texto" class="vt-textarea" formControlName="texto"></textarea>
+        <p class="vt-campo__pista">
+          Pide permiso antes de publicar el nombre de alguien: es un dato personal.
+        </p>
+        @if (texto.touched && texto.invalid) {
+          <p class="vt-campo__error">El texto es obligatorio y no puede pasar de 1200 caracteres.</p>
+        }
+      </div>
+
+      <div class="fra__rejilla">
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="fra-autor">Quién lo dice</label>
+          <input id="fra-autor" class="vt-input" type="text" formControlName="autor" />
+          @if (autor.touched && autor.invalid) {
+            <p class="vt-campo__error">Pon al menos un nombre o iniciales.</p>
+          }
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="fra-contexto">Contexto</label>
+          <input id="fra-contexto" class="vt-input" type="text" formControlName="contexto" />
+          <p class="vt-campo__pista">Ej. Boda · Mayo 2026, o Taller de acuarela.</p>
+        </div>
+      </div>
+
+      <label class="vt-check">
+        <input type="checkbox" formControlName="activa" />
+        Visible en la web
+      </label>
+
+      <div class="fra__acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">Cancelar</button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (lista().length === 0) {
+  <veta-estado-vacio
+    titulo="Todavía no hay testimonios"
+    pista="Los mensajes bonitos que os llegan por WhatsApp o Instagram funcionan muy bien aquí. Pide permiso antes de publicarlos."
+  />
+} @else {
+  <ul class="fra__lista">
+    @for (frase of lista(); track frase.id; let i = $index) {
+      <li class="vt-adm-tarjeta fra__item" [class.fra__item--inactiva]="!frase.activa">
+        <blockquote class="fra__texto">{{ frase.texto }}</blockquote>
+
+        <div class="fra__pie">
+          <div>
+            <p class="fra__autor">{{ frase.autor }}</p>
+            @if (frase.contexto) {
+              <p class="fra__contexto">{{ frase.contexto }}</p>
+            }
+          </div>
+
+          <div class="fra__controles">
+            <veta-ordenar
+              nombre="testimonio"
+              [primero]="i === 0"
+              [ultimo]="i === lista().length - 1"
+              (subir)="mover(i, -1)"
+              (bajar)="mover(i, 1)"
+            />
+            <button type="button" class="vt-adm-boton vt-adm-boton--fantasma fra__boton" (click)="alternarActiva(frase)">
+              {{ frase.activa ? 'Ocultar' : 'Mostrar' }}
+            </button>
+            <button type="button" class="vt-adm-boton vt-adm-boton--fantasma fra__boton" (click)="abrir(frase)">
+              Editar
+            </button>
+            <button type="button" class="vt-adm-boton vt-adm-boton--peligro fra__boton" (click)="borrar(frase)">
+              Borrar
+            </button>
+          </div>
+        </div>
+      </li>
+    }
+  </ul>
+}

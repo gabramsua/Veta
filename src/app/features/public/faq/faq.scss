@@ -1,0 +1,76 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.faq__cuerpo {
+  display: grid;
+  gap: var(--esp-8);
+  max-width: 88rem;
+}
+
+.faq__categoria {
+  margin-bottom: var(--esp-4);
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--veta-terracota);
+}
+
+.faq__lista {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.faq__item {
+  border-bottom: 1px solid var(--veta-arena);
+}
+
+.faq__encabezado {
+  margin: 0;
+  font-family: var(--fuente-cuerpo);
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.faq__boton {
+  display: flex;
+  gap: var(--esp-4);
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-block: var(--esp-4);
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-md);
+  text-align: left;
+}
+
+.faq__signo {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-lg);
+  color: var(--veta-terracota);
+}
+
+.faq__respuesta {
+  max-width: var(--ancho-texto);
+  padding-bottom: var(--esp-5);
+  color: var(--veta-tinta-suave);
+
+  :is(p, ul, ol) {
+    margin-bottom: var(--esp-3);
+  }
+
+  a {
+    color: var(--veta-terracota);
+    text-decoration: underline;
+  }
+}
+
+.faq__vacio {
+  font-style: italic;
+  color: var(--veta-tinta-suave);
+}

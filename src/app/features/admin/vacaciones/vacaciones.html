@@ -1,0 +1,109 @@
+<veta-panel-seccion
+  titulo="Vacaciones"
+  descripcion="Los días que marquéis aquí quedan bloqueados: no se pueden reservar ni programar sesiones."
+  accion="Añadir periodo"
+  (pulsada)="abrir()"
+/>
+
+<section class="vac__contadores">
+  @for (contador of contadores(); track contador.nombre) {
+    <article class="vt-adm-tarjeta vac__contador">
+      <p class="vac__contador-nombre">
+        {{ contador.nombre }}
+        @if (contador.esPropio) {
+          <span class="vac__tu">tú</span>
+        }
+      </p>
+      <p class="vac__contador-dias">{{ contador.dias }}</p>
+      <p class="vac__contador-etiqueta">días en {{ anio }}</p>
+    </article>
+  }
+</section>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta vac__form-tarjeta">
+    <h2 class="vac__form-titulo">Nuevo periodo</h2>
+
+    <form class="vac__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="vac__fechas">
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="vac-inicio">Desde</label>
+          <input id="vac-inicio" class="vt-input" type="date" formControlName="fechaInicio" />
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="vac-fin">Hasta</label>
+          <input id="vac-fin" class="vt-input" type="date" formControlName="fechaFin" />
+        </div>
+      </div>
+
+      <fieldset class="vac__talleres">
+        <legend class="vt-campo__etiqueta">¿Qué no se hace en esas fechas?</legend>
+        <p class="vt-campo__pista">
+          Si no marcas ninguno, se entiende que cierra todo el estudio.
+        </p>
+
+        @if (listaTalleres().length === 0) {
+          <p class="vac__sin-talleres">Todavía no hay talleres creados.</p>
+        } @else {
+          <div class="vac__lista-talleres">
+            @for (taller of listaTalleres(); track taller.id) {
+              <label class="vt-check">
+                <input
+                  type="checkbox"
+                  [checked]="estaSeleccionado(taller.id)"
+                  (change)="alternarTaller(taller.id, $any($event.target).checked)"
+                />
+                {{ taller.titulo }}
+              </label>
+            }
+          </div>
+        }
+      </fieldset>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="vac-nota">Nota</label>
+        <input id="vac-nota" class="vt-input" type="text" formControlName="nota" />
+        <p class="vt-campo__pista">Opcional, solo para vosotras. Ej. Vacaciones de verano.</p>
+      </div>
+
+      <div class="vac__acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">Cancelar</button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Añadir periodo' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (delAnio().length === 0) {
+  <veta-estado-vacio
+    [titulo]="'Sin vacaciones registradas en ' + anio"
+    pista="Añade los periodos en los que no vais a dar talleres para que nadie pueda reservar esos días."
+  />
+} @else {
+  <ul class="vac__lista">
+    @for (periodo of delAnio(); track periodo.id) {
+      <li class="vt-adm-tarjeta vac__periodo">
+        <div class="vac__datos">
+          <p class="vac__rango">
+            {{ formatearDia(periodo.fechaInicio) }} — {{ formatearDia(periodo.fechaFin) }}
+          </p>
+          <p class="vac__meta">
+            {{ nombreAdmin(periodo.adminUid) }} ·
+            {{ diasDelPeriodo(periodo.fechaInicio, periodo.fechaFin) }} días ·
+            {{ nombresTalleres(periodo.workshopIds) }}
+          </p>
+          @if (periodo.nota) {
+            <p class="vac__nota">{{ periodo.nota }}</p>
+          }
+        </div>
+
+        <button type="button" class="vt-adm-boton vt-adm-boton--peligro vac__boton" (click)="borrar(periodo)">
+          Borrar
+        </button>
+      </li>
+    }
+  </ul>
+}

@@ -1,0 +1,58 @@
+<header class="ini__cabecera">
+  <div>
+    <h1 class="vt-adm-titulo">
+      @if (nombre()) {
+        Hola, {{ nombre() }}
+      } @else {
+        Hola de nuevo
+      }
+    </h1>
+    <p class="ini__sub">Resumen de la actividad del estudio.</p>
+  </div>
+</header>
+
+<div class="ini__metricas">
+  @for (m of metricas(); track m.etiqueta) {
+    <a class="vt-adm-tarjeta ini__metrica" [class.ini__metrica--urgente]="m.urgente" [routerLink]="m.ruta">
+      <p class="ini__metrica-etiqueta">{{ m.etiqueta }}</p>
+      <p class="ini__metrica-valor">{{ m.valor }}</p>
+      <p class="ini__metrica-pie">{{ m.pie }}</p>
+    </a>
+  }
+</div>
+
+<section class="ini__bloque">
+  <header class="ini__bloque-cabecera">
+    <h2 class="vt-adm-titulo">Próximas sesiones</h2>
+    <a class="ini__enlace" routerLink="/panel/calendario">Ver el calendario</a>
+  </header>
+
+  @if (proximas().length === 0) {
+    <veta-estado-vacio
+      titulo="No hay sesiones programadas"
+      pista="Crea fechas desde Talleres → Sesiones para que la gente pueda reservar."
+    />
+  } @else {
+    <ul class="ini__sesiones">
+      @for (item of proximas(); track item.sesion.id) {
+        <li class="vt-adm-tarjeta ini__sesion">
+          <div class="ini__sesion-datos">
+            <p class="ini__sesion-titulo">{{ item.titulo }}</p>
+            <p class="ini__sesion-fecha">{{ formatearFecha(item.sesion.fechaInicio) }}</p>
+          </div>
+
+          <p class="ini__sesion-plazas">
+            <span class="ini__sesion-numero">{{ item.libres }}</span>
+            <span class="ini__sesion-etiqueta">libres de {{ item.sesion.plazasTotales }}</span>
+          </p>
+
+          @if (item.pendientes > 0) {
+            <a class="ini__aviso" routerLink="/panel/reservas">
+              {{ item.pendientes }} por confirmar
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  }
+</section>

@@ -1,0 +1,134 @@
+<header class="ajs__cabecera">
+  <div>
+    <h1 class="vt-adm-titulo">Ajustes del sitio</h1>
+    <p class="ajs__sub">Datos de contacto, redes y qué secciones se ven en la web.</p>
+  </div>
+</header>
+
+<form class="ajs__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+  <section class="vt-adm-tarjeta">
+    <h2 class="ajs__titulo">Secciones activas</h2>
+    <p class="ajs__ayuda">
+      Al desactivar una sección desaparece del menú y de la web. Los datos no se borran: al
+      reactivarla vuelve todo como estaba.
+    </p>
+
+    <ul class="ajs__interruptores" formGroupName="secciones">
+      @for (item of interruptores; track item.clave) {
+        <li class="ajs__interruptor">
+          <label class="vt-check">
+            <input type="checkbox" [formControlName]="item.clave" />
+            <span>
+              <span class="ajs__interruptor-etiqueta">{{ item.etiqueta }}</span>
+              <span class="ajs__interruptor-desc">{{ item.descripcion }}</span>
+            </span>
+          </label>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="vt-adm-tarjeta" formGroupName="contacto">
+    <h2 class="ajs__titulo">Datos de contacto</h2>
+    <p class="ajs__ayuda">Aparecen en el pie de la web y en los correos automáticos.</p>
+
+    <div class="ajs__rejilla">
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="contacto-email">Correo</label>
+        <input
+          id="contacto-email"
+          class="vt-input"
+          type="email"
+          formControlName="email"
+          [attr.aria-invalid]="emailContacto.touched && emailContacto.invalid"
+        />
+        @if (emailContacto.touched && emailContacto.invalid) {
+          <p class="vt-campo__error">Hace falta un correo válido: es a donde llegan las solicitudes.</p>
+        }
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="contacto-telefono">Teléfono</label>
+        <input id="contacto-telefono" class="vt-input" type="tel" formControlName="telefono" />
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="contacto-direccion">Dirección del estudio</label>
+        <input id="contacto-direccion" class="vt-input" type="text" formControlName="direccion" />
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="contacto-horario">Horario</label>
+        <input id="contacto-horario" class="vt-input" type="text" formControlName="horario" />
+      </div>
+    </div>
+  </section>
+
+  <section class="vt-adm-tarjeta" formGroupName="redes">
+    <h2 class="ajs__titulo">Redes sociales</h2>
+    <p class="ajs__ayuda">Pega la dirección completa. Si dejas una vacía, no aparece en la web.</p>
+
+    <div class="ajs__rejilla">
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="red-instagram">Instagram</label>
+        <input
+          id="red-instagram"
+          class="vt-input"
+          type="url"
+          formControlName="instagram"
+          placeholder="https://instagram.com/…"
+        />
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="red-pinterest">Pinterest</label>
+        <input
+          id="red-pinterest"
+          class="vt-input"
+          type="url"
+          formControlName="pinterest"
+          placeholder="https://pinterest.com/…"
+        />
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="red-facebook">Facebook</label>
+        <input id="red-facebook" class="vt-input" type="url" formControlName="facebook" />
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="red-tiktok">TikTok</label>
+        <input id="red-tiktok" class="vt-input" type="url" formControlName="tiktok" />
+      </div>
+    </div>
+  </section>
+
+  <section class="vt-adm-tarjeta" formGroupName="avisoGlobal">
+    <h2 class="ajs__titulo">Aviso en la web</h2>
+    <p class="ajs__ayuda">
+      Una franja arriba del todo, para avisos temporales: vacaciones, cierre por reformas…
+    </p>
+
+    <label class="vt-check ajs__check-aviso">
+      <input type="checkbox" formControlName="activo" />
+      Mostrar el aviso
+    </label>
+
+    <div class="vt-campo">
+      <label class="vt-campo__etiqueta" for="aviso-texto">Texto del aviso</label>
+      <input
+        id="aviso-texto"
+        class="vt-input"
+        type="text"
+        formControlName="texto"
+        placeholder="Estaremos cerradas del 1 al 24 de agosto"
+      />
+    </div>
+  </section>
+
+  <div class="ajs__acciones">
+    <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando…' : 'Guardar cambios' }}
+    </button>
+  </div>
+</form>

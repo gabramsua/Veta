@@ -1,0 +1,16 @@
+$bp-movil: 480px;
+$bp-tablet: 768px;
+$bp-escritorio: 1024px;
+$bp-ancho: 1280px;
+
+@mixin hasta($bp) {
+  @media (max-width: #{$bp - 0.02px}) {
+    @content;
+  }
+}
+
+@mixin desde($bp) {
+  @media (min-width: $bp) {
+    @content;
+  }
+}

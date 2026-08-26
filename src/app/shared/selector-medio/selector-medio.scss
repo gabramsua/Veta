@@ -1,0 +1,109 @@
+@use 'tokens' as *;
+
+.sel {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: var(--esp-5);
+  background-color: rgb(46 42 38 / 62%);
+}
+
+.sel__panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-4);
+  width: min(96rem, 100%);
+  max-height: 86dvh;
+  padding: var(--esp-5);
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+}
+
+.sel__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sel__titulo {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-md);
+  font-weight: var(--peso-fuerte);
+}
+
+.sel__cerrar {
+  width: 3.6rem;
+  height: 3.6rem;
+  font-size: var(--txt-lg);
+  color: var(--veta-tinta-suave);
+  border-radius: var(--radio-full);
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+}
+
+.sel__barra {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--esp-3);
+}
+
+.sel__subir {
+  cursor: pointer;
+}
+
+.sel__error {
+  padding: var(--esp-3);
+  font-size: var(--txt-sm);
+  color: var(--veta-error);
+  background-color: color-mix(in srgb, var(--veta-error) 10%, transparent);
+  border-radius: var(--radio-md);
+}
+
+.sel__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: var(--esp-3);
+  padding: 0;
+  margin: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.sel__item {
+  display: grid;
+  gap: var(--esp-2);
+  width: 100%;
+  padding: var(--esp-2);
+  border: 1px solid transparent;
+  border-radius: var(--radio-md);
+
+  img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radio-sm);
+  }
+
+  &:hover {
+    background-color: var(--veta-crema);
+    border-color: var(--veta-arena-osc);
+  }
+}
+
+.sel__nombre {
+  overflow: hidden;
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sel__pista {
+  font-size: var(--txt-xs);
+}

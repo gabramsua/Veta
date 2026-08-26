@@ -1,0 +1,157 @@
+<veta-panel-seccion
+  titulo="Talleres"
+  descripcion="Cada taller es una actividad. Las fechas concretas se gestionan en Sesiones."
+  accion="Nuevo taller"
+  (pulsada)="abrir()"
+/>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta tal__form-tarjeta">
+    <h2 class="tal__form-titulo">{{ tituloForm() }}</h2>
+
+    <form class="tal__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="tal__rejilla">
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="titulo">Título</label>
+          <input
+            id="titulo"
+            class="vt-input"
+            type="text"
+            formControlName="titulo"
+            (blur)="generarSlug()"
+            [attr.aria-invalid]="titulo.touched && titulo.invalid"
+          />
+          @if (titulo.touched && titulo.invalid) {
+            <p class="vt-campo__error">El título es obligatorio.</p>
+          }
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="categoria">Categoría</label>
+          <select id="categoria" class="vt-select" formControlName="categoria">
+            @for (categoria of categorias; track categoria[0]) {
+              <option [value]="categoria[0]">{{ categoria[1] }}</option>
+            }
+          </select>
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="slug">Dirección en la web</label>
+          <input
+            id="slug"
+            class="vt-input"
+            type="text"
+            formControlName="slug"
+            [attr.aria-invalid]="slug.touched && slug.invalid"
+          />
+          <p class="vt-campo__pista">Solo minúsculas, números y guiones. Ej. taller-ceramica-inicial</p>
+          @if (slug.touched && slug.invalid) {
+            <p class="vt-campo__error">
+              @if (slug.hasError('repetido')) {
+                Ya hay otro taller con esa dirección.
+              } @else {
+                Usa solo minúsculas, números y guiones.
+              }
+            </p>
+          }
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="precio">Precio por persona (€)</label>
+          <input id="precio" class="vt-input" type="number" min="0" step="0.5" formControlName="precio" />
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="duracion">Duración (minutos)</label>
+          <input id="duracion" class="vt-input" type="number" min="15" step="15" formControlName="duracionMin" />
+        </div>
+      </div>
+
+      <div class="vt-campo">
+        <span class="vt-campo__etiqueta">Descripción</span>
+        <veta-editor-texto etiqueta="Descripción del taller" formControlName="descripcion" />
+      </div>
+
+      <div class="vt-campo">
+        <span class="vt-campo__etiqueta">Imágenes</span>
+        <veta-lista-imagenes
+          [imagenes]="imagenes()"
+          (anadir)="anadirImagen()"
+          (quitar)="quitarImagen($event)"
+          (mover)="moverImagen($event)"
+        />
+      </div>
+
+      <label class="vt-check">
+        <input type="checkbox" formControlName="activo" />
+        Visible en la web
+      </label>
+
+      <div class="tal__acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">
+          Cancelar
+        </button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (lista().length === 0) {
+  <veta-estado-vacio
+    titulo="Todavía no hay talleres"
+    pista="Crea primero el taller (cerámica, pintura, infantil…) y después añade sus fechas en Sesiones."
+  />
+} @else {
+  <ul class="tal__lista">
+    @for (taller of lista(); track taller.id; let i = $index) {
+      <li class="vt-adm-tarjeta tal__item" [class.tal__item--inactivo]="!taller.activo">
+        @if (taller.imagenes.length > 0) {
+          <img class="tal__miniatura" [src]="taller.imagenes[0].url" [alt]="taller.imagenes[0].alt" loading="lazy" />
+        } @else {
+          <span class="tal__miniatura tal__miniatura--vacia" aria-hidden="true">◇</span>
+        }
+
+        <div class="tal__datos">
+          <h2 class="tal__titulo">{{ taller.titulo }}</h2>
+          <p class="tal__meta">
+            {{ nombreCategoria(taller.categoria) }} ·
+            {{ taller.precio }} € ·
+            {{ taller.duracionMin }} min ·
+            {{ sesionesDe(taller.id) }} sesión(es)
+          </p>
+          <span
+            class="vt-etiqueta-estado"
+            [class.vt-etiqueta-estado--activo]="taller.activo"
+            [class.vt-etiqueta-estado--inactivo]="!taller.activo"
+          >
+            {{ taller.activo ? 'Visible' : 'Oculto' }}
+          </span>
+        </div>
+
+        <div class="tal__controles">
+          <veta-ordenar
+            [nombre]="taller.titulo"
+            [primero]="i === 0"
+            [ultimo]="i === lista().length - 1"
+            (subir)="mover(i, -1)"
+            (bajar)="mover(i, 1)"
+          />
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma tal__boton" (click)="alternarActivo(taller)">
+            {{ taller.activo ? 'Ocultar' : 'Mostrar' }}
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma tal__boton" (click)="abrir(taller)">
+            Editar
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--peligro tal__boton" (click)="borrar(taller)">
+            Borrar
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+}
+
+<veta-selector-medio />

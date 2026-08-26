@@ -1,0 +1,59 @@
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+
+import { Imagen } from '../../../core/models';
+
+import { BloqueTexto } from '../../../shared/bloque-texto/bloque-texto';
+import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-seccion';
+import { Galeria } from '../../../shared/galeria/galeria';
+import { PaginasService } from '../../../core/data/paginas.service';
+import { PublicoService } from '../../../core/data/publico.service';
+import { SeoService } from '../../../core/seo/seo.service';
+import { textoPlano } from '../../../core/seo/quitar-html';
+import { textosPorDefecto } from '../../../core/data/textos';
+
+const SLUG = 'live-art';
+
+@Component({
+  selector: 'veta-live-art',
+  imports: [RouterLink, CabeceraSeccion, BloqueTexto, Galeria],
+  templateUrl: './live-art.html',
+  styleUrl: './live-art.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class LiveArt {
+  private readonly paginas = inject(PaginasService);
+  private readonly publico = inject(PublicoService);
+  private readonly seo = inject(SeoService);
+
+  protected readonly textos = toSignal(this.paginas.textos(SLUG), {
+    initialValue: textosPorDefecto(SLUG),
+  });
+
+  protected readonly imagenes = toSignal(this.paginas.imagenes(SLUG), { initialValue: {} as Record<string, Imagen> });
+
+  protected readonly galeria = toSignal(this.publico.portfolioDe('liveart'), {
+    initialValue: [],
+  });
+
+  private readonly seoPagina = toSignal(this.paginas.seo(SLUG), {
+    initialValue: { title: '', description: '', ogImage: '' },
+  });
+
+  constructor() {
+    effect(() => {
+      const propio = this.seoPagina();
+      const t = this.textos();
+
+      this.seo.aplicar({
+        titulo: propio.title || 'Live art · Veta Estudio Creativo',
+        descripcion:
+          propio.description || textoPlano(t['entradilla'] || t['texto'] || '') || 'Acuarelas en directo durante tu celebración, en Sevilla y alrededores.',
+        ruta: '/live-art',
+        imagen: propio.ogImage || this.galeria()[0]?.imagen.url,
+      });
+      this.seo.datosEstructurados(null);
+    });
+  }
+}

@@ -1,0 +1,154 @@
+<veta-panel-seccion
+  titulo="Solicitudes de presupuesto"
+  descripcion="Lo que llega desde los formularios de papelería, live art, encargos y contacto."
+/>
+
+@if (sinResponder() > 0) {
+  <p class="sol__nuevas">
+    Tienes <strong>{{ sinResponder() }}</strong> solicitud(es) sin abrir.
+  </p>
+}
+
+<section class="vt-adm-tarjeta sol__filtros">
+  <div class="vt-campo">
+    <label class="vt-campo__etiqueta" for="sol-buscar">Buscar</label>
+    <input
+      id="sol-buscar"
+      class="vt-input"
+      type="search"
+      placeholder="Nombre, correo o teléfono"
+      [value]="busqueda()"
+      (input)="busqueda.set($any($event.target).value)"
+    />
+  </div>
+
+  <div class="vt-campo">
+    <label class="vt-campo__etiqueta" for="sol-estado">Estado</label>
+    <select
+      id="sol-estado"
+      class="vt-select"
+      [value]="filtroEstado()"
+      (change)="filtroEstado.set($any($event.target).value)"
+    >
+      <option value="">Todos</option>
+      @for (estado of estados; track estado.valor) {
+        <option [value]="estado.valor">{{ estado.etiqueta }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="vt-campo">
+    <label class="vt-campo__etiqueta" for="sol-tipo">Tipo</label>
+    <select
+      id="sol-tipo"
+      class="vt-select"
+      [value]="filtroTipo()"
+      (change)="filtroTipo.set($any($event.target).value)"
+    >
+      <option value="">Todos</option>
+      @for (tipo of tipos; track tipo[0]) {
+        <option [value]="tipo[0]">{{ tipo[1] }}</option>
+      }
+    </select>
+  </div>
+</section>
+
+@if (filtradas().length === 0) {
+  <veta-estado-vacio
+    [titulo]="lista().length === 0 ? 'Todavía no hay solicitudes' : 'Ninguna solicitud coincide'"
+    [pista]="
+      lista().length === 0
+        ? 'Aquí aparecerán las peticiones de presupuesto que lleguen desde la web.'
+        : 'Prueba a quitar algún filtro.'
+    "
+  />
+} @else {
+  <ul class="sol__lista">
+    @for (solicitud of filtradas(); track solicitud.id) {
+      <li class="vt-adm-tarjeta sol__item" [class.sol__item--nueva]="solicitud.status === 'nueva'">
+        <button
+          type="button"
+          class="sol__cabecera"
+          [attr.aria-expanded]="abierta() === solicitud.id"
+          (click)="alternar(solicitud)"
+        >
+          <span class="sol__persona">
+            <span class="sol__nombre">{{ solicitud.nombre }}</span>
+            <span class="sol__meta">
+              {{ nombreTipo(solicitud.tipo) }} · {{ formatearFecha(solicitud.createdAt) }}
+            </span>
+          </span>
+
+          <span class="vt-etiqueta-estado sol__estado sol__estado--{{ solicitud.status }}">
+            {{ etiquetaEstado(solicitud.status) }}
+          </span>
+
+          <span class="sol__flecha" aria-hidden="true">
+            {{ abierta() === solicitud.id ? '−' : '+' }}
+          </span>
+        </button>
+
+        @if (abierta() === solicitud.id) {
+          <div class="sol__detalle">
+            <div class="sol__contacto">
+              <p><a [href]="'mailto:' + solicitud.email">{{ solicitud.email }}</a></p>
+              <p><a [href]="'tel:' + solicitud.telefono">{{ solicitud.telefono }}</a></p>
+            </div>
+
+            <veta-respuestas [datos]="solicitud.respuestas" />
+
+            <div class="sol__campos">
+              <div class="vt-campo sol__campo-estado">
+                <label class="vt-campo__etiqueta" [attr.for]="'estado-' + solicitud.id">
+                  Estado
+                </label>
+                <select
+                  class="vt-select"
+                  [id]="'estado-' + solicitud.id"
+                  [value]="solicitud.status"
+                  (change)="cambiarEstado(solicitud, $event)"
+                >
+                  @for (estado of estados; track estado.valor) {
+                    <option [value]="estado.valor">{{ estado.etiqueta }} — {{ estado.ayuda }}</option>
+                  }
+                </select>
+              </div>
+
+              <div class="vt-campo">
+                <label class="vt-campo__etiqueta" [attr.for]="'notas-' + solicitud.id">
+                  Notas internas
+                </label>
+                <textarea
+                  class="vt-textarea sol__notas"
+                  [id]="'notas-' + solicitud.id"
+                  [value]="solicitud.notasInternas"
+                  (blur)="guardarNotas(solicitud, $event)"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="sol__acciones">
+              <a
+                class="vt-adm-boton"
+                [href]="'mailto:' + solicitud.email + '?subject=' + asunto(solicitud)"
+              >
+                Responder por correo
+              </a>
+              <button type="button" class="vt-adm-boton vt-adm-boton--peligro" (click)="borrar(solicitud)">
+                Borrar
+              </button>
+            </div>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+
+  @if (hayMas()) {
+    <div class="sol__mas">
+      <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cargarMas()">
+        Cargar más solicitudes
+      </button>
+    </div>
+  }
+}

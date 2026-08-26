@@ -1,0 +1,139 @@
+<header class="adms__cabecera">
+  <div>
+    <h1 class="vt-adm-titulo">Administradoras</h1>
+    <p class="adms__sub">Quién puede entrar al panel y gestionar la web.</p>
+  </div>
+
+  @if (!formVisible()) {
+    <button type="button" class="vt-adm-boton" (click)="abrirForm()">Añadir administradora</button>
+  }
+</header>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta adms__form-tarjeta">
+    <h2 class="adms__form-titulo">Nueva administradora</h2>
+
+    <form class="adms__form" [formGroup]="formulario" (ngSubmit)="invitar($event)" novalidate>
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="nombre">Nombre</label>
+        <input
+          id="nombre"
+          class="vt-input"
+          type="text"
+          formControlName="nombre"
+          [attr.aria-invalid]="nombre.touched && nombre.invalid"
+        />
+        @if (nombre.touched && nombre.invalid) {
+          <p class="vt-campo__error">El nombre es obligatorio.</p>
+        }
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="email-nueva">Correo electrónico</label>
+        <input
+          id="email-nueva"
+          class="vt-input"
+          type="email"
+          formControlName="email"
+          autocomplete="off"
+          [attr.aria-invalid]="email.touched && email.invalid"
+        />
+        @if (email.touched && email.invalid) {
+          <p class="vt-campo__error">Escribe un correo con formato válido.</p>
+        }
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="password-nueva">Contraseña inicial</label>
+        <input
+          id="password-nueva"
+          class="vt-input"
+          type="text"
+          formControlName="password"
+          autocomplete="off"
+          [attr.aria-invalid]="password.touched && password.invalid"
+        />
+        <p class="vt-campo__pista">
+          Mínimo 8 caracteres. Pásasela por un canal seguro, no por correo, y pídele que la cambie
+          al entrar.
+        </p>
+        @if (password.touched && password.invalid) {
+          <p class="vt-campo__error">La contraseña necesita al menos 8 caracteres.</p>
+        }
+      </div>
+
+      <div class="adms__acciones">
+        <button
+          type="button"
+          class="vt-adm-boton vt-adm-boton--fantasma"
+          (click)="cerrarForm()"
+        >
+          Cancelar
+        </button>
+        <button type="submit" class="vt-adm-boton" [disabled]="enviando()">
+          {{ enviando() ? 'Creando…' : 'Crear cuenta' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+<section class="vt-adm-tarjeta">
+  @if (lista().length === 0) {
+    <div class="vt-adm-vacio">
+      <p class="vt-adm-vacio__icono" aria-hidden="true">◇</p>
+      <p>Todavía no hay administradoras registradas.</p>
+      <p class="adms__pista">
+        La primera cuenta se crea desde la consola de Firebase. A partir de ahí, desde aquí.
+      </p>
+    </div>
+  } @else {
+    <table class="vt-tabla">
+      <caption class="vt-solo-lectores">Listado de administradoras</caption>
+      <thead>
+        <tr>
+          <th scope="col">Nombre</th>
+          <th scope="col">Correo</th>
+          <th scope="col">Vacaciones</th>
+          <th scope="col">Estado</th>
+          <th scope="col"><span class="vt-solo-lectores">Acciones</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (admin of lista(); track admin.id) {
+          <tr>
+            <td>
+              {{ admin.nombre }}
+              @if (admin.id === uidPropio) {
+                <span class="adms__tu">tú</span>
+              }
+            </td>
+            <td>{{ admin.email }}</td>
+            <td>{{ admin.diasVacaciones }} días</td>
+            <td>
+              <span
+                class="vt-etiqueta-estado"
+                [class.vt-etiqueta-estado--activo]="admin.activo"
+                [class.vt-etiqueta-estado--inactivo]="!admin.activo"
+              >
+                {{ admin.activo ? 'Activa' : 'Desactivada' }}
+              </span>
+            </td>
+            <td class="adms__celda-accion">
+              @if (admin.id !== uidPropio) {
+                <button
+                  type="button"
+                  class="vt-adm-boton vt-adm-boton--fantasma adms__boton-fila"
+                  [class.vt-adm-boton--peligro]="admin.activo"
+                  (click)="cambiarEstado(admin.id, admin.nombre, !admin.activo)"
+                >
+                  {{ admin.activo ? 'Desactivar' : 'Reactivar' }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+</section>

@@ -1,0 +1,94 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.acc {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+  padding: var(--esp-5);
+  background-color: var(--veta-crema);
+}
+
+.acc__panel {
+  display: grid;
+  gap: var(--esp-5);
+  width: 100%;
+  max-width: 44rem;
+  padding: var(--esp-7) var(--esp-6);
+  background-color: #fff;
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-md);
+
+  @include hasta($bp-movil) {
+    padding: var(--esp-5) var(--esp-4);
+  }
+}
+
+.acc__marca {
+  width: auto;
+  height: 3.2rem;
+  justify-self: center;
+}
+
+.acc__intro {
+  display: grid;
+  gap: var(--esp-1);
+  text-align: center;
+}
+
+.acc__titulo {
+  font-size: var(--txt-lg);
+}
+
+.acc__sub {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.acc__form {
+  display: grid;
+  gap: var(--esp-4);
+}
+
+.acc__alerta {
+  padding: var(--esp-3) var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-error);
+  background-color: color-mix(in srgb, var(--veta-error) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--veta-error) 30%, transparent);
+  border-radius: var(--radio-md);
+}
+
+.acc__password {
+  position: relative;
+}
+
+.acc__password .vt-input {
+  padding-right: 7rem;
+}
+
+.acc__ojo {
+  position: absolute;
+  top: 50%;
+  right: var(--esp-2);
+  padding: var(--esp-2);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--veta-terracota);
+  transform: translateY(-50%);
+}
+
+.acc__enviar {
+  margin-top: var(--esp-2);
+}
+
+.acc__pie {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+  text-align: center;
+}

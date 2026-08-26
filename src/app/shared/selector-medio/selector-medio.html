@@ -1,0 +1,56 @@
+@if (visible()) {
+  <div class="sel" role="dialog" aria-modal="true" aria-labelledby="sel-titulo">
+    <div class="sel__panel">
+      <header class="sel__cabecera">
+        <h2 class="sel__titulo" id="sel-titulo">Elegir imagen</h2>
+        <button type="button" class="sel__cerrar" (click)="cerrar(null)">
+          <span class="vt-solo-lectores">Cerrar</span>
+          <span aria-hidden="true">×</span>
+        </button>
+      </header>
+
+      <div class="sel__barra">
+        <input
+          class="vt-input"
+          type="search"
+          placeholder="Buscar por nombre"
+          [ngModel]="busqueda()"
+          (ngModelChange)="busqueda.set($event)"
+        />
+
+        <label class="vt-adm-boton vt-adm-boton--fantasma sel__subir">
+          <input
+            type="file"
+            class="vt-solo-lectores"
+            accept="image/*"
+            [disabled]="subiendo()"
+            (change)="subirYSeleccionar($event)"
+          />
+          {{ subiendo() ? 'Subiendo…' : 'Subir nueva' }}
+        </label>
+      </div>
+
+      @if (error()) {
+        <p class="sel__error" role="alert">{{ error() }}</p>
+      }
+
+      @if (imagenes().length === 0) {
+        <div class="vt-adm-vacio">
+          <p>No hay imágenes en la biblioteca.</p>
+          <p class="sel__pista">Súbela desde aquí mismo con el botón «Subir nueva».</p>
+        </div>
+      } @else {
+        <ul class="sel__rejilla">
+          @for (medio of imagenes(); track medio.id) {
+            <li>
+              <button type="button" class="sel__item" (click)="seleccionar(medio)">
+                <img [src]="medio.url" [alt]="medio.alt || medio.nombre" loading="lazy" />
+                <span class="sel__nombre">{{ medio.nombre }}</span>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  </div>
+}

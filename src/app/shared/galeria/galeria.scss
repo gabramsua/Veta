@@ -1,0 +1,81 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.gal {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  gap: var(--esp-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+
+  @include hasta($bp-escritorio) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gal__boton {
+  display: grid;
+  gap: var(--esp-2);
+  width: 100%;
+  text-align: left;
+}
+
+.gal__imagen {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background-color: var(--veta-arena);
+  transition: opacity var(--trans-media);
+
+  .gal__boton:hover & {
+    opacity: 0.86;
+  }
+}
+
+.gal__pie {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.gal__lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  gap: var(--esp-4);
+  place-content: center;
+  place-items: center;
+  padding: var(--esp-6);
+  background-color: rgb(46 42 38 / 92%);
+}
+
+.gal__ampliada {
+  max-width: min(92vw, 110rem);
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.gal__pie-lightbox {
+  font-size: var(--txt-sm);
+  color: var(--veta-crema);
+}
+
+.gal__cerrar {
+  position: absolute;
+  top: var(--esp-4);
+  right: var(--esp-4);
+  width: 4.4rem;
+  height: 4.4rem;
+  font-size: var(--txt-lg);
+  color: var(--veta-crema);
+  border: 1px solid color-mix(in srgb, var(--veta-crema) 40%, transparent);
+  border-radius: var(--radio-full);
+}

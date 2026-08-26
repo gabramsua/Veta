@@ -1,0 +1,35 @@
+<veta-cabecera-seccion
+  antetitulo="El estudio"
+  titulo="Quiénes somos"
+  [entradilla]="textos()['entradilla']"
+/>
+
+<section class="vt-seccion qs">
+  <div class="vt-contenedor qs__cuerpo">
+    <article class="qs__bloque">
+      @if (imagenes()['queEsImagen']; as foto) {
+        <img class="qs__imagen" [src]="foto.url" [alt]="foto.alt"
+             [attr.width]="foto.width" [attr.height]="foto.height" loading="lazy" decoding="async" />
+      }
+      <h2 class="vt-titulo qs__titulo">{{ textos()['queEsTitulo'] }}</h2>
+      @if (textos()['queEsTexto']) {
+        <veta-bloque-texto [html]="textos()['queEsTexto']" />
+      } @else {
+        <p class="qs__pendiente">Texto pendiente de escribir.</p>
+      }
+    </article>
+
+    <article class="qs__bloque">
+      @if (imagenes()['quienesImagen']; as foto) {
+        <img class="qs__imagen" [src]="foto.url" [alt]="foto.alt"
+             [attr.width]="foto.width" [attr.height]="foto.height" loading="lazy" decoding="async" />
+      }
+      <h2 class="vt-titulo qs__titulo">{{ textos()['quienesTitulo'] }}</h2>
+      @if (textos()['quienesTexto']) {
+        <veta-bloque-texto [html]="textos()['quienesTexto']" />
+      } @else {
+        <p class="qs__pendiente">Texto pendiente de escribir.</p>
+      }
+    </article>
+  </div>
+</section>

@@ -1,0 +1,118 @@
+<veta-panel-seccion
+  titulo="Preguntas de los formularios"
+  descripcion="Nombre, correo y teléfono se piden siempre. Aquí añades lo que necesitáis saber en cada caso."
+  accion="Nueva pregunta"
+  (pulsada)="abrir()"
+/>
+
+<nav class="frm__pestanas" aria-label="Formulario a configurar">
+  @for (item of formularios; track item.valor) {
+    <button
+      type="button"
+      class="frm__pestana"
+      [class.frm__pestana--activa]="activo() === item.valor"
+      (click)="activo.set(item.valor)"
+    >
+      {{ item.etiqueta }} ({{ cuantasEn(item.valor) }})
+    </button>
+  }
+</nav>
+
+<p class="frm__descripcion">{{ descripcionActiva() }}</p>
+
+@if (formVisible()) {
+  <section class="vt-adm-tarjeta frm__form-tarjeta">
+    <h2 class="frm__form-titulo">{{ tituloForm() }}</h2>
+
+    <form class="frm__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="frm-etiqueta">Pregunta</label>
+        <input id="frm-etiqueta" class="vt-input" type="text" formControlName="etiqueta" />
+        <p class="vt-campo__pista">Tal cual la verá la clienta. Ej. ¿Cuántas invitaciones necesitas?</p>
+        @if (etiqueta.touched && etiqueta.invalid) {
+          <p class="vt-campo__error">La pregunta es obligatoria.</p>
+        }
+      </div>
+
+      <div class="vt-campo frm__campo-tipo">
+        <label class="vt-campo__etiqueta" for="frm-tipo">Tipo de respuesta</label>
+        <select id="frm-tipo" class="vt-select" formControlName="tipo">
+          @for (tipo of tipos; track tipo.valor) {
+            <option [value]="tipo.valor">{{ tipo.etiqueta }}</option>
+          }
+        </select>
+      </div>
+
+      @if (esOpciones()) {
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="frm-opciones">Opciones</label>
+          <textarea id="frm-opciones" class="vt-textarea frm__opciones" formControlName="opciones"></textarea>
+          <p class="vt-campo__pista">Una opción por línea. Hacen falta al menos dos.</p>
+        </div>
+      }
+
+      <div class="frm__checks">
+        <label class="vt-check">
+          <input type="checkbox" formControlName="obligatoria" />
+          Obligatoria
+        </label>
+        <label class="vt-check">
+          <input type="checkbox" formControlName="activa" />
+          Se pregunta ahora mismo
+        </label>
+      </div>
+
+      <div class="frm__acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrar()">Cancelar</button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Guardando…' : 'Guardar' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
+
+@if (deEsteFormulario().length === 0) {
+  <veta-estado-vacio
+    titulo="Este formulario solo pide los datos básicos"
+    pista="Nombre, correo y teléfono ya se piden siempre. Añade aquí lo que os haga falta saber para preparar el presupuesto o la reserva."
+  />
+} @else {
+  <ul class="frm__lista">
+    @for (pregunta of deEsteFormulario(); track pregunta.id) {
+      <li class="vt-adm-tarjeta frm__item" [class.frm__item--inactiva]="!pregunta.activa">
+        <div class="frm__datos">
+          <h2 class="frm__pregunta">
+            {{ pregunta.etiqueta }}
+            @if (pregunta.obligatoria) {
+              <span class="frm__obligatoria">obligatoria</span>
+            }
+          </h2>
+          <p class="frm__meta">{{ nombreTipo(pregunta.tipo) }}</p>
+          @if (pregunta.opciones.length > 0) {
+            <p class="frm__opciones-texto">{{ pregunta.opciones.join(' · ') }}</p>
+          }
+        </div>
+
+        <div class="frm__controles">
+          <veta-ordenar
+            nombre="pregunta"
+            [primero]="esPrimera(pregunta)"
+            [ultimo]="esUltima(pregunta)"
+            (subir)="mover(pregunta, -1)"
+            (bajar)="mover(pregunta, 1)"
+          />
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma frm__boton" (click)="alternarActiva(pregunta)">
+            {{ pregunta.activa ? 'Dejar de preguntar' : 'Preguntar' }}
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--fantasma frm__boton" (click)="abrir(pregunta)">
+            Editar
+          </button>
+          <button type="button" class="vt-adm-boton vt-adm-boton--peligro frm__boton" (click)="borrar(pregunta)">
+            Borrar
+          </button>
+        </div>
+      </li>
+    }
+  </ul>
+}

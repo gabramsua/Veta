@@ -1,0 +1,23 @@
+<veta-cabecera-seccion [titulo]="titulo()" antetitulo="Información legal" />
+
+<section class="vt-seccion">
+  <div class="vt-contenedor leg__cuerpo">
+    @if (contenido()) {
+      <veta-bloque-texto [html]="contenido()" />
+    } @else {
+      <div class="leg__pendiente">
+        <p class="leg__pendiente-titulo">Texto pendiente de redactar</p>
+        <p>
+          Este texto es obligatorio antes de publicar la web, porque los formularios recogen datos
+          personales. Se edita desde el panel, en Contenido → Textos de la web → Textos legales.
+        </p>
+        @if (ajustes().contacto.email) {
+          <p>
+            Mientras tanto, para cualquier cuestión sobre tus datos puedes escribir a
+            <a [href]="'mailto:' + ajustes().contacto.email">{{ ajustes().contacto.email }}</a>.
+          </p>
+        }
+      </div>
+    }
+  </div>
+</section>

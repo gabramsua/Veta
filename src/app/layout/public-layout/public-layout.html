@@ -1,0 +1,194 @@
+<div class="vt-pub" [class.vt-pub--menu-abierto]="menuAbierto()">
+  <a class="vt-salto-contenido" href="#contenido">Saltar al contenido</a>
+
+  @if (mostrarAviso()) {
+    <div class="aviso" role="status">
+      <p class="aviso__texto">{{ ajustes().avisoGlobal.texto }}</p>
+      <button type="button" class="aviso__cerrar" (click)="cerrarAviso()">
+        <span class="vt-solo-lectores">Cerrar aviso</span>
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+  }
+
+  <header class="cab" [class.cab--compacta]="cabeceraCompacta()">
+    <div class="cab__barra">
+      <a class="cab__marca" routerLink="/" (click)="cerrarMenu()">
+        <img
+          src="assets/marca/veta-logo.png"
+          alt="Veta · Estudio Creativo"
+          width="7757"
+          height="1010"
+        />
+      </a>
+
+      <nav class="cab__nav" aria-label="Navegación principal">
+        <ul class="cab__lista">
+          @for (enlace of enlaces(); track enlace.etiqueta) {
+            <li class="cab__item" [class.cab__item--con-hijos]="enlace.hijos">
+              <a
+                class="cab__enlace"
+                [routerLink]="enlace.ruta"
+                routerLinkActive="cab__enlace--activo"
+                [routerLinkActiveOptions]="{ exact: enlace.ruta === '/' }"
+                ariaCurrentWhenActive="page"
+              >
+                {{ enlace.etiqueta }}
+              </a>
+
+              @if (enlace.hijos) {
+                <ul class="cab__submenu">
+                  @for (hijo of enlace.hijos; track hijo.etiqueta) {
+                    <li>
+                      <a class="cab__subenlace" [routerLink]="hijo.ruta">{{ hijo.etiqueta }}</a>
+                    </li>
+                  }
+                </ul>
+              }
+            </li>
+          }
+        </ul>
+      </nav>
+
+      <button
+        type="button"
+        class="cab__hamburguesa"
+        [attr.aria-expanded]="menuAbierto()"
+        aria-controls="menu-movil"
+        (click)="alternarMenu()"
+      >
+        <span class="vt-solo-lectores">
+          {{ menuAbierto() ? 'Cerrar menú' : 'Abrir menú' }}
+        </span>
+        <span class="cab__hamburguesa-linea"></span>
+        <span class="cab__hamburguesa-linea"></span>
+        <span class="cab__hamburguesa-linea"></span>
+      </button>
+    </div>
+  </header>
+
+  <nav
+    id="menu-movil"
+    class="menu-movil"
+    aria-label="Navegación móvil"
+    [attr.inert]="menuAbierto() ? null : ''"
+  >
+    <ul class="menu-movil__lista">
+      @for (enlace of enlaces(); track enlace.etiqueta) {
+        <li class="menu-movil__item">
+          @if (enlace.hijos) {
+            <button
+              type="button"
+              class="menu-movil__enlace menu-movil__enlace--boton"
+              [attr.aria-expanded]="submenuAbierto() === enlace.etiqueta"
+              (click)="alternarSubmenu(enlace.etiqueta, $event)"
+            >
+              {{ enlace.etiqueta }}
+              <span class="menu-movil__flecha" aria-hidden="true">
+                {{ submenuAbierto() === enlace.etiqueta ? '−' : '+' }}
+              </span>
+            </button>
+
+            @if (submenuAbierto() === enlace.etiqueta) {
+              <ul class="menu-movil__submenu">
+                @for (hijo of enlace.hijos; track hijo.etiqueta) {
+                  <li>
+                    <a
+                      class="menu-movil__subenlace"
+                      [routerLink]="hijo.ruta"
+                      (click)="cerrarMenu()"
+                    >
+                      {{ hijo.etiqueta }}
+                    </a>
+                  </li>
+                }
+              </ul>
+            }
+          } @else {
+            <a class="menu-movil__enlace" [routerLink]="enlace.ruta" (click)="cerrarMenu()">
+              {{ enlace.etiqueta }}
+            </a>
+          }
+        </li>
+      }
+    </ul>
+  </nav>
+
+  <main id="contenido" class="vt-pub__main">
+    <router-outlet />
+  </main>
+
+  <footer class="pie">
+    <div class="pie__cuerpo vt-contenedor">
+      <div class="pie__marca">
+        <img
+          src="assets/marca/veta-logo-crema.png"
+          alt="Veta · Estudio Creativo"
+          width="7757"
+          height="1010"
+          loading="lazy"
+        />
+        <p class="pie__lema">Estudio creativo en Sevilla. Papelería, acuarela y talleres.</p>
+      </div>
+
+      <div class="pie__columna">
+        <h2 class="pie__titulo">Explora</h2>
+        <ul class="pie__lista">
+          <li><a routerLink="/papeleria-de-bodas">Papelería de bodas</a></li>
+          <li><a routerLink="/live-art">Live art</a></li>
+          <li><a routerLink="/acuarelas-y-encargos">Acuarelas y encargos</a></li>
+          <li><a routerLink="/talleres">Talleres</a></li>
+        </ul>
+      </div>
+
+      <div class="pie__columna">
+        <h2 class="pie__titulo">Estudio</h2>
+        <ul class="pie__lista">
+          <li><a routerLink="/quienes-somos">Quiénes somos</a></li>
+          <li><a routerLink="/preguntas-frecuentes">Preguntas frecuentes</a></li>
+          <li><a routerLink="/contacto">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div class="pie__columna">
+        <h2 class="pie__titulo">Contacto</h2>
+        <ul class="pie__lista">
+          @if (ajustes().contacto.email) {
+            <li><a [href]="'mailto:' + ajustes().contacto.email">{{ ajustes().contacto.email }}</a></li>
+          }
+          @if (ajustes().contacto.telefono) {
+            <li><a [href]="'tel:' + ajustes().contacto.telefono">{{ ajustes().contacto.telefono }}</a></li>
+          }
+          @if (ajustes().contacto.direccion) {
+            <li>{{ ajustes().contacto.direccion }}</li>
+          }
+          @if (ajustes().contacto.horario) {
+            <li>{{ ajustes().contacto.horario }}</li>
+          }
+        </ul>
+
+        @if (redes().length > 0) {
+          <h2 class="pie__titulo pie__titulo--separado">Síguenos</h2>
+          <ul class="pie__lista">
+            @for (red of redes(); track red.nombre) {
+              <li>
+                <a [href]="red.url" rel="noopener noreferrer" target="_blank">{{ red.nombre }}</a>
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+
+    <div class="pie__legal">
+      <div class="vt-contenedor pie__legal-cuerpo">
+        <p>© {{ anio }} · Veta Estudio Creativo</p>
+        <ul class="pie__legal-lista">
+          <li><a routerLink="/aviso-legal">Aviso legal</a></li>
+          <li><a routerLink="/politica-de-privacidad">Política de privacidad</a></li>
+          <li><a routerLink="/politica-de-cookies">Cookies</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,144 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.vac__contadores {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-5);
+}
+
+.vac__contador {
+  text-align: center;
+}
+
+.vac__contador-nombre {
+  display: flex;
+  gap: var(--esp-2);
+  align-items: center;
+  justify-content: center;
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+}
+
+.vac__tu {
+  padding: 0.1rem var(--esp-2);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-normal);
+  color: var(--veta-oliva);
+  background-color: var(--veta-crema);
+  border-radius: var(--radio-full);
+}
+
+.vac__contador-dias {
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-2xl);
+  line-height: 1;
+  color: var(--veta-terracota);
+}
+
+.vac__contador-etiqueta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.vac__form-tarjeta {
+  margin-bottom: var(--esp-4);
+}
+
+.vac__form-titulo {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.vac__form {
+  display: grid;
+  gap: var(--esp-5);
+  max-width: 62rem;
+}
+
+.vac__fechas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--esp-4);
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vac__talleres {
+  padding: 0;
+  margin: 0;
+  border: none;
+}
+
+.vac__lista-talleres {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--esp-3);
+  margin-top: var(--esp-3);
+}
+
+.vac__sin-talleres {
+  margin-top: var(--esp-3);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.vac__acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+}
+
+.vac__lista {
+  display: grid;
+  gap: var(--esp-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.vac__periodo {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--esp-4);
+  align-items: center;
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+}
+
+.vac__datos {
+  display: grid;
+  gap: var(--esp-1);
+}
+
+.vac__rango {
+  font-size: var(--txt-base);
+  font-weight: var(--peso-medio);
+}
+
+.vac__meta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.vac__nota {
+  font-size: var(--txt-xs);
+  font-style: italic;
+  color: var(--veta-tinta-suave);
+}
+
+.vac__boton {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+}

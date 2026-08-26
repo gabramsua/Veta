@@ -1,0 +1,68 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.pd__error,
+.pd__vacio,
+.pd__cta-cuerpo {
+  display: grid;
+  gap: var(--esp-4);
+  justify-items: center;
+  max-width: 68rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.pd__lista {
+  display: grid;
+  gap: var(--esp-9);
+}
+
+.pd__producto {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--esp-7);
+  align-items: center;
+
+  &:nth-child(even) .pd__media {
+    order: 2;
+  }
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+    gap: var(--esp-5);
+
+    &:nth-child(even) .pd__media {
+      order: 0;
+    }
+  }
+}
+
+.pd__media img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+
+.pd__texto {
+  display: grid;
+  gap: var(--esp-3);
+  justify-items: start;
+}
+
+.pd__titulo {
+  font-size: var(--txt-xl);
+}
+
+.pd__precio {
+  font-size: var(--txt-sm);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--veta-terracota);
+}
+
+.pd__galeria-titulo {
+  margin-bottom: var(--esp-6);
+}

@@ -1,0 +1,139 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.ses__form-tarjeta,
+.ses__filtros {
+  margin-bottom: var(--esp-4);
+}
+
+.ses__form-titulo {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-md);
+  font-family: var(--fuente-cuerpo);
+  font-weight: var(--peso-fuerte);
+}
+
+.ses__form {
+  display: grid;
+  gap: var(--esp-4);
+}
+
+.ses__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(24rem, 1fr));
+  gap: var(--esp-4);
+}
+
+.ses__notas {
+  min-height: 7rem;
+}
+
+.ses__acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+}
+
+.ses__filtros {
+  display: grid;
+  grid-template-columns: minmax(24rem, 1fr) auto;
+  gap: var(--esp-4);
+  align-items: end;
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ses__check {
+  padding-bottom: var(--esp-3);
+}
+
+.ses__lista {
+  display: grid;
+  gap: var(--esp-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ses__item {
+  display: grid;
+  grid-template-columns: 1fr auto auto auto;
+  gap: var(--esp-5);
+  align-items: center;
+
+  @include hasta($bp-escritorio) {
+    grid-template-columns: 1fr auto;
+  }
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+    justify-items: start;
+  }
+}
+
+.ses__item--pasada {
+  opacity: 0.6;
+}
+
+.ses__item--inactiva {
+  background-color: #fbfaf8;
+}
+
+.ses__datos {
+  display: grid;
+  gap: var(--esp-1);
+  min-width: 0;
+}
+
+.ses__titulo {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-md);
+  font-weight: var(--peso-fuerte);
+}
+
+.ses__fecha {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.ses__notas-texto {
+  font-size: var(--txt-xs);
+  font-style: italic;
+  color: var(--veta-tinta-suave);
+}
+
+.ses__plazas {
+  text-align: center;
+}
+
+.ses__plazas-numero {
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-xl);
+  line-height: 1;
+  color: var(--veta-terracota);
+}
+
+.ses__plazas-etiqueta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.ses__controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-2);
+
+  @include hasta($bp-escritorio) {
+    grid-column: 1 / -1;
+  }
+}
+
+.ses__boton {
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-xs);
+}

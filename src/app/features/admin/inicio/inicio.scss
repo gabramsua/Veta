@@ -1,0 +1,141 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.ini__cabecera {
+  margin-bottom: var(--esp-5);
+}
+
+.ini__sub {
+  margin-top: var(--esp-1);
+  color: var(--veta-tinta-suave);
+}
+
+.ini__metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(21rem, 1fr));
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-7);
+}
+
+.ini__metrica {
+  display: block;
+  transition: border-color var(--trans-rapida), transform var(--trans-rapida);
+
+  &:hover {
+    border-color: var(--veta-arena-osc);
+    transform: translateY(-2px);
+  }
+}
+
+.ini__metrica--urgente {
+  border-color: color-mix(in srgb, var(--veta-terracota) 45%, transparent);
+  box-shadow: inset 3px 0 0 var(--veta-terracota);
+}
+
+.ini__metrica-etiqueta {
+  font-size: var(--txt-xs);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--veta-tinta-suave);
+}
+
+.ini__metrica-valor {
+  margin-block: var(--esp-2) var(--esp-1);
+  font-family: var(--fuente-titular);
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--veta-terracota);
+}
+
+.ini__metrica-pie {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.ini__bloque {
+  display: grid;
+  gap: var(--esp-4);
+}
+
+.ini__bloque-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-3);
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.ini__enlace {
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-medio);
+  color: var(--veta-terracota);
+}
+
+.ini__sesiones {
+  display: grid;
+  gap: var(--esp-2);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.ini__sesion {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: var(--esp-4);
+  align-items: center;
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr auto;
+  }
+}
+
+.ini__sesion-datos {
+  display: grid;
+  gap: var(--esp-1);
+  min-width: 0;
+}
+
+.ini__sesion-titulo {
+  font-size: var(--txt-base);
+  font-weight: var(--peso-medio);
+}
+
+.ini__sesion-fecha {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.ini__sesion-plazas {
+  text-align: center;
+}
+
+.ini__sesion-numero {
+  display: block;
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-lg);
+  line-height: 1;
+  color: var(--veta-terracota);
+}
+
+.ini__sesion-etiqueta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.ini__aviso {
+  padding: var(--esp-2) var(--esp-3);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  color: var(--veta-aviso);
+  background-color: color-mix(in srgb, var(--veta-aviso) 14%, transparent);
+  border-radius: var(--radio-full);
+
+  @include hasta($bp-tablet) {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

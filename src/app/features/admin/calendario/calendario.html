@@ -1,0 +1,25 @@
+<veta-panel-seccion
+  titulo="Calendario"
+  descripcion="Todas las sesiones programadas y los periodos de vacaciones. Pulsa una sesión para ir a editarla."
+/>
+
+<section class="vt-adm-tarjeta cal__leyenda">
+  <span class="cal__marca cal__marca--libre">Con plazas</span>
+  <span class="cal__marca cal__marca--casi">Quedan 2 o menos</span>
+  <span class="cal__marca cal__marca--lleno">Completo</span>
+  <span class="cal__marca cal__marca--vacaciones">Vacaciones</span>
+</section>
+
+@if (!hayDatos() && !cargando()) {
+  <veta-estado-vacio
+    titulo="Todavía no hay nada que mostrar"
+    pista="Programa sesiones desde Talleres → Sesiones y aparecerán aquí."
+  />
+}
+
+<section class="vt-adm-tarjeta cal__caja" [class.cal__caja--oculta]="!hayDatos() && !cargando()">
+  @if (cargando()) {
+    <p class="cal__cargando">Cargando el calendario…</p>
+  }
+  <div #calendario class="cal__contenedor"></div>
+</section>

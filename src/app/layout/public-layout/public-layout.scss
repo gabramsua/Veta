@@ -1,0 +1,372 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.cab {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-cabecera);
+  background-color: color-mix(in srgb, var(--veta-crema) 92%, transparent);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid transparent;
+  transition:
+    border-color var(--trans-media),
+    box-shadow var(--trans-media);
+}
+
+.cab--compacta {
+  border-bottom-color: var(--veta-arena);
+  box-shadow: var(--sombra-sm);
+}
+
+// La barra no usa el contenedor centrado: ocupa todo el ancho de la ventana
+// para que el logotipo quede pegado al borde izquierdo y el menú al derecho,
+// también en pantallas grandes. El resto de la web sí se centra a 132 rem, así
+// que el logotipo ya no cae en la misma vertical que los títulos de abajo: es
+// el precio de esta decisión, y es a propósito.
+.cab__barra {
+  display: flex;
+  gap: clamp(var(--esp-4), 3vw, var(--esp-7));
+  align-items: center;
+  min-height: 8rem;
+  padding-inline: clamp(var(--esp-4), 2.5vw, var(--esp-7));
+  flex-wrap: nowrap;
+}
+
+// El logotipo mide casi ocho veces más de ancho que de alto, así que cada
+// milímetro que crece le quita sitio al menú. Se encoge un poco en pantallas
+// intermedias en vez de empujar los enlaces.
+//
+// `margin-right: auto` lo deja pegado a la izquierda pase lo que pase: no
+// depende de cuántos hijos tenga la barra ni de que el menú esté visible.
+.cab__marca {
+  flex: 0 0 auto;
+  margin-right: auto;
+}
+
+// Alto fijo, no fluido: con una proporción de 7,7:1 cada décima de rem de alto
+// son casi ocho de ancho, y el menú se queda sin sitio.
+.cab__marca img {
+  width: auto;
+  height: 2.6rem;
+}
+
+// Ocho entradas en mayúsculas no caben en horizontal por debajo de ~1280 px.
+// Por debajo manda el menú desplegable.
+//
+// `flex: 0 0 auto` es lo importante: sin él el menú se encoge por debajo de su
+// contenido, la lista se desborda de su caja y acaba montándose sobre el
+// logotipo. Nada de `min-width: 0` aquí, que es justo lo que lo permitía.
+.cab__nav {
+  flex: 0 0 auto;
+
+  @include hasta($bp-ancho) {
+    display: none;
+  }
+}
+
+.cab__lista {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: clamp(var(--esp-2), 1.4vw, var(--esp-4));
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.cab__item {
+  position: relative;
+  // Sin esto los enlaces se encogen y parten su texto en dos renglones, que es
+  // lo que descuadraba el menú: cada uno rompía por un sitio distinto.
+  flex: 0 0 auto;
+}
+
+.cab__enlace {
+  display: inline-block;
+  padding-block: var(--esp-3);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--veta-tinta);
+  transition: color var(--trans-rapida);
+
+  &:hover,
+  &--activo {
+    color: var(--veta-terracota);
+  }
+}
+
+.cab__submenu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  display: grid;
+  gap: var(--esp-1);
+  min-width: 24rem;
+  padding: var(--esp-3);
+  margin: 0;
+  // El submenú arranca justo bajo el enlace; el padding vertical de este hace
+  // de puente para que no se cierre al mover el ratón hacia abajo.
+  list-style: none;
+  background-color: var(--veta-blanco);
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-md);
+  box-shadow: var(--sombra-lg);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 8px);
+  transition:
+    opacity var(--trans-rapida),
+    transform var(--trans-rapida),
+    visibility var(--trans-rapida);
+}
+
+// Los últimos enlaces están pegados al borde derecho: si su submenú se centra
+// sobre ellos, se sale de la pantalla. Se ancla a la derecha en su lugar.
+.cab__item:nth-last-child(-n + 3) .cab__submenu {
+  right: 0;
+  left: auto;
+  transform: translate(0, 8px);
+}
+
+.cab__item--con-hijos:nth-last-child(-n + 3):hover .cab__submenu,
+.cab__item--con-hijos:nth-last-child(-n + 3):focus-within .cab__submenu {
+  transform: translate(0, 0);
+}
+
+.cab__subenlace {
+  white-space: nowrap;
+}
+
+.cab__item--con-hijos:hover .cab__submenu,
+.cab__item--con-hijos:focus-within .cab__submenu {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.cab__subenlace {
+  display: block;
+  padding: var(--esp-2) var(--esp-3);
+  font-size: var(--txt-sm);
+  border-radius: var(--radio-sm);
+  transition: background-color var(--trans-rapida);
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+}
+
+.cab__hamburguesa {
+  display: none;
+  flex: 0 0 auto;
+  flex-direction: column;
+  gap: 5px;
+  padding: var(--esp-2);
+
+  @include hasta($bp-ancho) {
+    display: flex;
+  }
+}
+
+.cab__hamburguesa-linea {
+  width: 24px;
+  height: 1.5px;
+  background-color: var(--veta-tinta);
+  transition: transform var(--trans-rapida), opacity var(--trans-rapida);
+}
+
+.vt-pub--menu-abierto {
+  .cab__hamburguesa-linea:nth-child(2) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+
+  .cab__hamburguesa-linea:nth-child(3) {
+    opacity: 0;
+  }
+
+  .cab__hamburguesa-linea:nth-child(4) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+}
+
+.menu-movil {
+  position: fixed;
+  inset: 8rem 0 0;
+  z-index: var(--z-overlay);
+  overflow-y: auto;
+  background-color: var(--veta-crema);
+  transform: translateX(100%);
+  transition: transform var(--trans-media);
+
+  @include desde($bp-ancho) {
+    display: none;
+  }
+}
+
+.vt-pub--menu-abierto .menu-movil {
+  transform: translateX(0);
+}
+
+.menu-movil__lista {
+  padding: var(--esp-5) var(--esp-5) var(--esp-9);
+  margin: 0;
+  list-style: none;
+}
+
+.menu-movil__item {
+  border-bottom: 1px solid var(--veta-arena);
+}
+
+.menu-movil__enlace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding-block: var(--esp-4);
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-lg);
+  text-align: left;
+}
+
+.menu-movil__flecha {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-lg);
+  color: var(--veta-terracota);
+}
+
+.menu-movil__submenu {
+  padding: 0 0 var(--esp-4) var(--esp-4);
+  margin: 0;
+  list-style: none;
+}
+
+.menu-movil__subenlace {
+  display: block;
+  padding-block: var(--esp-2);
+  font-size: var(--txt-base);
+  color: var(--veta-tinta-suave);
+}
+
+.pie {
+  color: var(--veta-crema);
+  background-color: var(--veta-oliva);
+}
+
+.pie__cuerpo {
+  display: grid;
+  grid-template-columns: 2fr repeat(3, 1fr);
+  gap: var(--esp-6);
+  padding-block: var(--esp-8);
+
+  @include hasta($bp-escritorio) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @include hasta($bp-movil) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pie__marca img {
+  /* El logotipo ya viene en crema sobre alfa, así que no hace falta filtro.
+     `brightness(0) invert(1)` daba blanco puro, no el crema de la marca, y
+     además volvía blanco el fondo de las versiones que no son transparentes. */
+  width: auto;
+  height: 3.2rem;
+}
+
+.pie__lema {
+  max-width: 32rem;
+  margin-top: var(--esp-4);
+  font-size: var(--txt-sm);
+  color: color-mix(in srgb, var(--veta-crema) 78%, transparent);
+}
+
+.pie__titulo {
+  margin-bottom: var(--esp-3);
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-xs);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--veta-arena);
+}
+
+.pie__lista {
+  display: grid;
+  gap: var(--esp-2);
+  padding: 0;
+  margin: 0;
+  font-size: var(--txt-sm);
+  list-style: none;
+
+  a {
+    color: color-mix(in srgb, var(--veta-crema) 82%, transparent);
+    transition: color var(--trans-rapida);
+
+    &:hover {
+      color: var(--veta-crema);
+    }
+  }
+}
+
+.pie__legal {
+  border-top: 1px solid color-mix(in srgb, var(--veta-crema) 18%, transparent);
+}
+
+.pie__legal-cuerpo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-4);
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--esp-4);
+  font-size: var(--txt-xs);
+  color: color-mix(in srgb, var(--veta-crema) 70%, transparent);
+}
+
+.pie__legal-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--esp-4);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.aviso {
+  display: flex;
+  gap: var(--esp-4);
+  align-items: center;
+  justify-content: center;
+  padding: var(--esp-2) var(--esp-5);
+  font-size: var(--txt-xs);
+  color: var(--veta-crema);
+  background-color: var(--veta-oliva);
+}
+
+.aviso__texto {
+  text-align: center;
+}
+
+.aviso__cerrar {
+  font-size: var(--txt-base);
+  line-height: 1;
+  color: inherit;
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.pie__titulo--separado {
+  margin-top: var(--esp-5);
+}
