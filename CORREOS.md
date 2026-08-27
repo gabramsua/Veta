@@ -74,12 +74,27 @@ Para cambiarla algún día, se repite el mismo comando y se vuelve a desplegar.
 
 ## 4. Desplegar
 
-```bash
-cd functions && npm install && cd ..
+```powershell
+cd functions; npm install; cd ..
+$env:FUNCTIONS_DISCOVERY_TIMEOUT=180
 firebase deploy --only functions --project=veta-estudio-creativo
 ```
 
 El `npm install` es necesario la primera vez: añade Nodemailer.
+
+**El `FUNCTIONS_DISCOVERY_TIMEOUT` no es opcional.** Antes de desplegar, el CLI
+arranca tu código para leer qué Functions exporta, y le da 10 segundos. Cargar
+`firebase-admin` tarda unos 20 solo con sus tres módulos, así que sin la variable
+el despliegue falla con:
+
+```
+Error: User code failed to load. Cannot determine backend specification.
+Timeout after 10000.
+```
+
+No es un error del código: pasa con cualquier proyecto que use `firebase-admin`.
+En cmd en vez de PowerShell, la línea es `set FUNCTIONS_DISCOVERY_TIMEOUT=180`.
+Solo dura lo que dure esa ventana de terminal.
 
 ---
 

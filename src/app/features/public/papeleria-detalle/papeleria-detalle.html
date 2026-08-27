@@ -17,7 +17,9 @@
     <section class="vt-seccion">
       <div class="vt-contenedor pd__vacio">
         <p>Todavía no hemos publicado modelos de esta sección.</p>
-        <a class="vt-boton" routerLink="/solicitar/papeleria">Pedir presupuesto</a>
+        <a class="vt-boton" routerLink="/solicitar/papeleria" [queryParams]="{ sobre: categoria() }">
+          Pedir presupuesto
+        </a>
       </div>
     </section>
   } @else {
@@ -44,7 +46,9 @@
               <h2 class="pd__titulo">{{ producto.titulo }}</h2>
               <p class="pd__precio">desde {{ producto.precioDesde }} € / {{ producto.unidad }}</p>
               <veta-bloque-texto [html]="producto.descripcion" />
-              <a class="vt-enlace-sub" routerLink="/solicitar/papeleria">Pedir presupuesto</a>
+              <a class="vt-enlace-sub" routerLink="/solicitar/papeleria" [queryParams]="{ sobre: categoria() }">
+                Pedir presupuesto
+              </a>
             </div>
           </article>
         }
@@ -69,7 +73,9 @@
         Contadnos vuestra idea, la fecha y cuántas invitaciones necesitáis, y os preparamos un
         presupuesto cerrado.
       </p>
-      <a class="vt-boton" routerLink="/solicitar/papeleria">Pedir presupuesto</a>
+      <a class="vt-boton" routerLink="/solicitar/papeleria" [queryParams]="{ sobre: categoria() }">
+        Pedir presupuesto
+      </a>
     </div>
   </section>
 }

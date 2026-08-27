@@ -6,6 +6,7 @@ import { catchError, of } from 'rxjs';
 import { AlertasService } from '../../../core/ui/alertas.service';
 import { EditorTexto } from '../../../shared/editor-texto/editor-texto';
 import { PLANTILLAS_CONOCIDAS, PlantillasService } from '../../../core/data/plantillas.service';
+import { PlantillaEmail } from '../../../core/models';
 import { PanelSeccion } from '../../../shared/panel-seccion/panel-seccion';
 
 @Component({
@@ -28,6 +29,15 @@ export class Plantillas {
     initialValue: [],
   });
 
+  /**
+   * Las plantillas de serie, traídas del servidor.
+   *
+   * Si la llamada falla el editor sigue funcionando: se queda en blanco, que es
+   * lo que hacía antes. No merece bloquear la sección por esto.
+   */
+  private readonly porDefecto = signal<PlantillaEmail[]>([]);
+  protected readonly cargandoOriginal = signal(true);
+
   protected readonly formulario = this.fb.nonNullable.group({
     subject: ['', [Validators.required, Validators.maxLength(160)]],
     html: ['', Validators.required],
@@ -48,30 +58,57 @@ export class Plantillas {
     this.definicion().variables.map((variable) => `{{${variable}}}`),
   );
 
+  protected readonly huecoRespuestas = `{{respuestasHtml}}`;
+
+  protected readonly llevaRespuestas = computed(() =>
+    this.definicion().variables.includes('respuestasHtml'),
+  );
+
   protected get subject() {
     return this.formulario.controls.subject;
   }
 
   constructor() {
-    // Las plantillas guardadas llegan de forma asíncrona: sin esto, al entrar en
-    // la sección el editor salía vacío aunque hubiera una versión personalizada.
+    void this.cargarOriginales();
+
+    // Tanto las guardadas como las de serie llegan de forma asíncrona: sin esto,
+    // al entrar en la sección el editor salía vacío aunque hubiera texto.
     effect(() => {
-      const guardada = this.guardadas().find((p) => p.id === this.activa());
+      const texto = this.textoDe(this.activa());
 
       if (this.formulario.pristine) {
-        this.formulario.reset(
-          { subject: guardada?.subject ?? '', html: guardada?.html ?? '' },
-          { emitEvent: false },
-        );
+        this.formulario.reset(texto, { emitEvent: false });
       }
     });
   }
 
+  private async cargarOriginales(): Promise<void> {
+    try {
+      this.porDefecto.set(await this.servicio.porDefecto());
+    } catch {
+      // El editor sigue usable, solo que sin precargar el original.
+    } finally {
+      this.cargandoOriginal.set(false);
+    }
+  }
+
+  /**
+   * Qué texto se edita: la versión guardada si existe, y si no la de serie.
+   *
+   * Precargar la de serie es lo que evita el destrozo de antes: quien abría una
+   * plantilla sin personalizar veía un cuadro vacío y, al guardar, sustituía el
+   * correo bueno por lo que hubiera escrito sin haber leído el original.
+   */
+  private textoDe(id: string): { subject: string; html: string } {
+    const fuente =
+      this.guardadas().find((p) => p.id === id) ?? this.porDefecto().find((p) => p.id === id);
+
+    return { subject: fuente?.subject ?? '', html: fuente?.html ?? '' };
+  }
+
   protected seleccionar(id: string): void {
     this.activa.set(id);
-
-    const guardada = this.guardadas().find((p) => p.id === id);
-    this.formulario.reset({ subject: guardada?.subject ?? '', html: guardada?.html ?? '' });
+    this.formulario.reset(this.textoDe(id));
   }
 
   protected async guardar(evento: Event): Promise<void> {
@@ -110,7 +147,10 @@ export class Plantillas {
     if (!confirmado) return;
 
     await this.servicio.borrar(this.activa());
-    this.formulario.reset({ subject: '', html: '' });
+
+    const original = this.porDefecto().find((p) => p.id === this.activa());
+    this.formulario.reset({ subject: original?.subject ?? '', html: original?.html ?? '' });
+
     await this.alertas.aviso('Plantilla restaurada');
   }
 }

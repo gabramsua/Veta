@@ -56,8 +56,9 @@ npm run test:reglas
 firebase deploy --only firestore:rules,firestore:indexes,storage:rules
 
 # Cloud Functions. La primera vez tarda varios minutos.
+# La variable no es opcional: ver la nota de abajo.
 cd functions && npm install && cd ..
-firebase deploy --only functions
+FUNCTIONS_DISCOVERY_TIMEOUT=180 firebase deploy --only functions
 
 # La web. Construye y sube en un solo paso.
 firebase deploy --only hosting
@@ -66,8 +67,46 @@ firebase deploy --only hosting
 O todo junto:
 
 ```bash
-firebase deploy
+FUNCTIONS_DISCOVERY_TIMEOUT=180 firebase deploy
 ```
+
+En Windows la variable se pone aparte, porque esa sintaxis es de bash:
+
+```powershell
+$env:FUNCTIONS_DISCOVERY_TIMEOUT=180     # PowerShell
+set FUNCTIONS_DISCOVERY_TIMEOUT=180      # cmd
+```
+
+### El primer despliegue falla a medias, y es normal
+
+La primera vez, el CLI habilita las APIs de Eventarc y Cloud Run sobre la marcha
+y sigue adelante sin esperar a que los permisos del service agent se propaguen.
+Resultado: las Functions llamables y el cron se crean, y **las cinco que
+escuchan Firestore fallan** con:
+
+```
+Permission denied while using the Eventarc Service Agent.
+```
+
+No hay nada que arreglar. Espera cinco o diez minutos y repite el mismo comando.
+Las que ya se crearon se actualizan sin más.
+
+### Por qué hace falta esa variable
+
+Antes de desplegar, el CLI arranca tu código para leer qué Functions exporta, y
+le da 10 segundos. Solo cargar `firebase-admin` tarda unos 20:
+
+```
+firebase-admin/firestore    9,6 s
+firebase-admin/auth         5,4 s
+firebase-admin/app          2,1 s
+firebase-functions          2,2 s
+```
+
+Sin la variable, el despliegue falla con `Cannot determine backend
+specification. Timeout after 10000`. No es un error del código: le pasa a
+cualquier proyecto que use `firebase-admin`. La variable va en segundos y solo
+dura lo que dure esa ventana de terminal.
 
 ---
 

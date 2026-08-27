@@ -1,9 +1,9 @@
 /**
  * Plantillas de correo por defecto.
  *
- * La extensión Trigger Email lee las plantillas de la colección `templates`,
- * así que Carmen puede editarlas desde el panel sin tocar código. Estas son las
- * que se usan la primera vez, y sirven de red por si alguien borra una.
+ * Las plantillas se leen de la colección `templates`, así que Carmen puede
+ * editarlas desde el panel sin tocar código. Estas son las que se usan la
+ * primera vez, y sirven de red por si alguien borra una.
  */
 
 export interface Plantilla {
@@ -24,12 +24,29 @@ const ENVOLTORIO = (contenido: string) => `
   </p>
 </div>`;
 
+const RESUMEN = (filas: string) => `
+  <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#6B635B;margin:32px 0 8px">
+    Resumen de tu solicitud
+  </p>
+  <table style="width:100%;border-collapse:collapse">${filas}</table>`;
+
+const FILA = (etiqueta: string, valor: string) => `
+  <tr>
+    <td style="padding:8px 12px 8px 0;color:#6B635B;font-size:13px;vertical-align:top;width:35%">${etiqueta}</td>
+    <td style="padding:8px 0;font-size:14px">${valor}</td>
+  </tr>`;
+
 export const PLANTILLAS: Record<string, Plantilla> = {
   'solicitud-veta': {
     descripcion: 'Aviso interno cuando llega una solicitud de presupuesto.',
-    subject: 'Nueva solicitud de {{tipo}} · {{nombre}}',
+    subject: 'Nueva solicitud de {{tipo}}{{#if piezas}} · {{piezas}}{{/if}} · {{nombre}}',
     html: ENVOLTORIO(`
       <h1 style="font-size:22px;font-weight:normal;margin:0 0 16px">Nueva solicitud de {{tipo}}</h1>
+      {{#if piezas}}
+        <p style="padding:12px 16px;background:#E3D5C4;border-radius:4px;margin:0 0 16px">
+          <strong>Piden:</strong> {{piezas}}
+        </p>
+      {{/if}}
       <p><strong>{{nombre}}</strong><br />{{email}}<br />{{telefono}}</p>
       {{{respuestasHtml}}}
       <p style="font-size:13px;color:#6B635B">Contesta directamente a este correo para responderle.</p>
@@ -37,13 +54,29 @@ export const PLANTILLAS: Record<string, Plantilla> = {
   },
 
   'solicitud-cliente': {
-    descripcion: 'Acuse de recibo para quien pide un presupuesto.',
-    subject: 'Hemos recibido tu solicitud · Veta',
+    descripcion: 'Acuse de recibo para quien pide un presupuesto. Le devuelve lo que nos ha contado.',
+    subject: 'Hemos recibido tu solicitud de {{tipo}} · Veta',
     html: ENVOLTORIO(`
       <h1 style="font-size:22px;font-weight:normal;margin:0 0 16px">Gracias, {{nombre}}</h1>
-      <p>Hemos recibido tu solicitud y la estamos mirando con calma.</p>
+      <p>Hemos recibido tu solicitud de <strong>{{tipo}}</strong> y la estamos mirando con calma.</p>
       <p>Te escribiremos en los próximos días con un presupuesto a medida. Si necesitas contarnos
       algo más mientras tanto, responde a este correo.</p>
+      ${RESUMEN(`
+        ${FILA('Sobre', '{{tipo}}')}
+        {{#if piezas}}${FILA('Piezas', '{{piezas}}')}{{/if}}
+        ${FILA('A nombre de', '{{nombre}}')}
+        ${FILA('Correo', '{{email}}')}
+        ${FILA('Teléfono', '{{telefono}}')}
+      `)}
+      {{#if respuestasHtml}}
+        <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#6B635B;margin:32px 0 8px">
+          Lo que nos has contado
+        </p>
+        {{{respuestasHtml}}}
+      {{/if}}
+      <p style="font-size:13px;color:#6B635B">
+        Si ves algo mal en estos datos, responde a este correo y lo corregimos.
+      </p>
     `),
   },
 
@@ -52,7 +85,7 @@ export const PLANTILLAS: Record<string, Plantilla> = {
     subject: 'Nueva reserva · {{nombre}} · {{taller}}',
     html: ENVOLTORIO(`
       <h1 style="font-size:22px;font-weight:normal;margin:0 0 16px">Nueva solicitud de reserva</h1>
-      <p><strong>{{taller}}</strong><br />{{fecha}}</p>
+      <p><strong>{{taller}}</strong>{{#if fecha}}<br />{{fecha}}{{/if}}</p>
       <p><strong>{{nombre}}</strong> · {{nPersonas}} persona(s)<br />{{email}}<br />{{telefono}}</p>
       {{{respuestasHtml}}}
       <p style="font-size:13px;color:#6B635B">
@@ -63,13 +96,31 @@ export const PLANTILLAS: Record<string, Plantilla> = {
 
   'reserva-cliente': {
     descripcion: 'Acuse de recibo de una solicitud de plaza. Todavía no está confirmada.',
-    subject: 'Hemos recibido tu solicitud de plaza · Veta',
+    subject: 'Hemos recibido tu solicitud de plaza · {{taller}}',
     html: ENVOLTORIO(`
       <h1 style="font-size:22px;font-weight:normal;margin:0 0 16px">Gracias, {{nombre}}</h1>
-      <p>Hemos recibido tu solicitud para <strong>{{taller}}</strong>{{#if fecha}} el {{fecha}}{{/if}}.</p>
+      <p>Hemos recibido tu solicitud de <strong>{{nPersonas}} plaza(s)</strong> para
+      <strong>{{taller}}</strong>{{#if fecha}} el {{fecha}}{{/if}}.</p>
       <p style="padding:16px;background:#E3D5C4;border-radius:4px">
         <strong>Tu plaza todavía no está reservada.</strong> Te escribiremos en breve para
         confirmártela y contarte cómo hacer el pago.
+      </p>
+      ${RESUMEN(`
+        ${FILA('{{etiqueta}}', '{{taller}}')}
+        {{#if fecha}}${FILA('Fecha', '{{fecha}}')}{{/if}}
+        ${FILA('Personas', '{{nPersonas}}')}
+        ${FILA('A nombre de', '{{nombre}}')}
+        ${FILA('Correo', '{{email}}')}
+        ${FILA('Teléfono', '{{telefono}}')}
+      `)}
+      {{#if respuestasHtml}}
+        <p style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#6B635B;margin:32px 0 8px">
+          Lo que nos has contado
+        </p>
+        {{{respuestasHtml}}}
+      {{/if}}
+      <p style="font-size:13px;color:#6B635B">
+        Si ves algo mal en estos datos, responde a este correo y lo corregimos.
       </p>
     `),
   },

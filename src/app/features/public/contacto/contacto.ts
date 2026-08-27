@@ -61,6 +61,7 @@ export class Contacto {
     try {
       await this.solicitudes.enviar({
         tipo: 'contacto',
+        piezas: [],
         nombre: datos.nombre,
         email: datos.email,
         telefono: datos.telefono,

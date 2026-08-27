@@ -61,6 +61,31 @@
     }
   </div>
 
+  @if (pidePiezas()) {
+    <fieldset class="fs__piezas">
+      <legend class="fs__etiqueta">{{ etiquetaPiezas() }} *</legend>
+      <p class="fs__pista">Puedes marcar todas las que necesitéis.</p>
+
+      <div class="fs__piezas-lista">
+        @for (pieza of opcionesPiezas(); track pieza.valor) {
+          <label class="fs__pieza">
+            <input
+              type="checkbox"
+              [value]="pieza.valor"
+              [checked]="piezaMarcada(pieza.valor)"
+              (change)="alternarPieza(pieza.valor)"
+            />
+            <span>{{ pieza.etiqueta }}</span>
+          </label>
+        }
+      </div>
+
+      @if (intentado() && faltanPiezas()) {
+        <p class="fs__error">Marca al menos una pieza para que sepamos qué presupuestar.</p>
+      }
+    </fieldset>
+  }
+
   @if (preguntas().length > 0) {
     <div class="fs__extras">
       @for (pregunta of preguntas(); track pregunta.id) {
@@ -78,6 +103,17 @@
                 [attr.aria-invalid]="falta(pregunta.id)"
                 (input)="actualizar(pregunta.id, $event)"
               ></textarea>
+            }
+            @case ('fecha') {
+              <input
+                class="fs__input"
+                type="date"
+                [id]="'fs-' + pregunta.id"
+                [value]="valor(pregunta.id)"
+                [min]="hoyIso"
+                [attr.aria-invalid]="falta(pregunta.id) || esPasada(pregunta.id)"
+                (change)="actualizar(pregunta.id, $event)"
+              />
             }
             @case ('opciones') {
               <select
@@ -107,6 +143,8 @@
 
           @if (falta(pregunta.id)) {
             <p class="fs__error">Esta pregunta es obligatoria.</p>
+          } @else if (esPasada(pregunta.id)) {
+            <p class="fs__error">Esa fecha ya ha pasado. Elige una de hoy en adelante.</p>
           }
         </div>
       }

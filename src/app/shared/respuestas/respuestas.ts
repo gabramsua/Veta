@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
+import { formatearFechaIso } from '../../core/data/fechas';
+
 interface Fila {
   etiqueta: string;
   valor: string;
@@ -76,7 +78,9 @@ export class Respuestas {
       .filter(([clave]) => !clave.endsWith('__etiqueta'))
       .map(([clave, valor]) => ({
         etiqueta: datos[`${clave}__etiqueta`] ?? 'Respuesta',
-        valor,
+        // Las preguntas de tipo fecha se guardan como `2027-06-12`, que es lo
+        // que da el input. Aquí se lee «12 de junio de 2027».
+        valor: formatearFechaIso(valor),
       }));
   });
 }

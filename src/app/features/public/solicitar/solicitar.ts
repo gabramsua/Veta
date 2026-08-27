@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, effect, inject, input, si
 import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+import { CATEGORIA_POR_SLUG, PIEZAS_PAPELERIA } from '../../../core/data/categorias-papeleria';
 import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-seccion';
 import { DatosEnviados, FormularioSolicitud } from '../../../shared/formulario-solicitud/formulario-solicitud';
 import { EnvioCorrecto } from '../../../shared/envio-correcto/envio-correcto';
@@ -75,6 +76,8 @@ export class Solicitar {
   readonly tipo = input.required<string>();
   // Solo en la solicitud de bono: llega como parámetro opcional de consulta.
   readonly bono = input<string | undefined>();
+  // Solo en papelería: el slug de la subsección desde la que se pulsó el CTA.
+  readonly sobre = input<string | undefined>();
 
   private readonly solicitudes = inject(SolicitudesService);
   private readonly reservas = inject(ReservasService);
@@ -90,6 +93,18 @@ export class Solicitar {
 
   protected readonly definicion = computed(() => DEFINICIONES[this.tipo()] ?? DEFINICIONES['contacto']);
   protected readonly esBono = computed(() => this.tipo() === 'bono');
+  protected readonly esPapeleria = computed(() => this.definicion().formulario === 'papeleria');
+
+  protected readonly opcionesPiezas = computed(() => (this.esPapeleria() ? PIEZAS_PAPELERIA : []));
+
+  // El slug viene de la URL, así que puede ser cualquier cosa: si no cuadra con
+  // una categoría real, no se premarca nada y la clienta elige.
+  protected readonly piezasIniciales = computed(() => {
+    const slug = this.sobre();
+    const categoria = slug ? CATEGORIA_POR_SLUG[slug] : undefined;
+
+    return this.esPapeleria() && categoria ? [categoria] : [];
+  });
 
   constructor() {
     effect(() => {
@@ -137,6 +152,7 @@ export class Solicitar {
       } else {
         await this.solicitudes.enviar({
           tipo: this.definicion().formulario as TipoSolicitud,
+          piezas: this.esPapeleria() ? datos.piezas : [],
           nombre: datos.nombre,
           email: datos.email,
           telefono: datos.telefono,

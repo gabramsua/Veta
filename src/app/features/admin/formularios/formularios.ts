@@ -28,6 +28,7 @@ export class Formularios {
     { valor: 'texto', etiqueta: 'Respuesta corta' },
     { valor: 'textarea', etiqueta: 'Respuesta larga' },
     { valor: 'opciones', etiqueta: 'Elegir entre opciones' },
+    { valor: 'fecha', etiqueta: 'Fecha' },
   ];
 
   private readonly todas = toSignal(this.servicio.todas().pipe(catchError(() => of([]))), {

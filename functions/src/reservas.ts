@@ -25,6 +25,26 @@ const ETIQUETAS_TIPO: Record<string, string> = {
   contacto: 'contacto',
 };
 
+// Las piezas se guardan por su clave. Las reglas de Firestore solo admiten estas
+// seis, así que cualquier otra cosa que llegue aquí es un dato viejo.
+const ETIQUETAS_PIEZA: Record<string, string> = {
+  invitaciones: 'Invitaciones',
+  seating: 'Seating plan y meseros',
+  minutas: 'Minutas',
+  marcasitios: 'Marcasitios',
+  laminas: 'Láminas personalizadas',
+  pack: 'Pack completo',
+};
+
+function nombresDePiezas(piezas: unknown): string {
+  if (!Array.isArray(piezas)) return '';
+
+  return piezas
+    .filter((pieza): pieza is string => typeof pieza === 'string')
+    .map((pieza) => ETIQUETAS_PIEZA[pieza] ?? pieza)
+    .join(', ');
+}
+
 function formatear(fecha: Timestamp | null | undefined): string {
   if (!fecha) return '';
 
@@ -40,13 +60,16 @@ function formatear(fecha: Timestamp | null | undefined): string {
 }
 
 // Nombre del taller o del bono, y la fecha si la hay.
-async function contexto(datos: DatosReserva): Promise<{ taller: string; fecha: string; precio: number }> {
+async function contexto(
+  datos: DatosReserva,
+): Promise<{ taller: string; fecha: string; precio: number; etiqueta: string }> {
   if (datos.tipo === 'bono' && datos.bonoId) {
     const bono = await db.doc(`bonos/${datos.bonoId}`).get();
     return {
       taller: (bono.data()?.['titulo'] as string) ?? 'Bono mensual',
       fecha: '',
       precio: (bono.data()?.['precioMes'] as number) ?? 0,
+      etiqueta: 'Bono',
     };
   }
 
@@ -59,10 +82,11 @@ async function contexto(datos: DatosReserva): Promise<{ taller: string; fecha: s
       taller: (taller?.data()?.['titulo'] as string) ?? 'Taller',
       fecha: formatear(sesion.data()?.['fechaInicio'] as Timestamp | undefined),
       precio: (taller?.data()?.['precio'] as number) ?? 0,
+      etiqueta: 'Taller',
     };
   }
 
-  return { taller: 'Taller', fecha: '', precio: 0 };
+  return { taller: 'Taller', fecha: '', precio: 0, etiqueta: 'Taller' };
 }
 
 // --- Correos al recibir una solicitud de presupuesto ---
@@ -72,8 +96,11 @@ export const onRequestCreated = onDocumentCreated(
     const datos = evento.data?.data();
     if (!datos) return;
 
+    const piezas = nombresDePiezas(datos['piezas']);
+
     const comunes = {
       tipo: ETIQUETAS_TIPO[datos['tipo'] as string] ?? (datos['tipo'] as string),
+      piezas,
       nombre: datos['nombre'],
       email: datos['email'],
       telefono: datos['telefono'],
@@ -93,11 +120,12 @@ export const onBookingCreated = onDocumentCreated(
     const datos = evento.data?.data() as DatosReserva | undefined;
     if (!datos) return;
 
-    const { taller, fecha } = await contexto(datos);
+    const { taller, fecha, etiqueta } = await contexto(datos);
 
     const comunes = {
       taller,
       fecha,
+      etiqueta,
       nombre: datos.nombre,
       email: datos.email,
       telefono: datos.telefono,
@@ -119,20 +147,25 @@ export const onBookingUpdated = onDocumentUpdated(
 
     if (!antes || !despues || antes.status === despues.status) return;
 
-    const { taller, fecha, precio } = await contexto(despues);
+    const { taller, fecha, precio, etiqueta } = await contexto(despues);
 
     if (despues.status === 'confirmada') {
       await encolarCorreo(despues.email, 'reserva-confirmada', {
         nombre: despues.nombre,
         taller,
         fecha,
+        etiqueta,
         nPersonas: despues.nPersonas,
         importe: precio * despues.nPersonas,
       });
     }
 
     if (despues.status === 'cancelada') {
-      await encolarCorreo(despues.email, 'reserva-cancelada', { nombre: despues.nombre, taller });
+      await encolarCorreo(despues.email, 'reserva-cancelada', {
+        nombre: despues.nombre,
+        taller,
+        etiqueta,
+      });
     }
   },
 );

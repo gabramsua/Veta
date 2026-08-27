@@ -36,3 +36,33 @@ export function seSolapan(
 ): boolean {
   return inicioA.toMillis() < finB.toMillis() && inicioB.toMillis() < finA.toMillis();
 }
+
+const MESES = [
+  'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+  'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre',
+];
+
+/**
+ * Da formato a una fecha suelta del tipo `2027-06-12`, que es lo que devuelve un
+ * `<input type="date">`.
+ *
+ * Se parte la cadena a mano en vez de pasar por `Date`: `new Date('2027-06-12')`
+ * la interpreta como medianoche UTC, y al formatearla en otra zona horaria puede
+ * mostrar el día anterior. Una fecha de boda no tiene hora ni huso, así que
+ * meter un `Date` por medio solo añade formas de equivocarse.
+ *
+ * Si la cadena no tiene esa forma se devuelve tal cual: puede ser la respuesta a
+ * una pregunta de texto que casualmente parecía una fecha.
+ */
+export function formatearFechaIso(valor: string): string {
+  const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor.trim());
+
+  if (!partes) return valor;
+
+  const [, anio, mes, dia] = partes;
+  const nombreMes = MESES[Number(mes) - 1];
+
+  if (!nombreMes) return valor;
+
+  return `${Number(dia)} de ${nombreMes} de ${anio}`;
+}

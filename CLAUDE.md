@@ -190,6 +190,7 @@ Todo lo demás es cliente contra Firestore. Estas cinco cosas no pueden serlo:
 | `createAdminUser` | Crear usuarios y asignar custom claims requiere Admin SDK. |
 | `resetVacationCounters` | Cron anual: pone a 0 los contadores el 1 de enero. |
 | `enviarCorreo` | Consume la cola `mail/` y envía por SMTP. Las credenciales no pueden estar en el cliente. |
+| `getPlantillasPorDefecto` | Devuelve al panel las plantillas de serie. Viven en el código de Functions y el editor necesita enseñarlas; copiarlas al cliente las separaría al primer cambio. |
 
 **La extensión *Trigger Email* se descartó.** Hacía exactamente lo que hace
 `enviarCorreo`, pero el servicio de extensiones de Firebase se apaga el 31 de
@@ -240,7 +241,7 @@ requests/{id}                     // presupuestos
 
 formQuestions/{id}                // preguntas extra por formulario (§6)
   formulario: 'papeleria'|'liveart'|'encargo'|'taller'|'bono'|'contacto'
-  etiqueta, tipo: 'texto'|'textarea'|'opciones', opciones[]
+  etiqueta, tipo: 'texto'|'textarea'|'opciones'|'fecha', opciones[]
   obligatoria, orden, activa
 
 vacations/{id}
@@ -299,9 +300,19 @@ Cada formulario tiene una parte fija en código y una parte editable desde el pa
 y en reservas de taller también número de personas.
 
 **Preguntas extra**: Carmen añade desde el panel preguntas por formulario
-(`formQuestions`), de tipo texto corto, texto largo u opciones. Se renderizan
-debajo de los campos fijos y las respuestas se guardan en `respuestas: {}`
-indexadas por el id de la pregunta.
+(`formQuestions`), de tipo texto corto, texto largo, opciones o fecha. Se
+renderizan debajo de los campos fijos y las respuestas se guardan en
+`respuestas: {}` indexadas por el id de la pregunta.
+
+Las de tipo fecha usan `<input type="date">` con `min` en el día de hoy, y no
+admiten fechas pasadas: el `min` desanima en el calendario, y al enviar se
+comprueba otra vez porque el campo se puede escribir a mano. Se guardan como
+`2027-06-12`. Al
+mostrarlas se pasan por `formatearFechaIso`, que parte la cadena a mano en vez de
+construir un `Date`: `new Date('2027-06-12')` es medianoche UTC y al formatearla
+en otro huso puede enseñar el día anterior. Esa función está duplicada en
+`core/data/fechas.ts` y en `functions/src/emails.ts` porque cliente y Functions
+se compilan por separado; si se toca una, hay que tocar la otra.
 
 Todos los formularios llevan checkbox de aceptación de política de privacidad y
 honeypot antispam.
@@ -442,6 +453,14 @@ Excepción necesaria: los campos de Jodit producen HTML que hay que pintar. Se
 renderiza con `[innerHTML]` pasando **siempre** por `DomSanitizer`, y solo para
 contenido que ha escrito una administradora autenticada. Nunca para nada que
 venga de un formulario público.
+
+En las plantillas de correo (`functions/src/emails.ts`) rige la misma idea con
+otra forma: `sustituir()` escapa todos los huecos **salvo los que terminan en
+`Html`**. Es así porque el panel ofrece la lista de huecos y los escribe todos
+con dos llaves; si `respuestasHtml` necesitara tres, la primera plantilla que
+editara Carmen saldría con la tabla en crudo. La regla que lo sostiene: en una
+clave `*Html` solo va HTML construido por nosotros, y `respuestasAHtml()` escapa
+cada etiqueta y cada valor antes de montar la tabla.
 
 ### Notas de SSR
 

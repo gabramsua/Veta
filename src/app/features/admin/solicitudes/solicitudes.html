@@ -77,6 +77,9 @@
             <span class="sol__meta">
               {{ nombreTipo(solicitud.tipo) }} · {{ formatearFecha(solicitud.createdAt) }}
             </span>
+            @if (solicitud.piezas?.length) {
+              <span class="sol__piezas">{{ nombresPiezas(solicitud.piezas) }}</span>
+            }
           </span>
 
           <span class="vt-etiqueta-estado sol__estado sol__estado--{{ solicitud.status }}">

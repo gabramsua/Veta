@@ -15,7 +15,7 @@ export async function correoDeVeta(): Promise<string> {
 
 /**
  * Encola un correo escribiendo en `mail/`, que es la colección que consume la
- * extensión Trigger Email.
+ * Function `enviarCorreo`.
  *
  * La plantilla se busca primero en Firestore, para que sea editable desde el
  * panel, y solo si no existe se usa la de código. Así una plantilla mal borrada
@@ -63,15 +63,33 @@ export async function encolarCorreo(
   await db.collection('mail').add(correo);
 }
 
-// Sustitución mínima al estilo Handlebars: {{clave}}, {{{sinEscapar}}} y
-// {{#if clave}}…{{/if}}. Suficiente para estas plantillas y sin dependencias.
+/**
+ * Sustitución mínima al estilo Handlebars: {{clave}}, {{{sinEscapar}}} y
+ * {{#if clave}}…{{/if}}. Suficiente para estas plantillas y sin dependencias.
+ *
+ * Las claves terminadas en `Html` no se escapan, ni siquiera con dos llaves.
+ * El panel le ofrece a Carmen la lista de huecos disponibles y los escribe todos
+ * igual, con dos llaves; si `respuestasHtml` necesitara tres, la primera
+ * plantilla que editara saldría con la tabla en crudo. Que el motor lo resuelva
+ * es más seguro que confiar en que se acuerde de una excepción.
+ *
+ * La contrapartida es una regla que hay que respetar: en una clave `*Html` solo
+ * se mete HTML que hayamos construido nosotros. `respuestasAHtml` escapa cada
+ * etiqueta y cada valor antes de montar la tabla, así que lo que escriba una
+ * clienta en un formulario público nunca llega vivo hasta aquí.
+ */
 function sustituir(texto: string, datos: Record<string, unknown>): string {
+  const valor = (clave: string) => String(datos[clave] ?? '');
+  const esHtml = (clave: string) => clave.endsWith('Html');
+
   return texto
     .replace(/\{\{#if (\w+)\}\}([\s\S]*?)\{\{\/if\}\}/g, (_, clave: string, cuerpo: string) =>
       datos[clave] ? cuerpo : '',
     )
-    .replace(/\{\{\{(\w+)\}\}\}/g, (_, clave: string) => String(datos[clave] ?? ''))
-    .replace(/\{\{(\w+)\}\}/g, (_, clave: string) => escapar(String(datos[clave] ?? '')));
+    .replace(/\{\{\{(\w+)\}\}\}/g, (_, clave: string) => valor(clave))
+    .replace(/\{\{(\w+)\}\}/g, (_, clave: string) =>
+      esHtml(clave) ? valor(clave) : escapar(valor(clave)),
+    );
 }
 
 function escapar(valor: string): string {
@@ -80,6 +98,48 @@ function escapar(valor: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+}
+
+const MESES = [
+  'enero',
+  'febrero',
+  'marzo',
+  'abril',
+  'mayo',
+  'junio',
+  'julio',
+  'agosto',
+  'septiembre',
+  'octubre',
+  'noviembre',
+  'diciembre',
+];
+
+/**
+ * Da formato a una fecha suelta del tipo `2027-06-12`, que es lo que guarda una
+ * pregunta de tipo fecha.
+ *
+ * Se parte la cadena a mano en vez de pasar por `Date`: `new Date('2027-06-12')`
+ * la interpreta como medianoche UTC y al formatearla en otro huso puede mostrar
+ * el día anterior. Una fecha de boda no tiene hora, así que meter un `Date` por
+ * medio solo añade formas de equivocarse.
+ *
+ * Si la cadena no tiene esa forma se devuelve tal cual: puede ser la respuesta a
+ * una pregunta de texto que casualmente parecía una fecha.
+ *
+ * Gemela de `formatearFechaIso` en `src/app/core/data/fechas.ts`. Está duplicada
+ * porque el cliente y las Functions se compilan por separado y no comparten
+ * código; si se toca una, hay que tocar la otra.
+ */
+function formatearFechaIso(valor: string): string {
+  const partes = /^(\d{4})-(\d{2})-(\d{2})$/.exec(valor.trim());
+
+  if (!partes) return valor;
+
+  const [, anio, mes, dia] = partes;
+  const nombreMes = MESES[Number(mes) - 1];
+
+  return nombreMes ? `${Number(dia)} de ${nombreMes} de ${anio}` : valor;
 }
 
 /**
@@ -96,7 +156,7 @@ export function respuestasAHtml(respuestas: Record<string, string>): string {
       const etiqueta = respuestas[`${clave}__etiqueta`] ?? 'Respuesta';
       return `<tr>
         <td style="padding:8px 12px 8px 0;color:#6B635B;font-size:13px;vertical-align:top">${escapar(etiqueta)}</td>
-        <td style="padding:8px 0;font-size:14px">${escapar(valor)}</td>
+        <td style="padding:8px 0;font-size:14px">${escapar(formatearFechaIso(valor))}</td>
       </tr>`;
     });
 

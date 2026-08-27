@@ -8,6 +8,7 @@ import { Reserva, Solicitud, TipoSolicitud } from '../models';
 
 export interface EnvioSolicitud {
   tipo: TipoSolicitud;
+  piezas: string[];
   nombre: string;
   email: string;
   telefono: string;
@@ -42,6 +43,7 @@ export class SolicitudesService extends ColeccionBase<Solicitud> {
   async enviar(datos: EnvioSolicitud): Promise<string> {
     const referencia = await addDoc(collection(this.firestore, 'requests'), {
       tipo: datos.tipo,
+      piezas: datos.piezas,
       nombre: datos.nombre,
       email: datos.email,
       telefono: datos.telefono,

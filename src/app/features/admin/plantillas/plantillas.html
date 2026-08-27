@@ -32,6 +32,14 @@
       }
     </header>
 
+    @if (!personalizada() && !cargandoOriginal()) {
+      <p class="pla__aviso">
+        Este es el texto que se envía ahora mismo. En cuanto lo guardes, esta plantilla pasa a ser
+        vuestra: dejará de actualizarse sola si mejoramos la original, aunque siempre podréis
+        recuperarla con «Volver al original».
+      </p>
+    }
+
     <div class="pla__variables">
       <p class="pla__variables-titulo">Puedes usar estos huecos en el asunto y en el texto:</p>
       <ul class="pla__variables-lista">
@@ -42,6 +50,13 @@
       <p class="pla__variables-nota">
         Se sustituyen por los datos reales al enviar. Si escribes un hueco que no existe, sale vacío.
       </p>
+      @if (llevaRespuestas()) {
+        <p class="pla__variables-nota">
+          <code>{{ huecoRespuestas }}</code> es distinto: no es un dato suelto, sino la tabla entera
+          con las preguntas del formulario y lo que ha contestado la clienta. Ponlo en una línea
+          aparte.
+        </p>
+      }
     </div>
 
     <form class="pla__form" [formGroup]="formulario" (ngSubmit)="guardar($event)" novalidate>

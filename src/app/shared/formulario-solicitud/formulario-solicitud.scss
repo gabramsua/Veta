@@ -110,3 +110,41 @@
   font-size: var(--txt-xs);
   color: var(--veta-tinta-suave);
 }
+
+.fs__piezas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+  padding: var(--esp-4);
+  border: 1px solid var(--veta-arena-osc);
+  border-radius: var(--radio-md);
+  background-color: var(--veta-blanco);
+}
+
+.fs__piezas-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--esp-2) var(--esp-4);
+  margin-top: var(--esp-2);
+}
+
+.fs__pieza {
+  display: flex;
+  gap: var(--esp-3);
+  align-items: center;
+  padding: var(--esp-2);
+  font-size: var(--txt-sm);
+  cursor: pointer;
+  border-radius: var(--radio-sm);
+
+  &:hover {
+    background-color: var(--veta-crema);
+  }
+
+  input {
+    width: 1.8rem;
+    height: 1.8rem;
+    accent-color: var(--veta-terracota);
+    flex: 0 0 auto;
+  }
+}

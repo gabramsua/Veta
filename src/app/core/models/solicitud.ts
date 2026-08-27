@@ -24,6 +24,14 @@ export interface Reserva {
 export interface Solicitud {
   id: string;
   tipo: TipoSolicitud;
+  /**
+   * Solo en papelería: qué piezas ha marcado. Vacío en el resto de formularios.
+   *
+   * Opcional al leer, obligatorio al escribir (`EnvioSolicitud`). Las
+   * solicitudes anteriores a este campo siguen en Firestore sin él, y decir aquí
+   * que siempre está sería mentirle al compilador justo donde más duele.
+   */
+  piezas?: string[];
   nombre: string;
   email: string;
   telefono: string;
@@ -33,7 +41,7 @@ export interface Solicitud {
   notasInternas: string;
 }
 
-export type TipoPregunta = 'texto' | 'textarea' | 'opciones';
+export type TipoPregunta = 'texto' | 'textarea' | 'opciones' | 'fecha';
 
 export interface PreguntaFormulario {
   id: string;

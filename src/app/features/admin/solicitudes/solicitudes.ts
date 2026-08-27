@@ -4,6 +4,7 @@ import { catchError, of, switchMap } from 'rxjs';
 
 import { AlertasService } from '../../../core/ui/alertas.service';
 import { EstadoSolicitud, Solicitud, TipoSolicitud } from '../../../core/models';
+import { ETIQUETA_POR_PIEZA } from '../../../core/data/categorias-papeleria';
 import { EstadoVacio } from '../../../shared/estado-vacio/estado-vacio';
 import { PanelSeccion } from '../../../shared/panel-seccion/panel-seccion';
 import { Respuestas } from '../../../shared/respuestas/respuestas';
@@ -75,6 +76,12 @@ export class Solicitudes {
   );
 
   protected readonly hayMas = computed(() => this.lista().length >= this.limite());
+
+  // Las piezas se guardan por su clave para poder filtrar por ellas más
+  // adelante; aquí se traducen al nombre que Carmen reconoce.
+  protected nombresPiezas(piezas: string[] | undefined): string {
+    return (piezas ?? []).map((pieza) => ETIQUETA_POR_PIEZA[pieza] ?? pieza).join(' · ');
+  }
 
   protected nombreTipo(tipo: TipoSolicitud): string {
     return TIPOS[tipo] ?? tipo;

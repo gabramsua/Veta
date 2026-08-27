@@ -115,3 +115,12 @@
   gap: var(--esp-3);
   justify-content: flex-end;
 }
+
+.pla__aviso {
+  padding: var(--esp-3) var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+  background-color: var(--veta-crema);
+  border-left: 3px solid var(--veta-terracota);
+  border-radius: var(--radio-sm);
+}

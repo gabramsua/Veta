@@ -59,6 +59,7 @@ function reservaValida(extra = {}) {
 function solicitudValida(extra = {}) {
   return {
     tipo: 'papeleria',
+    piezas: ['invitaciones', 'minutas'],
     nombre: 'Lucía Gómez',
     email: 'lucia@example.com',
     telefono: '600333444',
@@ -214,6 +215,38 @@ describe('Solicitudes de presupuesto', () => {
 
   it('no se pueden leer desde fuera', async () => {
     await assertFails(getDocs(collection(anonimo(), 'requests')));
+  });
+
+  it('acepta una solicitud sin piezas: solo papelería las usa', async () => {
+    await assertSucceeds(addDoc(collection(anonimo(), 'requests'), solicitudValida({ piezas: [] })));
+  });
+
+  it('rechaza una pieza que no existe', async () => {
+    await assertFails(
+      addDoc(collection(anonimo(), 'requests'), solicitudValida({ piezas: ['invitaciones', 'jarrones'] })),
+    );
+  });
+
+  it('rechaza piezas que no sean una lista', async () => {
+    await assertFails(
+      addDoc(collection(anonimo(), 'requests'), solicitudValida({ piezas: 'invitaciones' })),
+    );
+  });
+
+  it('rechaza más piezas de las que existen', async () => {
+    await assertFails(
+      addDoc(
+        collection(anonimo(), 'requests'),
+        solicitudValida({
+          piezas: ['invitaciones', 'seating', 'minutas', 'marcasitios', 'laminas', 'pack', 'pack'],
+        }),
+      ),
+    );
+  });
+
+  it('rechaza una solicitud sin el campo piezas', async () => {
+    const { piezas, ...sinPiezas } = solicitudValida();
+    await assertFails(addDoc(collection(anonimo(), 'requests'), sinPiezas));
   });
 });
 
