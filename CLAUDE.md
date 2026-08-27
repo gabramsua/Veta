@@ -476,6 +476,13 @@ Jodit, SweetAlert2 y FullCalendar tocan `window`. Se cargan con `import()`
 dinámico dentro de un guard `isPlatformBrowser`, y solo en el chunk del panel.
 El panel queda excluido del prerender. Sin esto la build de SSR rompe.
 
+**App Check va en la misma lista.** `ReCaptchaV3Provider` inyecta el script de
+Google en el documento, así que en servidor lanza y la aplicación no arranca:
+Cloud Run responde 503 y el único rastro está en sus logs. En `app.config.ts` se
+registra solo si `typeof window !== 'undefined'`. Se mira así, y no con
+`isPlatformBrowser`, porque el array de providers se construye al cargar el
+módulo, fuera de contexto de inyección.
+
 **En servidor no se usan listeners de Firestore.** `ColeccionBase.listar()` y
 `leerDocumento()` devuelven un listener en navegador y una lectura suelta
 (`getDocs` / `getDoc`) en servidor. Un listener abre un canal permanente, y

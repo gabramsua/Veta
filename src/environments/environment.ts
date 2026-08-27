@@ -13,5 +13,8 @@ export const environment = {
   // App Check protege bookings y requests frente a scripts que escriban
   // saltándose el formulario. Se activa poniendo aquí la clave de sitio de
   // reCAPTCHA v3 (Consola de Firebase → App Check). Ver pendientes.md D1.
-  recaptchaSiteKey: 'veta-estudiocreativo',
+  // Clave de sitio de reCAPTCHA v3 para App Check. Vacía = App Check apagado.
+  // Las reales empiezan por `6L`; aquí había colado el id del proyecto, que
+  // rompía el render de servidor. Ver `pendientes.md` D1.
+  recaptchaSiteKey: '',
 };
