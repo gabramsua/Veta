@@ -37,6 +37,25 @@ const FILA = (etiqueta: string, valor: string) => `
   </tr>`;
 
 export const PLANTILLAS: Record<string, Plantilla> = {
+  'admin-password': {
+    descripcion: 'Enlace para ponerse una contraseña nueva. Se envía desde Administradoras.',
+    subject: 'Cambia tu contraseña de acceso · Veta',
+    html: ENVOLTORIO(`
+      <h1 style="font-size:22px;font-weight:normal;margin:0 0 16px">Hola, {{nombre}}</h1>
+      <p>Se ha pedido un cambio de contraseña para tu acceso al panel de Veta. Pulsa el botón y
+      elige una nueva.</p>
+      <p style="margin:24px 0">
+        <a href="{{enlace}}" style="display:inline-block;padding:14px 28px;background:#B0592B;color:#F2EBE1;text-decoration:none;border-radius:4px">
+          Elegir contraseña nueva
+        </a>
+      </p>
+      <p style="font-size:13px;color:#6B635B">
+        El enlace caduca y solo se puede usar una vez. Si no has sido tú, avisa a la otra
+        administradora: no hace falta que hagas nada más, tu contraseña actual sigue funcionando.
+      </p>
+    `),
+  },
+
   'solicitud-veta': {
     descripcion: 'Aviso interno cuando llega una solicitud de presupuesto.',
     subject: 'Nueva solicitud de {{tipo}}{{#if piezas}} · {{piezas}}{{/if}} · {{nombre}}',

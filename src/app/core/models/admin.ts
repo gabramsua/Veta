@@ -6,6 +6,5 @@ export interface Admin {
   email: string;
   rol: 'admin';
   activo: boolean;
-  diasVacaciones: number;
   createdAt: FechaFs;
 }

@@ -93,7 +93,8 @@
 - [x] Plantillas de email editables, con vuelta al texto original
 - [x] `onRequestCreated`, `onBookingCreated` y `onBookingUpdated`
 - [x] `confirmBooking` en transacción
-- [x] `resetVacationCounters` (cron anual) y `onVacationWritten`
+- [x] `onVacationWritten` (espejo público de cierres)
+- [x] Los días de vacaciones se calculan desde `vacations`; el cron anual sobraba
 - [x] `enviarCorreo`: Function propia con Nodemailer sobre la cola `mail/`
 - [ ] **Pendiente de tu parte**: configurar el SMTP y desplegar (`CORREOS.md`, necesita C1)
 - [ ] **Build y prueba manual pendientes**

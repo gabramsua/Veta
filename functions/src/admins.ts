@@ -2,6 +2,7 @@ import { FieldValue } from 'firebase-admin/firestore';
 import { HttpsError, onCall } from 'firebase-functions/v2/https';
 
 import { REGION, auth, db, exigirAdmin, textoObligatorio } from './comun.js';
+import { encolarCorreo } from './emails.js';
 
 interface AltaAdmin {
   nombre: string;
@@ -44,7 +45,6 @@ export const createAdminUser = onCall<AltaAdmin>({ region: REGION }, async (peti
     email,
     rol: 'admin',
     activo: true,
-    diasVacaciones: 0,
     createdAt: FieldValue.serverTimestamp(),
   });
 
@@ -79,3 +79,51 @@ export const setAdminEnabled = onCall<{ uid: string; activo: boolean }>(
     return { ok: true };
   },
 );
+
+/**
+ * Manda a una administradora un enlace para ponerse una contraseña nueva.
+ *
+ * Firebase Auth guarda solo un hash scrypt de la contraseña, así que no existe
+ * forma de leerla ni de «recordarla»: lo único posible es sustituirla. Se hace
+ * con un enlace por correo en vez de generando una contraseña y enseñándola en
+ * pantalla, para que nadie tenga que pasarla por un canal inseguro y para que
+ * quede en manos de su dueña desde el primer momento.
+ *
+ * El enlace lo emite Auth, caduca solo y solo sirve una vez.
+ */
+export const resetPasswordAdmin = onCall<{ uid: string }>({ region: REGION }, async (peticion) => {
+  exigirAdmin(peticion);
+
+  const uid = textoObligatorio(peticion.data?.uid, 'uid', 128);
+
+  const perfil = await db.doc(`admins/${uid}`).get();
+
+  if (!perfil.exists) {
+    throw new HttpsError('not-found', 'Esa administradora no existe.');
+  }
+
+  // El correo se toma de Auth, no del perfil: si alguna vez se separan, el
+  // enlace solo es válido para la dirección que Auth reconoce.
+  let email: string;
+  let nombre: string;
+
+  try {
+    const usuario = await auth.getUser(uid);
+
+    if (!usuario.email) {
+      throw new HttpsError('failed-precondition', 'Esa cuenta no tiene correo asociado.');
+    }
+
+    email = usuario.email;
+    nombre = usuario.displayName ?? (perfil.data()?.['nombre'] as string) ?? '';
+  } catch (error) {
+    if (error instanceof HttpsError) throw error;
+    throw new HttpsError('not-found', 'No hemos encontrado esa cuenta.');
+  }
+
+  const enlace = await auth.generatePasswordResetLink(email);
+
+  await encolarCorreo(email, 'admin-password', { nombre, enlace });
+
+  return { email };
+});

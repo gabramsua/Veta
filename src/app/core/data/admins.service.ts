@@ -27,6 +27,24 @@ export class AdminsService extends ColeccionBase<Admin> {
     await fn(datos);
   }
 
+  /**
+   * Manda un enlace para elegir contraseña nueva.
+   *
+   * Firebase Auth solo guarda un hash de la contraseña, así que no hay nada que
+   * «recuperar»: lo único posible es sustituirla, y quien genera el enlace tiene
+   * que ser el Admin SDK.
+   */
+  async resetearPassword(id: string): Promise<string> {
+    const fn = httpsCallable<{ uid: string }, { email: string }>(
+      this.functions,
+      'resetPasswordAdmin',
+    );
+
+    const respuesta = await fn({ uid: id });
+
+    return respuesta.data.email;
+  }
+
   async cambiarEstado(id: string, activo: boolean): Promise<void> {
     const fn = httpsCallable<{ uid: string; activo: boolean }, void>(
       this.functions,

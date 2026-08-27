@@ -188,7 +188,7 @@ Todo lo demás es cliente contra Firestore. Estas cinco cosas no pueden serlo:
 | `confirmBooking` | Decrementar plazas debe ser una transacción servidor. Si no, dos admins confirmando a la vez sobrevenden la sesión. |
 | `onRequestCreated` / `onBookingWrite` | Componer el documento de `mail/` con la plantilla correcta. Si el cliente escribiera en `mail/`, cualquiera podría enviar correos desde el dominio de Veta. |
 | `createAdminUser` | Crear usuarios y asignar custom claims requiere Admin SDK. |
-| `resetVacationCounters` | Cron anual: pone a 0 los contadores el 1 de enero. |
+| `resetPasswordAdmin` | Generar un enlace de cambio de contraseña requiere Admin SDK. Auth solo guarda un hash, así que no existe forma de leer la contraseña: solo de sustituirla. |
 | `enviarCorreo` | Consume la cola `mail/` y envía por SMTP. Las credenciales no pueden estar en el cliente. |
 | `getPlantillasPorDefecto` | Devuelve al panel las plantillas de serie. Viven en el código de Functions y el editor necesita enseñarlas; copiarlas al cliente las separaría al primer cambio. |
 
@@ -207,7 +207,9 @@ cambiar de proveedor no toca nada más. Detalle y configuración en `CORREOS.md`
 
 ```
 admins/{uid}
-  nombre, email, rol: 'admin', activo, diasVacaciones, createdAt
+  nombre, email, rol: 'admin', activo, createdAt
+  // La contraseña NO está aquí: vive en Firebase Auth, como hash scrypt.
+  // Los días de vacaciones tampoco: se calculan desde `vacations`.
 
 workshops/{id}
   slug, categoria: 'ceramica'|'pintura'|'infantil'|'eventos'
@@ -364,8 +366,14 @@ nunca aparece un hueco en blanco.
 - Cada periodo se asocia a los talleres o servicios que no se realizarán.
 - Los días de esos periodos quedan bloqueados en el calendario público y en
   cualquier punto del panel donde se cree o edite una sesión.
-- Contador de días consumidos por administradora, visible para todas. Se pone a
-  0 el 1 de enero de cada año natural.
+- Contador de días consumidos por administradora, visible para todas, y también
+  en la tabla de Administradoras. **Se calcula sumando los periodos de
+  `vacations` del año en curso, no se guarda en ningún sitio.** Hubo un campo
+  `admins.diasVacaciones` con un cron que lo ponía a 0 cada enero, pero nadie lo
+  incrementaba nunca: la tabla enseñaba siempre 0 mientras la sección de
+  Vacaciones daba el número bueno. Un valor derivado que además se almacena es
+  un valor que puede mentir, y este mentía desde el primer día. Al calcularlo,
+  el «se reinicia en enero» sale solo del filtro por año y el cron sobra.
 - Al crear una sesión que solape con un periodo de vacaciones, se avisa y se
   bloquea el guardado.
 

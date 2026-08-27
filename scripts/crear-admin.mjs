@@ -103,7 +103,6 @@ await documento.set(
     email,
     rol: 'admin',
     activo: true,
-    diasVacaciones: actual.exists ? (actual.data().diasVacaciones ?? 0) : 0,
     createdAt: actual.exists ? actual.data().createdAt : FieldValue.serverTimestamp(),
   },
   { merge: true },

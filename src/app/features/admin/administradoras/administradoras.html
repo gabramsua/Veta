@@ -109,7 +109,7 @@
               }
             </td>
             <td>{{ admin.email }}</td>
-            <td>{{ admin.diasVacaciones }} días</td>
+            <td>{{ diasDe(admin.id) }} días</td>
             <td>
               <span
                 class="vt-etiqueta-estado"
@@ -120,6 +120,17 @@
               </span>
             </td>
             <td class="adms__celda-accion">
+              @if (admin.activo) {
+                <button
+                  type="button"
+                  class="vt-adm-boton vt-adm-boton--fantasma adms__boton-fila"
+                  [disabled]="reseteando() === admin.id"
+                  (click)="resetearPassword(admin.id, admin.nombre, admin.email)"
+                >
+                  {{ reseteando() === admin.id ? 'Enviando…' : 'Cambiar contraseña' }}
+                </button>
+              }
+
               @if (admin.id !== uidPropio) {
                 <button
                   type="button"

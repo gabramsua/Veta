@@ -7,6 +7,12 @@ import { PlantillaEmail } from '../models';
 
 export const PLANTILLAS_CONOCIDAS: { id: string; nombre: string; cuando: string; variables: string[] }[] = [
   {
+    id: 'admin-password',
+    nombre: 'Cambio de contraseña · panel',
+    cuando: 'Le llega a una administradora al pedir el cambio desde Administradoras.',
+    variables: ['nombre', 'enlace'],
+  },
+  {
     id: 'solicitud-veta',
     nombre: 'Aviso interno · presupuesto',
     cuando: 'Os llega a vosotras cuando alguien pide un presupuesto.',
