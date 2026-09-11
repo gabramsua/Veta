@@ -8,7 +8,8 @@ import { PaginasService } from '../../../core/data/paginas.service';
 import { PublicoService } from '../../../core/data/publico.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { formatearFecha } from '../../../core/data/fechas';
-import { textosPorDefecto } from '../../../core/data/textos';
+import { estilosPorDefecto, textosPorDefecto } from '../../../core/data/textos';
+import { Fuente } from '../../../shared/fuente/fuente';
 
 const RUTAS_PAPELERIA: Record<CategoriaProducto, string> = {
   invitaciones: '/papeleria-de-bodas/invitaciones',
@@ -21,7 +22,7 @@ const RUTAS_PAPELERIA: Record<CategoriaProducto, string> = {
 
 @Component({
   selector: 'veta-home',
-  imports: [RouterLink],
+  imports: [RouterLink, Fuente],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -80,6 +81,12 @@ export class Home {
         };
       },
     );
+  });
+
+  // La familia de cada texto se elige desde el panel; el catálogo pone la de
+  // partida. Ver `estilosPorDefecto` en core/data/textos.ts.
+  protected readonly estilos = toSignal(this.paginas.estilos('home'), {
+    initialValue: estilosPorDefecto('home'),
   });
 
   protected readonly lineasHero = computed(() =>

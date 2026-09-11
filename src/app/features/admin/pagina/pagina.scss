@@ -179,3 +179,22 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.pag__fuente {
+  display: flex;
+  gap: var(--esp-3);
+  align-items: center;
+  margin-top: var(--esp-2);
+}
+
+.pag__fuente-etiqueta {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.pag__fuente-select {
+  width: auto;
+  min-width: 22rem;
+  padding-block: var(--esp-2);
+  font-size: var(--txt-sm);
+}

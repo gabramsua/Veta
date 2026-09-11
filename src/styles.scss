@@ -1,3 +1,19 @@
+// Las fuentes se sirven desde el propio dominio, no desde Google.
+//
+// Antes venían del CDN de Google Fonts, que recibe la IP de cada visitante. Eso
+// convierte la web en un caso con transferencia de datos a un tercero, y obliga
+// a mencionarlo en la política de privacidad. Como el resto de la web no lleva
+// ni rastreadores ni cookies de terceros, alojarlas nosotros es lo que permite
+// seguir sin banner de consentimiento (ver `DATOS-LEGALES.md`).
+// Los `as` no son opcionales: Sass saca el espacio de nombres del nombre del
+// fichero, y `400` no es un identificador válido.
+// `standard` y no `index`: el `index` carga una versión recortada al eje de
+// peso, y en una Didone el eje que de verdad afina los trazos es el de tamaño
+// óptico. Son 20 KB más y merecen la pena.
+@use '@fontsource-variable/bodoni-moda/standard.css' as bodoni;
+@use '@fontsource-variable/karla/index.css' as karla;
+@use '@fontsource/pinyon-script/400.css' as pinyon;
+
 @use 'base';
 @use 'public/public';
 @use 'admin/admin';

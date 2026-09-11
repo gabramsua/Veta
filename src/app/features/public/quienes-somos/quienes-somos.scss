@@ -29,3 +29,12 @@
   object-fit: cover;
   margin-bottom: var(--esp-3);
 }
+
+.qs__eslogan {
+  text-align: center;
+}
+
+.qs__eslogan-frase {
+  font-size: clamp(var(--txt-xl), 5.5vw, var(--txt-3xl));
+  color: var(--veta-terracota);
+}

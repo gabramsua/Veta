@@ -1,11 +1,29 @@
 export type TipoCampo = 'texto' | 'parrafo' | 'rico' | 'imagen';
 
+/** Las tres familias de la marca. Ver §8 de CLAUDE.md. */
+export type EstiloTexto = 'titular' | 'cuerpo' | 'eslogan';
+
+export const ESTILOS_TEXTO: { valor: EstiloTexto; etiqueta: string }[] = [
+  { valor: 'titular', etiqueta: 'Titular (Bodoni)' },
+  { valor: 'cuerpo', etiqueta: 'Texto normal (Karla)' },
+  { valor: 'eslogan', etiqueta: 'Letra inglesa (Pinyon)' },
+];
+
 export interface CampoPagina {
   clave: string;
   etiqueta: string;
   tipo: TipoCampo;
   pista?: string;
   porDefecto?: string;
+  /**
+   * Si está, el panel enseña un desplegable para elegir la familia tipográfica
+   * y su valor es la que se usa mientras nadie la cambie.
+   *
+   * Solo se marcan los campos cuya plantilla pública sabe pintar el estilo
+   * elegido. Enseñar el selector en un campo que luego lo ignora sería un
+   * control que miente, y de esos ya hemos arreglado unos cuantos.
+   */
+  estiloPorDefecto?: EstiloTexto;
 }
 
 /** Un tramo de la página, tal y como se ve al bajar por ella. */
@@ -64,6 +82,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
             tipo: 'parrafo',
             pista: 'Cada línea que escribas aparecerá en un renglón distinto.',
             porDefecto: 'Papel, acuarela\ny manos que crean',
+            estiloPorDefecto: 'titular',
           },
         ],
       },
@@ -72,7 +91,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         ayuda: 'La frase grande sobre fondo crema, justo debajo de la portada.',
         campos: [
           { clave: 'manifiestoAntetitulo', etiqueta: 'Línea pequeña de encima', tipo: 'texto', porDefecto: 'En Veta creemos que' },
-          { clave: 'manifiestoFrase', etiqueta: 'La frase', tipo: 'parrafo', pista: 'Cada línea, un renglón.', porDefecto: 'Lo que se hace despacio\nse queda para siempre' },
+          { clave: 'manifiestoFrase', etiqueta: 'La frase', tipo: 'parrafo', pista: 'Cada línea, un renglón.', porDefecto: 'Lo que se hace despacio\nse queda para siempre', estiloPorDefecto: 'eslogan' },
           { clave: 'manifiestoTexto', etiqueta: 'Texto debajo', tipo: 'parrafo', porDefecto: '' },
         ],
       },
@@ -80,7 +99,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '3 · Papelería de bodas',
         ayuda: 'La rejilla con las seis subsecciones de papelería.',
         campos: [
-          { clave: 'papeleriaTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Papelería que cuenta vuestra historia' },
+          { clave: 'papeleriaTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Papelería que cuenta vuestra historia', estiloPorDefecto: 'eslogan' },
           { clave: 'papeleriaTexto', etiqueta: 'Texto', tipo: 'parrafo', porDefecto: 'Cada pieza se diseña a medida. Pídenos presupuesto sin compromiso.' },
         ],
       },
@@ -89,7 +108,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         ayuda: 'El bloque a media pantalla con la acuarela en directo.',
         campos: [
           { clave: 'liveartImagen', etiqueta: 'Imagen', tipo: 'imagen', pista: 'Vertical u horizontal, se recorta a la mitad de la pantalla.' },
-          { clave: 'liveartTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Acuarelas en directo' },
+          { clave: 'liveartTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Acuarelas en directo', estiloPorDefecto: 'titular' },
           { clave: 'liveartTexto', etiqueta: 'Texto', tipo: 'parrafo', porDefecto: '' },
         ],
       },
@@ -97,7 +116,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '5 · Cierre',
         ayuda: 'El último bloque, antes del pie.',
         campos: [
-          { clave: 'cierreTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Nos vemos en el estudio' },
+          { clave: 'cierreTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Nos vemos en el estudio', estiloPorDefecto: 'titular' },
           { clave: 'cierreTexto', etiqueta: 'Texto', tipo: 'parrafo', porDefecto: 'Escríbenos y te contamos disponibilidad, precios y todo lo que necesites saber.' },
         ],
       },
@@ -121,17 +140,31 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         ],
       },
       {
-        nombre: '2 · Qué es Veta',
+        nombre: '2 · Frase de marca',
+        ayuda: 'Una frase corta, en letra inglesa. Si la dejas vacía, el bloque no aparece.',
         campos: [
-          { clave: 'queEsTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Qué es Veta' },
+          {
+            clave: 'esloganFrase',
+            etiqueta: 'La frase',
+            tipo: 'parrafo',
+            pista: 'Cada línea, un renglón. Cuanto más corta, mejor luce.',
+            porDefecto: 'Queremos hacer de vuestra historia\nuna obra de arte',
+            estiloPorDefecto: 'eslogan',
+          },
+        ],
+      },
+      {
+        nombre: '3 · Qué es Veta',
+        campos: [
+          { clave: 'queEsTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Qué es Veta', estiloPorDefecto: 'titular' },
           { clave: 'queEsImagen', etiqueta: 'Imagen', tipo: 'imagen' },
           { clave: 'queEsTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
       {
-        nombre: '3 · Carmen y Maripepi',
+        nombre: '4 · Carmen y Maripepi',
         campos: [
-          { clave: 'quienesTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Carmen y Maripepi' },
+          { clave: 'quienesTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Carmen y Maripepi', estiloPorDefecto: 'titular' },
           { clave: 'quienesImagen', etiqueta: 'Foto', tipo: 'imagen', pista: 'Un retrato de las dos funciona mejor que dos fotos sueltas.' },
           { clave: 'quienesTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
@@ -191,6 +224,72 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
     ],
     relacionado: [
       { etiqueta: 'Galería de live art', ruta: '/panel/portfolio', ayuda: 'Elige la sección «Live art» dentro del portfolio.' },
+    ],
+  },
+
+  {
+    slug: 'live-art-directo',
+    nombre: 'Acuarelas en directo',
+    ruta: '/live-art/acuarelas-en-directo',
+    bloques: [
+      {
+        nombre: '1 · Cabecera',
+        campos: [
+          {
+            clave: 'entradilla',
+            etiqueta: 'Entradilla',
+            tipo: 'parrafo',
+            porDefecto: 'Pintamos durante la celebración y cada invitado se lleva su acuarela.',
+          },
+        ],
+      },
+      {
+        nombre: '2 · Cómo funciona',
+        campos: [
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen' },
+          { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
+        ],
+      },
+      {
+        nombre: '3 · Qué incluye',
+        campos: [{ clave: 'incluye', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' }],
+      },
+    ],
+    relacionado: [
+      { etiqueta: 'Portfolio de live art', ruta: '/panel/portfolio', ayuda: 'La galería sale de la sección «Live art».' },
+    ],
+  },
+
+  {
+    slug: 'live-art-previo',
+    nombre: 'Live art previo',
+    ruta: '/live-art/previo',
+    bloques: [
+      {
+        nombre: '1 · Cabecera',
+        campos: [
+          {
+            clave: 'entradilla',
+            etiqueta: 'Entradilla',
+            tipo: 'parrafo',
+            porDefecto: 'Acuarelas pintadas antes del día, para entregar ya enmarcadas o dentro de la papelería.',
+          },
+        ],
+      },
+      {
+        nombre: '2 · Cómo funciona',
+        campos: [
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen' },
+          { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
+        ],
+      },
+      {
+        nombre: '3 · Qué incluye',
+        campos: [{ clave: 'incluye', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' }],
+      },
+    ],
+    relacionado: [
+      { etiqueta: 'Portfolio de live art', ruta: '/panel/portfolio', ayuda: 'La galería sale de la sección «Live art».' },
     ],
   },
 
@@ -306,5 +405,17 @@ export function textosPorDefecto(slug: string): Record<string, string> {
     camposDe(pagina)
       .filter((c) => c.tipo !== 'imagen')
       .map((c) => [c.clave, c.porDefecto ?? '']),
+  );
+}
+
+/** La familia que lleva cada campo mientras nadie la cambie desde el panel. */
+export function estilosPorDefecto(slug: string): Record<string, EstiloTexto> {
+  const pagina = paginaEditable(slug);
+  if (!pagina) return {};
+
+  return Object.fromEntries(
+    camposDe(pagina)
+      .filter((campo) => campo.estiloPorDefecto)
+      .map((campo) => [campo.clave, campo.estiloPorDefecto as EstiloTexto]),
   );
 }

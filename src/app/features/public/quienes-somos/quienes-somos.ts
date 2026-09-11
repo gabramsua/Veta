@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import { Imagen } from '../../../core/models';
@@ -8,13 +8,14 @@ import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-secci
 import { PaginasService } from '../../../core/data/paginas.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { textoPlano } from '../../../core/seo/quitar-html';
-import { textosPorDefecto } from '../../../core/data/textos';
+import { estilosPorDefecto, textosPorDefecto } from '../../../core/data/textos';
+import { Fuente } from '../../../shared/fuente/fuente';
 
 const SLUG = 'quienes-somos';
 
 @Component({
   selector: 'veta-quienes-somos',
-  imports: [CabeceraSeccion, BloqueTexto],
+  imports: [CabeceraSeccion, BloqueTexto, Fuente],
   templateUrl: './quienes-somos.html',
   styleUrl: './quienes-somos.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,6 +29,15 @@ export class QuienesSomos {
   });
 
   protected readonly imagenes = toSignal(this.paginas.imagenes(SLUG), { initialValue: {} as Record<string, Imagen> });
+
+  protected readonly estilos = toSignal(this.paginas.estilos(SLUG), {
+    initialValue: estilosPorDefecto(SLUG),
+  });
+
+  // Cada renglón de la frase se escribe en una línea del panel.
+  protected readonly lineasEslogan = computed(() =>
+    (this.textos()['esloganFrase'] ?? '').split('\n').filter((l) => l.trim().length > 0),
+  );
 
   private readonly seoPagina = toSignal(this.paginas.seo(SLUG), {
     initialValue: { title: '', description: '', ogImage: '' },

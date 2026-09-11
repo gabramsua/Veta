@@ -4,6 +4,16 @@
   [entradilla]="textos()['entradilla']"
 />
 
+@if (textos()['esloganFrase']) {
+  <section class="vt-seccion vt-seccion--crema qs__eslogan">
+    <p class="vt-contenedor qs__eslogan-frase" [vetaFuente]="estilos()['esloganFrase']">
+      @for (linea of lineasEslogan(); track $index) {
+        {{ linea }}@if (!$last) {<br />}
+      }
+    </p>
+  </section>
+}
+
 <section class="vt-seccion qs">
   <div class="vt-contenedor qs__cuerpo">
     <article class="qs__bloque">
@@ -11,7 +21,7 @@
         <img class="qs__imagen" [src]="foto.url" [alt]="foto.alt"
              [attr.width]="foto.width" [attr.height]="foto.height" loading="lazy" decoding="async" />
       }
-      <h2 class="vt-titulo qs__titulo">{{ textos()['queEsTitulo'] }}</h2>
+      <h2 class="vt-titulo qs__titulo" [vetaFuente]="estilos()['queEsTitulo']">{{ textos()['queEsTitulo'] }}</h2>
       @if (textos()['queEsTexto']) {
         <veta-bloque-texto [html]="textos()['queEsTexto']" />
       } @else {
@@ -24,7 +34,7 @@
         <img class="qs__imagen" [src]="foto.url" [alt]="foto.alt"
              [attr.width]="foto.width" [attr.height]="foto.height" loading="lazy" decoding="async" />
       }
-      <h2 class="vt-titulo qs__titulo">{{ textos()['quienesTitulo'] }}</h2>
+      <h2 class="vt-titulo qs__titulo" [vetaFuente]="estilos()['quienesTitulo']">{{ textos()['quienesTitulo'] }}</h2>
       @if (textos()['quienesTexto']) {
         <veta-bloque-texto [html]="textos()['quienesTexto']" />
       } @else {

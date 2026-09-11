@@ -42,6 +42,9 @@ export interface CategoriaMedio {
 export interface Pagina {
   id: string;
   textos: Record<string, string>;
+  // La familia tipográfica elegida para cada texto, por clave de campo. Solo
+  // están las que se han cambiado; el resto usa la del catálogo.
+  estilos?: Record<string, string>;
   // Las imágenes propias de la página: portada, retratos, bloques ilustrados.
   // Las galerías siguen viviendo en `portfolio`.
   imagenes: Record<string, Imagen>;

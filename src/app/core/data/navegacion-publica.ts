@@ -22,7 +22,15 @@ const TODOS: EnlaceNav[] = [
       { etiqueta: 'Pack completo', ruta: '/papeleria-de-bodas/pack' },
     ],
   },
-  { etiqueta: 'Live art', ruta: '/live-art', seccion: 'liveart' },
+  {
+    etiqueta: 'Live art',
+    ruta: '/live-art',
+    seccion: 'liveart',
+    hijos: [
+      { etiqueta: 'Acuarelas en directo', ruta: '/live-art/acuarelas-en-directo' },
+      { etiqueta: 'Live art previo', ruta: '/live-art/previo' },
+    ],
+  },
   { etiqueta: 'Acuarelas y encargos', ruta: '/acuarelas-y-encargos' },
   {
     etiqueta: 'Talleres',

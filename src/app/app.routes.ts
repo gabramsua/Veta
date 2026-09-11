@@ -154,6 +154,22 @@ export const routes: Routes = [
         title: 'Live art · Acuarelas en directo · Veta',
       },
       {
+        // El slug viaja en `data`: Angular lo enlaza al input del componente
+        // igual que si fuera un parámetro de la URL.
+        path: 'live-art/acuarelas-en-directo',
+        loadComponent: () =>
+          import('./features/public/live-art-sub/live-art-sub').then((m) => m.LiveArtSub),
+        data: { slug: 'live-art-directo' },
+        title: 'Acuarelas en directo · Live art · Veta',
+      },
+      {
+        path: 'live-art/previo',
+        loadComponent: () =>
+          import('./features/public/live-art-sub/live-art-sub').then((m) => m.LiveArtSub),
+        data: { slug: 'live-art-previo' },
+        title: 'Live art previo · Veta',
+      },
+      {
         path: 'acuarelas-y-encargos',
         loadComponent: () => import('./features/public/acuarelas/acuarelas').then((m) => m.Acuarelas),
         title: 'Acuarelas y encargos · Veta',

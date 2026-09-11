@@ -1,0 +1,23 @@
+@use 'tokens' as *;
+
+.las__intro {
+  display: grid;
+  gap: var(--esp-6);
+}
+
+.las__imagen {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radio-md);
+}
+
+.las__subtitulo {
+  margin-bottom: var(--esp-5);
+}
+
+.las__cta {
+  display: grid;
+  gap: var(--esp-4);
+  justify-items: center;
+  text-align: center;
+}

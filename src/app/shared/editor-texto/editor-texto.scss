@@ -24,3 +24,36 @@ veta-editor-texto {
 .jodit-status-bar {
   background-color: var(--veta-crema);
 }
+
+/**
+ * Los tres anchos de imagen, también dentro del editor.
+ *
+ * Jodit pinta el contenido en su propio contenedor, que no conoce los estilos
+ * de la web. Sin esto, Carmen elige un tamaño y ve exactamente lo mismo en los
+ * tres casos: el control parecería no hacer nada hasta publicar.
+ *
+ * Los porcentajes son los mismos que en `BloqueTexto`. Si allí cambian, aquí
+ * también.
+ */
+.jodit-wysiwyg {
+  .bt__imagen {
+    display: block;
+    height: auto;
+    margin-block: 1.6rem;
+    border-radius: var(--radio-md);
+  }
+
+  .bt__imagen--completa {
+    width: 100%;
+  }
+
+  .bt__imagen--media {
+    width: 65%;
+    margin-inline: auto;
+  }
+
+  .bt__imagen--pequena {
+    width: 40%;
+    margin-inline: auto;
+  }
+}

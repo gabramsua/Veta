@@ -4,7 +4,15 @@ import { RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 import { AlertasService } from '../../../core/ui/alertas.service';
-import { CampoPagina, PAGINAS_EDITABLES, PaginaEditable, camposDe } from '../../../core/data/textos';
+import {
+  CampoPagina,
+  ESTILOS_TEXTO,
+  EstiloTexto,
+  PAGINAS_EDITABLES,
+  PaginaEditable,
+  camposDe,
+  estilosPorDefecto,
+} from '../../../core/data/textos';
 import { EditorTexto } from '../../../shared/editor-texto/editor-texto';
 import { Imagen } from '../../../core/models';
 import { PaginasService } from '../../../core/data/paginas.service';
@@ -29,6 +37,17 @@ export class Pagina {
   protected readonly cargando = signal(true);
   protected readonly guardando = signal(false);
   protected readonly imagenes = signal<Record<string, Imagen>>({});
+
+  protected readonly familias = ESTILOS_TEXTO;
+
+  /**
+   * La familia elegida para cada texto.
+   *
+   * Va en un signal aparte y no en el formulario reactivo porque los controles
+   * se crean al vuelo según la página, y añadir un segundo control por campo
+   * complicaba el grupo sin ganar nada: aquí no hay validación que hacer.
+   */
+  protected readonly estilos = signal<Record<string, EstiloTexto>>({});
 
   protected readonly definicion = computed<PaginaEditable | undefined>(() =>
     PAGINAS_EDITABLES.find((p) => p.slug === this.slug()),
@@ -55,10 +74,23 @@ export class Pagina {
     return this.imagenes()[clave] ?? null;
   }
 
+  protected estiloDe(campo: CampoPagina): EstiloTexto {
+    return this.estilos()[campo.clave] ?? campo.estiloPorDefecto ?? 'cuerpo';
+  }
+
+  protected cambiarEstilo(clave: string, evento: Event): void {
+    const valor = (evento.target as HTMLSelectElement).value as EstiloTexto;
+
+    this.estilos.update((actuales) => ({ ...actuales, [clave]: valor }));
+    this.formulario.markAsDirty();
+  }
+
   private async cargar(definicion: PaginaEditable): Promise<void> {
     this.cargando.set(true);
 
     const soloTextos = camposDe(definicion).filter((c) => c.tipo !== 'imagen');
+
+    this.estilos.set(estilosPorDefecto(definicion.slug));
 
     this.formulario = this.fb.group({
       textos: this.fb.group(
@@ -72,14 +104,16 @@ export class Pagina {
     });
 
     try {
-      const [textos, imagenes, seo] = await Promise.all([
+      const [textos, imagenes, seo, estilos] = await Promise.all([
         firstValueFrom(this.paginas.textos(definicion.slug)),
         firstValueFrom(this.paginas.imagenes(definicion.slug)),
         firstValueFrom(this.paginas.seo(definicion.slug)),
+        firstValueFrom(this.paginas.estilos(definicion.slug)),
       ]);
 
       this.formulario.patchValue({ textos, seo });
       this.imagenes.set(imagenes);
+      this.estilos.set(estilos);
       this.formulario.markAsPristine();
     } catch {
       await this.alertas.error('No hemos podido cargar la página', 'Recarga e inténtalo de nuevo.');
@@ -127,7 +161,13 @@ export class Pagina {
         seo: { title: string; description: string; ogImage: string };
       };
 
-      await this.paginas.guardar(definicion.slug, valor.textos, this.imagenes(), valor.seo);
+      await this.paginas.guardar(
+        definicion.slug,
+        valor.textos,
+        this.imagenes(),
+        valor.seo,
+        this.estilos(),
+      );
       this.formulario.markAsPristine();
       await this.alertas.aviso('Cambios guardados');
     } catch {

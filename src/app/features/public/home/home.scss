@@ -62,10 +62,10 @@
 }
 
 .manifiesto__frase {
-  font-family: var(--fuente-titular);
-  font-size: clamp(var(--txt-xl), 6vw, var(--txt-3xl));
-  font-weight: 300;
-  line-height: 1.08;
+  // La familia y el peso los pone `.vt-eslogan`; aquí solo el tamaño, que
+  // depende del bloque. La inglesa pide algo más de cuerpo que una serif para
+  // leerse igual de bien.
+  font-size: clamp(var(--txt-2xl), 7vw, var(--txt-4xl));
 }
 
 .destacados__intro {

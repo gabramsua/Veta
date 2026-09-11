@@ -15,7 +15,7 @@
 
   <div class="hero__texto vt-contenedor">
     <p class="hero__antetitulo">{{ textos()['heroAntetitulo'] }}</p>
-    <h1 class="hero__titulo">
+    <h1 class="hero__titulo" [vetaFuente]="estilos()['heroTitulo']">
       @for (linea of lineasHero(); track $index) {
         {{ linea }}@if (!$last) {<br />}
       }
@@ -27,7 +27,7 @@
 <section class="vt-seccion vt-seccion--crema manifiesto">
   <div class="vt-contenedor manifiesto__cuerpo">
     <p class="vt-antetitulo">{{ textos()['manifiestoAntetitulo'] }}</p>
-    <p class="manifiesto__frase">
+    <p class="manifiesto__frase" [vetaFuente]="estilos()['manifiestoFrase']">
       @for (linea of lineasManifiesto(); track $index) {
         {{ linea }}@if (!$last) {<br />}
       }
@@ -73,7 +73,7 @@
     <div class="papeleria__intro">
       <div>
         <p class="vt-antetitulo">Bodas</p>
-        <h2 class="vt-titulo">{{ textos()['papeleriaTitulo'] }}</h2>
+        <h2 class="vt-titulo" [vetaFuente]="estilos()['papeleriaTitulo']">{{ textos()['papeleriaTitulo'] }}</h2>
       </div>
       <p class="vt-entradilla">{{ textos()['papeleriaTexto'] }}</p>
     </div>
@@ -127,7 +127,7 @@
     }
     <div class="liveart__texto">
       <p class="vt-antetitulo">Un recuerdo que trasciende</p>
-      <h2 class="vt-titulo">{{ textos()['liveartTitulo'] }}</h2>
+      <h2 class="vt-titulo" [vetaFuente]="estilos()['liveartTitulo']">{{ textos()['liveartTitulo'] }}</h2>
       @if (textos()['liveartTexto']) {
         <p class="vt-entradilla">{{ textos()['liveartTexto'] }}</p>
       }
@@ -195,7 +195,7 @@
 <section class="vt-seccion cierre">
   <div class="vt-contenedor cierre__cuerpo">
     <p class="vt-antetitulo">No te pierdas nada</p>
-    <h2 class="vt-titulo">{{ textos()['cierreTitulo'] }}</h2>
+    <h2 class="vt-titulo" [vetaFuente]="estilos()['cierreTitulo']">{{ textos()['cierreTitulo'] }}</h2>
     <p class="vt-entradilla">{{ textos()['cierreTexto'] }}</p>
     <div class="cierre__acciones">
       <a class="vt-boton" routerLink="/solicitar/contacto">Contactar</a>

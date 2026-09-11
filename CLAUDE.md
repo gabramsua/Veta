@@ -19,7 +19,7 @@ Portfolio + gestión de reservas de talleres para Veta, estudio creativo en Sevi
 | Iconos | Font Awesome (subset SVG, no la hoja completa) |
 | Modales / feedback | SweetAlert2, tematizado con los tokens de Veta |
 | Componentes utilitarios | Angular Material **solo en el panel** (spinner, datepicker, menú). No en la parte pública. |
-| Editor de texto | Jodit 4.7.6, servido desde el propio proyecto. Solo en el panel. |
+| Editor de texto | Jodit 4.7.6, servido desde el propio proyecto. Solo en el panel. Con botón propio para insertar imágenes de la biblioteca. |
 | Calendario del panel | FullCalendar, núcleo vanilla con envoltorio propio — ver nota en §9 |
 | Backend | Firebase directo desde el cliente (`@angular/fire`). **Sin backend propio.** |
 | Datos | Cloud Firestore |
@@ -128,7 +128,9 @@ Papelería de bodas
   · Marcasitios
   · Láminas personalizadas
   · Pack completo — OFERTA (descuento por papelería completa)
-Live art — Acuarelas en directo
+Live art
+  · Acuarelas en directo
+  · Live art previo
 Acuarelas y encargos
 Talleres
   · Talleres puntuales → Cerámica · Pintura · Infantil · Eventos privados
@@ -265,6 +267,7 @@ mediaCategories/{id}
 pages/{slug}                      // home, quienes-somos, live-art, ..., legal
   textos: { clave: valor }        // los huecos de cada página, definidos en
   imagenes: { clave: Imagen }     // core/data/textos.ts (§6b)
+  estilos: { clave: 'titular'|'cuerpo'|'eslogan' }   // familia elegida por frase
   seo: { title, description, ogImage }
 
 settings/site                     // documento único
@@ -403,9 +406,43 @@ Assets en la raíz: `lodo-veta-*.png`, `CARTA DE COLOR.png`, `fonts/`.
 ```
 *(Afinar con el archivo original de la carta de color.)*
 
-**Tipografía**: Laima (en `fonts/`, convertida a webfont en `src/assets/fonts/`)
-para titulares — es la serif de contraste alto del logo. Para cuerpo, Karla.
-El script del logo solo en elementos de marca, nunca en texto corrido.
+**Tipografía**: tres familias, todas OFL y **servidas desde el propio dominio**
+vía paquetes de Fontsource, nunca desde el CDN de Google. Alojarlas nosotros es
+lo que evita mandar la IP de cada visitante a un tercero y permite seguir sin
+banner de cookies (`DATOS-LEGALES.md`).
+
+| Uso | Familia | Token |
+|---|---|---|
+| Titulares | Bodoni Moda Variable, peso 400 | `--fuente-titular` |
+| Cuerpo | Karla Variable | `--fuente-cuerpo` |
+| Frases de marca | Pinyon Script | `--fuente-eslogan` |
+
+**Laima se retiró.** Era la serif del logo, pero en titulares se veía demasiado
+pesada. El logo es una imagen, así que la marca no se toca.
+
+Bodoni Moda **no tiene pesos por debajo de 400**: bajar `font-weight` no hace
+nada, el navegador lo recorta al mínimo. Lo que afina una Didone es el eje de
+tamaño óptico (`opsz`, de 6 a 96), y por eso los titulares llevan
+`font-optical-sizing: auto`. Por lo mismo se importa `standard.css` del paquete
+y no `index.css`: ese último viene recortado al eje de peso y se deja fuera el
+`opsz`.
+
+**La familia de cada frase se elige desde el panel.** Un campo de `textos.ts`
+con `estiloPorDefecto` saca en el editor un desplegable con las tres familias, y
+lo elegido se guarda en `pages/{slug}.estilos`. En la web lo aplica la directiva
+`vetaFuente`.
+
+Solo se marcan los campos cuya plantilla pública sabe pintar el estilo: enseñar
+el selector en un campo que luego lo ignora sería un control que miente. Añadir
+uno nuevo son dos líneas —el `estiloPorDefecto` en el catálogo y el
+`[vetaFuente]` en la plantilla— y hay que hacer las dos.
+
+La inglesa solo funciona en frases cortas: en texto corrido es ilegible y en
+cuerpos pequeños los trazos finos desaparecen. Por eso no se ofrece en los
+campos de texto largo.
+
+**Nada de Didot de pago ni de descargas «gratis para uso personal»**: la web
+factura, así que cualquier fuente tiene que permitir uso comercial.
 
 **Tono**: artesanal, cálido, mucho aire. La fotografía manda, la interfaz se
 aparta. Es una empresa de diseño: el acabado visual y el responsive son críticos.
@@ -457,10 +494,27 @@ Referencias: trantan.es y labahiacreativa.com.
 Regla general: **no construir DOM a mano ni inyectar HTML**. En Angular el
 template ya lo resuelve, así que `createElement` / `appendChild` no hacen falta.
 
+**Imágenes dentro del texto.** El editor lleva un botón que abre la biblioteca
+de medios e inserta la imagen donde está el cursor, con tres anchos posibles
+(`bt__imagen--completa|media|pequena`). El ancho lo decide la hoja de estilos de
+`BloqueTexto`, no un `style` en línea, para que una imagen insertada hoy se
+adapte sola si mañana cambia la maquetación. Se guarda el `width` y el `height`
+reales del archivo para que no haya salto al cargar. Como todo el texto rico se
+pinta con `BloqueTexto`, esto vale igual en páginas, talleres, bonos, productos
+y FAQ. En las plantillas de correo va apagado (`permiteImagenes` a `false`):
+muchos gestores bloquean las imágenes remotas.
+
 Excepción necesaria: los campos de Jodit producen HTML que hay que pintar. Se
 renderiza con `[innerHTML]` pasando **siempre** por `DomSanitizer`, y solo para
 contenido que ha escrito una administradora autenticada. Nunca para nada que
 venga de un formulario público.
+
+**Lo que se pinta con `[innerHTML]` necesita estilos sin encapsular.** Angular
+acota cada selector de un componente a un atributo que solo llevan los elementos
+de su plantilla; el HTML inyectado después no lo tiene, así que las reglas no le
+llegan. Por eso `BloqueTexto` usa `ViewEncapsulation.None`, con todos sus
+selectores bajo `.bt` para no pisar nada. Es el mismo motivo por el que ya lo
+usaba `EditorTexto` con el DOM de Jodit.
 
 En las plantillas de correo (`functions/src/emails.ts`) rige la misma idea con
 otra forma: `sustituir()` escapa todos los huecos **salvo los que terminan en

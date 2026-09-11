@@ -85,6 +85,24 @@
                     }
                   }
 
+                  @if (campo.estiloPorDefecto) {
+                    <div class="pag__fuente">
+                      <label class="pag__fuente-etiqueta" [attr.for]="'fuente-' + campo.clave">
+                        Letra
+                      </label>
+                      <select
+                        class="vt-input pag__fuente-select"
+                        [id]="'fuente-' + campo.clave"
+                        [value]="estiloDe(campo)"
+                        (change)="cambiarEstilo(campo.clave, $event)"
+                      >
+                        @for (familia of familias; track familia.valor) {
+                          <option [value]="familia.valor">{{ familia.etiqueta }}</option>
+                        }
+                      </select>
+                    </div>
+                  }
+
                   @if (campo.pista) {
                     <p class="vt-campo__pista">{{ campo.pista }}</p>
                   }

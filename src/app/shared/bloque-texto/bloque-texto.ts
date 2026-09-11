@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
 
 import { HtmlSeguroPipe } from '../html-seguro.pipe';
 
@@ -42,7 +42,50 @@ import { HtmlSeguroPipe } from '../html-seguro.pipe';
     .bt strong {
       color: var(--veta-tinta);
     }
+
+    /* Imágenes insertadas dentro del texto desde el panel. */
+    .bt__imagen {
+      display: block;
+      height: auto;
+      margin-block: 3.2rem;
+      border-radius: var(--radio-md);
+    }
+
+    .bt__imagen--completa {
+      width: 100%;
+    }
+
+    .bt__imagen--media {
+      width: 65%;
+      margin-inline: auto;
+    }
+
+    .bt__imagen--pequena {
+      width: 40%;
+      margin-inline: auto;
+    }
+
+    /* En móvil no hay sitio para medias tintas: todas a ancho completo. */
+    @media (max-width: 599.98px) {
+      .bt__imagen--media,
+      .bt__imagen--pequena {
+        width: 100%;
+      }
+    }
   `,
+  /**
+   * Sin encapsular, y no es opcional.
+   *
+   * Con la encapsulación emulada, Angular marca con un atributo los elementos
+   * que están en la plantilla y acota cada selector a ese atributo. El HTML que
+   * entra por `[innerHTML]` se inserta después y no lo lleva, así que ninguna
+   * regla de las de aquí abajo llegaba a aplicarse: se veía el contenedor con
+   * su ancho y su color, y dentro los estilos por defecto del navegador.
+   *
+   * Todos los selectores empiezan por `.bt`, así que sacarlos del ámbito del
+   * componente no pisa nada.
+   */
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BloqueTexto {

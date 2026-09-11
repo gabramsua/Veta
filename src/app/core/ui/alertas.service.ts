@@ -67,6 +67,36 @@ export class AlertasService {
     return isConfirmed;
   }
 
+  /**
+   * Pide elegir una opción de una lista corta. Devuelve `null` si se cancela.
+   *
+   * Se usa radio y no un desplegable porque las opciones son pocas y así se ven
+   * todas de golpe, sin tener que desplegar nada.
+   */
+  async elegirOpcion(
+    titulo: string,
+    opciones: { valor: string; etiqueta: string }[],
+    porDefecto = opciones[0]?.valor ?? '',
+  ): Promise<string | null> {
+    const swal = await this.cargar();
+    if (!swal) return null;
+
+    const { isConfirmed, value } = await swal.fire({
+      title: titulo,
+      input: 'radio',
+      inputOptions: Object.fromEntries(opciones.map((o) => [o.valor, o.etiqueta])),
+      inputValue: porDefecto,
+      showCancelButton: true,
+      confirmButtonText: 'Insertar',
+      cancelButtonText: 'Cancelar',
+      reverseButtons: true,
+      customClass: ESTILOS,
+      buttonsStyling: false,
+    });
+
+    return isConfirmed && typeof value === 'string' ? value : null;
+  }
+
   async aviso(texto: string): Promise<void> {
     const swal = await this.cargar();
     await swal?.fire({

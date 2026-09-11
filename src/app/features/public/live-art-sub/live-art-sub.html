@@ -1,0 +1,45 @@
+<veta-cabecera-seccion
+  antetitulo="Live art"
+  [titulo]="definicion()?.nombre ?? 'Live art'"
+  [entradilla]="valor()('entradilla')"
+/>
+
+@if (valor()('texto') || imagenes()['imagen']) {
+  <section class="vt-seccion">
+    <div class="vt-contenedor las__intro">
+      @if (imagenes()['imagen']; as foto) {
+        <img
+          class="las__imagen"
+          [src]="foto.url"
+          [alt]="foto.alt"
+          [attr.width]="foto.width"
+          [attr.height]="foto.height"
+          loading="lazy"
+          decoding="async"
+        />
+      }
+      @if (valor()('texto')) {
+        <veta-bloque-texto [html]="valor()('texto')" />
+      }
+    </div>
+  </section>
+}
+
+@if (valor()('incluye')) {
+  <section class="vt-seccion vt-seccion--crema">
+    <div class="vt-contenedor">
+      <h2 class="vt-titulo las__subtitulo">Qué incluye</h2>
+      <veta-bloque-texto [html]="valor()('incluye')" />
+    </div>
+  </section>
+}
+
+<section class="vt-seccion vt-seccion--arena">
+  <div class="vt-contenedor las__cta">
+    <h2 class="vt-titulo">¿Lo hablamos?</h2>
+    <p class="vt-entradilla">
+      Cuéntanos qué necesitas y te respondemos con un presupuesto a medida.
+    </p>
+    <a class="vt-boton" routerLink="/solicitar/live-art">Consultar disponibilidad</a>
+  </div>
+</section>

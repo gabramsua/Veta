@@ -149,3 +149,13 @@
 - [x] Cada página lista qué más sale en ella y dónde se gestiona
 - [x] Cabecera pública cuadrada: enlaces sin partir y menú desplegable bajo 1280 px
 - [ ] **Enseñárselo a Carmen y ver dónde se atasca**: es la única prueba que vale
+
+## Mejoras tras la primera prueba con las clientas
+
+- [x] Tipografía nueva: Bodoni Moda para titulares, Pinyon Script para frases de marca
+- [x] Laima retirada; fuentes autoalojadas con Fontsource, fuera del CDN de Google
+- [x] Bloque de frase de marca en Quiénes somos
+- [x] Desplegable de familia tipográfica por frase, en el editor de páginas
+- [x] Live art se abre en dos subpáginas editables desde el panel
+- [x] Imágenes dentro del texto, desde la biblioteca de medios, con tres anchos
+- [ ] **Pendiente de tu parte**: `npm install` para bajar las tres fuentes

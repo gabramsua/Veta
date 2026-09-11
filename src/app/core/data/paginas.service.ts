@@ -5,7 +5,7 @@ import { isPlatformServer } from '@angular/common';
 
 import { Imagen, Pagina } from '../models';
 import { leerDocumento } from './lectura-ssr';
-import { textosPorDefecto } from './textos';
+import { EstiloTexto, estilosPorDefecto, textosPorDefecto } from './textos';
 
 @Injectable({ providedIn: 'root' })
 export class PaginasService {
@@ -21,6 +21,23 @@ export class PaginasService {
         ...((datos as Partial<Pagina> | undefined)?.textos ?? {}),
       })),
       catchError(() => of(textosPorDefecto(slug))),
+    );
+  }
+
+  /**
+   * Qué familia tipográfica usa cada texto.
+   *
+   * Igual que con los textos, lo guardado pisa al catálogo y lo que falte cae
+   * en el valor por defecto, para que una página que nadie ha tocado se vea
+   * como la diseñamos.
+   */
+  estilos(slug: string): Observable<Record<string, EstiloTexto>> {
+    return leerDocumento(this.firestore, `pages/${slug}`, this.esServidor).pipe(
+      map((datos) => ({
+        ...estilosPorDefecto(slug),
+        ...(((datos as Partial<Pagina> | undefined)?.estilos ?? {}) as Record<string, EstiloTexto>),
+      })),
+      catchError(() => of(estilosPorDefecto(slug))),
     );
   }
 
@@ -50,7 +67,12 @@ export class PaginasService {
     textos: Record<string, string>,
     imagenes: Record<string, Imagen>,
     seo: { title: string; description: string; ogImage: string },
+    estilos: Record<string, EstiloTexto>,
   ): Promise<void> {
-    await setDoc(doc(this.firestore, 'pages', slug), { textos, imagenes, seo }, { merge: true });
+    await setDoc(
+      doc(this.firestore, 'pages', slug),
+      { textos, imagenes, seo, estilos },
+      { merge: true },
+    );
   }
 }

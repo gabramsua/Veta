@@ -145,3 +145,37 @@
 [inert] {
   pointer-events: none;
 }
+
+/**
+ * Frases de marca en inglesa manuscrita.
+ *
+ * Solo para eslóganes cortos: «Lo que se hace despacio, se queda para siempre».
+ * Pinyon Script tiene un ojo pequeño y mucho trazo fino, así que necesita más
+ * tamaño y más interlínea que una serif normal para leerse bien.
+ *
+ * No usar en párrafos ni en enlaces: en texto corrido es ilegible, y en cuerpos
+ * pequeños los trazos finos desaparecen en pantallas sin retina.
+ */
+.vt-eslogan {
+  font-family: var(--fuente-eslogan);
+  font-weight: 400;
+  line-height: 1.35;
+  // La inglesa se apoya en una línea base inclinada y las mayúsculas suben
+  // mucho: sin este respiro, los ascendentes chocan con el bloque de arriba.
+  padding-block: 0.12em;
+}
+
+/**
+ * Las otras dos familias, para cuando se eligen desde el panel.
+ *
+ * La de eslogan es `.vt-eslogan`, más arriba, porque necesita bastante más que
+ * cambiar de familia.
+ */
+.vt-fuente-titular {
+  font-family: var(--fuente-titular);
+  font-optical-sizing: auto;
+}
+
+.vt-fuente-cuerpo {
+  font-family: var(--fuente-cuerpo);
+}

@@ -16,8 +16,14 @@
   --veta-aviso: #b8892f;
   --veta-error: #a33a2a;
 
-  --fuente-titular: 'Laima', 'Georgia', serif;
-  --fuente-cuerpo: 'Karla', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // Didone de contraste alto para titulares. Su peso más ligero es el 400: en
+  // una Didone el trazo fino no se consigue bajando el peso sino subiendo el
+  // tamaño óptico, que es lo que hace `font-optical-sizing` más abajo.
+  --fuente-titular: 'Bodoni Moda Variable', 'Didot', 'Georgia', serif;
+  --fuente-cuerpo: 'Karla Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  // Inglesa manuscrita, solo para frases de marca. Nunca en texto corrido: en
+  // párrafos largos es ilegible.
+  --fuente-eslogan: 'Pinyon Script', 'Snell Roundhand', cursive;
 
   --peso-normal: 400;
   --peso-medio: 500;
@@ -65,38 +71,6 @@
   --z-overlay: 300;
   --z-modal: 400;
 }
-@font-face {
-  font-family: 'Laima';
-  src: url('/assets/fonts/Laima-Regular.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Laima';
-  src: url('/assets/fonts/Laima-Light.woff') format('woff');
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Laima';
-  src: url('/assets/fonts/Laima-Thin.woff') format('woff');
-  font-weight: 200;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Laima';
-  src: url('/assets/fonts/Laima-Hairline.woff') format('woff');
-  font-weight: 100;
-  font-style: normal;
-  font-display: swap;
-}
-
 *,
 *::before,
 *::after {
@@ -143,6 +117,17 @@ h6 {
   margin: 0;
   font-family: var(--fuente-titular);
   font-weight: var(--peso-normal);
+  /**
+   * El eje de tamaño óptico es lo que da el aire fino que se buscaba.
+   *
+   * Bodoni Moda no tiene pesos por debajo de 400, así que bajar `font-weight`
+   * no sirve de nada: el navegador lo recorta al mínimo. Lo que sí funciona en
+   * una Didone es el eje `opsz` (de 6 a 96): cuanto mayor es, más contraste y
+   * más finos los trazos horizontales. Con `auto` el navegador lo sube solo
+   * según el tamaño de letra, así que los titulares grandes salen afilados y
+   * los pequeños siguen siendo legibles.
+   */
+  font-optical-sizing: auto;
   line-height: 1.12;
   letter-spacing: 0.01em;
 }
