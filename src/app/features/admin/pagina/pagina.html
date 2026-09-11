@@ -63,6 +63,27 @@
                     </button>
                   }
 
+                  @if (campo.permitePosicion && imagen(campo.clave)) {
+                    <div class="pag__fuente">
+                      <label class="pag__fuente-etiqueta" [attr.for]="'pos-' + campo.clave">
+                        Colocación
+                      </label>
+                      <select
+                        class="vt-input pag__fuente-select"
+                        [id]="'pos-' + campo.clave"
+                        [value]="posicionDe(campo.clave)"
+                        (change)="cambiarPosicion(campo.clave, $event)"
+                      >
+                        @for (opcion of posiciones; track opcion.valor) {
+                          <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+                        }
+                      </select>
+                    </div>
+                    <p class="vt-campo__pista">
+                      Si la pones a un lado, el texto la rodea. En móvil siempre ocupa todo el ancho.
+                    </p>
+                  }
+
                   @if (campo.pista) {
                     <p class="vt-campo__pista">{{ campo.pista }}</p>
                   }
@@ -79,6 +100,13 @@
                     }
                     @case ('parrafo') {
                       <textarea class="vt-textarea pag__parrafo" [id]="'campo-' + campo.clave" [formControlName]="campo.clave"></textarea>
+                    }
+                    @case ('opcion') {
+                      <select class="vt-input" [id]="'campo-' + campo.clave" [formControlName]="campo.clave">
+                        @for (opcion of campo.opciones; track opcion.valor) {
+                          <option [value]="opcion.valor">{{ opcion.etiqueta }}</option>
+                        }
+                      </select>
                     }
                     @default {
                       <veta-editor-texto [etiqueta]="campo.etiqueta" [formControlName]="campo.clave" />

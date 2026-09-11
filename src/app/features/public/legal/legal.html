@@ -2,7 +2,7 @@
 
 <section class="vt-seccion">
   <div class="vt-contenedor leg__cuerpo">
-    @if (contenido()) {
+    @if (tieneContenido(contenido())) {
       <veta-bloque-texto [html]="contenido()" />
     } @else {
       <div class="leg__pendiente">

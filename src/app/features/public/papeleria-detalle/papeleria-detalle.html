@@ -13,6 +13,38 @@
     [entradilla]="entradilla()"
   />
 
+  @if (texto('bloqueUnoTitulo') || tieneContenido(texto('bloqueUnoTexto')) || imagenes()['bloqueUnoImagen']) {
+    <section class="vt-seccion">
+      <div class="vt-contenedor">
+        @if (texto('bloqueUnoTitulo')) {
+          <h2 class="vt-titulo pd__bloque-titulo" [vetaFuente]="estilos()['bloqueUnoTitulo']">
+            {{ texto('bloqueUnoTitulo') }}
+          </h2>
+        }
+        <veta-bloque-ilustrado
+          [imagen]="imagenes()['bloqueUnoImagen'] ?? null"
+          [html]="texto('bloqueUnoTexto')"
+        />
+      </div>
+    </section>
+  }
+
+  @if (texto('bloqueDosTitulo') || tieneContenido(texto('bloqueDosTexto')) || imagenes()['bloqueDosImagen']) {
+    <section class="vt-seccion vt-seccion--crema">
+      <div class="vt-contenedor">
+        @if (texto('bloqueDosTitulo')) {
+          <h2 class="vt-titulo pd__bloque-titulo" [vetaFuente]="estilos()['bloqueDosTitulo']">
+            {{ texto('bloqueDosTitulo') }}
+          </h2>
+        }
+        <veta-bloque-ilustrado
+          [imagen]="imagenes()['bloqueDosImagen'] ?? null"
+          [html]="texto('bloqueDosTexto')"
+        />
+      </div>
+    </section>
+  }
+
   @if (deLaCategoria().length === 0) {
     <section class="vt-seccion">
       <div class="vt-contenedor pd__vacio">
@@ -24,33 +56,73 @@
     </section>
   } @else {
     <section class="vt-seccion">
-      <div class="vt-contenedor pd__lista">
-        @for (producto of deLaCategoria(); track producto.id) {
-          <article class="pd__producto">
-            <div class="pd__media">
-              @if (producto.imagenes.length > 0) {
-                <img
-                  [src]="producto.imagenes[0].url"
-                  [alt]="producto.imagenes[0].alt"
-                  [attr.width]="producto.imagenes[0].width"
-                  [attr.height]="producto.imagenes[0].height"
-                  loading="lazy"
-                  decoding="async"
-                />
-              } @else {
-                <span class="vt-marcador">{{ producto.titulo }}</span>
-              }
-            </div>
+      <div class="vt-contenedor">
+        @if (texto('tituloCatalogo')) {
+          <h2 class="vt-titulo pd__bloque-titulo" [vetaFuente]="estilos()['tituloCatalogo']">
+            {{ texto('tituloCatalogo') }}
+          </h2>
+        }
 
-            <div class="pd__texto">
-              <h2 class="pd__titulo">{{ producto.titulo }}</h2>
-              <p class="pd__precio">desde {{ producto.precioDesde }} € / {{ producto.unidad }}</p>
-              <veta-bloque-texto [html]="producto.descripcion" />
-              <a class="vt-enlace-sub" routerLink="/solicitar/papeleria" [queryParams]="{ sobre: categoria() }">
-                Pedir presupuesto
-              </a>
-            </div>
-          </article>
+        @if (enRejilla()) {
+          <div class="pd__rejilla">
+            @for (producto of deLaCategoria(); track producto.id) {
+              <article class="pd__ficha">
+                <a
+                  class="pd__ficha-enlace"
+                  routerLink="/solicitar/papeleria"
+                  [queryParams]="{ sobre: categoria() }"
+                >
+                  <div class="pd__ficha-media">
+                    @if (producto.imagenes.length > 0) {
+                      <img
+                        [src]="producto.imagenes[0].url"
+                        [alt]="producto.imagenes[0].alt"
+                        [attr.width]="producto.imagenes[0].width"
+                        [attr.height]="producto.imagenes[0].height"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    } @else {
+                      <span class="vt-marcador">{{ producto.titulo }}</span>
+                    }
+                  </div>
+
+                  <h3 class="pd__ficha-titulo">{{ producto.titulo }}</h3>
+                  <p class="pd__precio">desde {{ producto.precioDesde }} € / {{ producto.unidad }}</p>
+                </a>
+              </article>
+            }
+          </div>
+        } @else {
+          <div class="pd__lista">
+            @for (producto of deLaCategoria(); track producto.id) {
+              <article class="pd__producto">
+                <div class="pd__media">
+                  @if (producto.imagenes.length > 0) {
+                    <img
+                      [src]="producto.imagenes[0].url"
+                      [alt]="producto.imagenes[0].alt"
+                      [attr.width]="producto.imagenes[0].width"
+                      [attr.height]="producto.imagenes[0].height"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  } @else {
+                    <span class="vt-marcador">{{ producto.titulo }}</span>
+                  }
+                </div>
+
+                <div class="pd__texto">
+                  <h3 class="pd__titulo">{{ producto.titulo }}</h3>
+                  <p class="pd__precio">desde {{ producto.precioDesde }} € / {{ producto.unidad }}</p>
+                  <veta-bloque-texto [html]="producto.descripcion" />
+                  <a class="vt-enlace-sub" routerLink="/solicitar/papeleria" [queryParams]="{ sobre: categoria() }">
+                    Pedir presupuesto
+                  </a>
+                </div>
+              </article>
+            }
+          </div>
         }
       </div>
     </section>

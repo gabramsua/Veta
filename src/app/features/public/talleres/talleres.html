@@ -4,7 +4,7 @@
   [entradilla]="textos()['entradilla']"
 />
 
-@if (textos()['texto']) {
+@if (tieneContenido(textos()['texto'])) {
   <section class="vt-seccion">
     <div class="vt-contenedor">
       <veta-bloque-texto [html]="textos()['texto']" />
@@ -103,7 +103,7 @@
   }
 }
 
-@if (textos()['comoReservar']) {
+@if (tieneContenido(textos()['comoReservar'])) {
   <section class="vt-seccion vt-seccion--arena">
     <div class="vt-contenedor">
       <h2 class="vt-titulo tal__subtitulo">Cómo se reserva</h2>

@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, ViewEncapsulation, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewEncapsulation, computed, input } from '@angular/core';
 
 import { HtmlSeguroPipe } from '../html-seguro.pipe';
+import { tieneContenido } from '../../core/seo/quitar-html';
 
 // Pinta el HTML que ha escrito una administradora desde Jodit. Nunca se usa con
 // contenido que venga de un formulario público.
@@ -8,7 +9,7 @@ import { HtmlSeguroPipe } from '../html-seguro.pipe';
   selector: 'veta-bloque-texto',
   imports: [HtmlSeguroPipe],
   template: `
-    @if (html()) {
+    @if (hayContenido()) {
       <div class="bt" [innerHTML]="html() | htmlSeguro"></div>
     }
   `,
@@ -90,4 +91,8 @@ import { HtmlSeguroPipe } from '../html-seguro.pipe';
 })
 export class BloqueTexto {
   readonly html = input<string>('');
+
+  // Jodit deja `<p><br></p>` al vaciar un campo. Sin esta comprobación se
+  // pintaría un contenedor con un párrafo vacío dentro.
+  protected readonly hayContenido = computed(() => tieneContenido(this.html()));
 }

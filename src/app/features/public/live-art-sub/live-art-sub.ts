@@ -5,11 +5,12 @@ import { switchMap } from 'rxjs';
 
 import { Imagen } from '../../../core/models';
 
+import { BloqueIlustrado } from '../../../shared/bloque-ilustrado/bloque-ilustrado';
 import { BloqueTexto } from '../../../shared/bloque-texto/bloque-texto';
 import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-seccion';
 import { PaginasService } from '../../../core/data/paginas.service';
 import { SeoService } from '../../../core/seo/seo.service';
-import { textoPlano } from '../../../core/seo/quitar-html';
+import { textoPlano, tieneContenido } from '../../../core/seo/quitar-html';
 import { paginaEditable, textosPorDefecto } from '../../../core/data/textos';
 
 /**
@@ -24,13 +25,17 @@ import { paginaEditable, textosPorDefecto } from '../../../core/data/textos';
  */
 @Component({
   selector: 'veta-live-art-sub',
-  imports: [RouterLink, CabeceraSeccion, BloqueTexto],
+  imports: [RouterLink, CabeceraSeccion, BloqueTexto, BloqueIlustrado],
   templateUrl: './live-art-sub.html',
   styleUrl: './live-art-sub.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LiveArtSub {
   readonly slug = input.required<string>();
+
+  // Jodit deja `<p><br></p>` al vaciar un campo, así que comprobar la cadena a
+  // secas dejaría la sección en pie con todo su espaciado y nada dentro.
+  protected readonly tieneContenido = tieneContenido;
 
   private readonly paginas = inject(PaginasService);
   private readonly seo = inject(SeoService);

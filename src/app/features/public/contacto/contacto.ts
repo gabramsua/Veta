@@ -11,6 +11,7 @@ import { PaginasService } from '../../../core/data/paginas.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { SolicitudesService } from '../../../core/data/solicitudes.service';
 import { textosPorDefecto } from '../../../core/data/textos';
+import { tieneContenido } from '../../../core/seo/quitar-html';
 
 const SLUG = 'contacto';
 
@@ -22,6 +23,10 @@ const SLUG = 'contacto';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Contacto {
+  // Jodit deja `<p><br></p>` al vaciar un campo. Sin esto, el hueco del texto
+  // seguiría contando en la rejilla y separaría la cabecera del formulario.
+  protected readonly tieneContenido = tieneContenido;
+
   private readonly paginas = inject(PaginasService);
   private readonly ajustesService = inject(AjustesService);
   private readonly seo = inject(SeoService);

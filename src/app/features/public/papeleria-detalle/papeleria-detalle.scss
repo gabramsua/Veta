@@ -66,3 +66,59 @@
 .pd__galeria-titulo {
   margin-bottom: var(--esp-6);
 }
+
+.pd__bloque-titulo {
+  margin-bottom: var(--esp-5);
+}
+
+/**
+ * Rejilla de fichas, para subsecciones con varios modelos.
+ *
+ * `auto-fill` con un mínimo deja que el navegador decida cuántas caben: tres o
+ * cuatro en escritorio, dos en tableta, una en móvil, sin escribir un solo
+ * punto de ruptura.
+ */
+.pd__rejilla {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(26rem, 1fr));
+  gap: var(--esp-7) var(--esp-5);
+}
+
+.pd__ficha-enlace {
+  display: grid;
+  gap: var(--esp-2);
+  color: inherit;
+  text-decoration: none;
+
+  &:hover .pd__ficha-media img,
+  &:focus-visible .pd__ficha-media img {
+    transform: scale(1.03);
+  }
+}
+
+.pd__ficha-media {
+  overflow: hidden;
+  background-color: var(--veta-arena);
+  border-radius: var(--radio-md);
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    transition: transform var(--trans-lenta);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    img {
+      transition: none;
+    }
+  }
+}
+
+.pd__ficha-titulo {
+  margin-top: var(--esp-2);
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-md);
+  font-weight: var(--peso-normal);
+}

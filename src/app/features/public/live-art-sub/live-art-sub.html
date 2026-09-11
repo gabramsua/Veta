@@ -4,28 +4,18 @@
   [entradilla]="valor()('entradilla')"
 />
 
-@if (valor()('texto') || imagenes()['imagen']) {
+@if (tieneContenido(valor()('texto')) || imagenes()['imagen']) {
   <section class="vt-seccion">
-    <div class="vt-contenedor las__intro">
-      @if (imagenes()['imagen']; as foto) {
-        <img
-          class="las__imagen"
-          [src]="foto.url"
-          [alt]="foto.alt"
-          [attr.width]="foto.width"
-          [attr.height]="foto.height"
-          loading="lazy"
-          decoding="async"
-        />
-      }
-      @if (valor()('texto')) {
-        <veta-bloque-texto [html]="valor()('texto')" />
-      }
+    <div class="vt-contenedor">
+      <veta-bloque-ilustrado
+        [imagen]="imagenes()['imagen'] ?? null"
+        [html]="valor()('texto')"
+      />
     </div>
   </section>
 }
 
-@if (valor()('incluye')) {
+@if (tieneContenido(valor()('incluye'))) {
   <section class="vt-seccion vt-seccion--crema">
     <div class="vt-contenedor">
       <h2 class="vt-titulo las__subtitulo">Qué incluye</h2>

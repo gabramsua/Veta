@@ -7,7 +7,7 @@
 <section class="vt-seccion">
   <div class="vt-contenedor con__cuerpo">
     <div class="con__texto">
-      @if (textos()['texto']) {
+      @if (tieneContenido(textos()['texto'])) {
         <veta-bloque-texto [html]="textos()['texto']" />
       }
 

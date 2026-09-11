@@ -4,7 +4,7 @@
   [entradilla]="textos()['entradilla']"
 />
 
-@if (textos()['texto']) {
+@if (tieneContenido(textos()['texto'])) {
   <section class="vt-seccion pap__intro">
     <div class="vt-contenedor">
       <veta-bloque-texto [html]="textos()['texto']" />
@@ -55,7 +55,7 @@
 
 <section class="vt-seccion pap__cta">
   <div class="vt-contenedor pap__cta-cuerpo">
-    <h2 class="vt-titulo">¿Hablamos de vuestra boda?</h2>
+    <h2 class="vt-titulo">Te enviamos el dossier completo con todas las opciones</h2>
     <p class="vt-entradilla">
       Cuéntanos qué tenéis en mente y os preparamos un presupuesto a medida, sin compromiso.
     </p>

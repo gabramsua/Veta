@@ -1,0 +1,76 @@
+@use 'tokens' as *;
+
+.bi {
+  display: block;
+}
+
+.bi__imagen {
+  height: auto;
+  border-radius: var(--radio-md);
+}
+
+.bi--completa {
+  display: grid;
+  gap: var(--esp-6);
+
+  .bi__imagen {
+    width: 100%;
+  }
+}
+
+/**
+ * Con la imagen a un lado, el texto la rodea.
+ *
+ * Se usa `float` y no `grid` a propósito: una rejilla pone el texto en una
+ * columna propia y lo deja cortado a la altura de la imagen. El float es lo
+ * único que hace que las líneas sigan por debajo cuando el texto es más largo
+ * que la foto, que es justo lo que pidieron.
+ *
+ * El `.bt` de `BloqueTexto` trae `max-width`, y con una imagen flotando al lado
+ * eso estrecharía la columna dos veces. Aquí se anula.
+ */
+.bi--izquierda,
+.bi--derecha {
+  &::after {
+    display: block;
+    clear: both;
+    content: '';
+  }
+
+  .bi__imagen {
+    width: 42%;
+    margin-bottom: var(--esp-5);
+  }
+
+  .bt {
+    max-width: none;
+  }
+}
+
+.bi--izquierda .bi__imagen {
+  float: left;
+  margin-right: var(--esp-6);
+}
+
+.bi--derecha .bi__imagen {
+  float: right;
+  margin-left: var(--esp-6);
+}
+
+/**
+ * En móvil no flota nada.
+ *
+ * Una imagen al 42% en una pantalla estrecha deja el texto en columnas de tres
+ * palabras, con más guiones que letras. Todas pasan a ancho completo.
+ */
+@include hasta($bp-tablet) {
+  .bi--izquierda,
+  .bi--derecha {
+    .bi__imagen {
+      float: none;
+      width: 100%;
+      margin-inline: 0;
+      margin-bottom: var(--esp-5);
+    }
+  }
+}

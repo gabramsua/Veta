@@ -1,4 +1,10 @@
-export type TipoCampo = 'texto' | 'parrafo' | 'rico' | 'imagen';
+/**
+ * `opcion` es un desplegable con valores cerrados.
+ *
+ * Se guarda en `textos` como cualquier otro campo, así que no necesita ni
+ * colección ni método de servicio propios: para Firestore es una cadena más.
+ */
+export type TipoCampo = 'texto' | 'parrafo' | 'rico' | 'imagen' | 'opcion';
 
 /** Las tres familias de la marca. Ver §8 de CLAUDE.md. */
 export type EstiloTexto = 'titular' | 'cuerpo' | 'eslogan';
@@ -24,6 +30,17 @@ export interface CampoPagina {
    * control que miente, y de esos ya hemos arreglado unos cuantos.
    */
   estiloPorDefecto?: EstiloTexto;
+  /**
+   * Solo en campos de imagen: si está a `true`, el panel deja elegir si la
+   * imagen va a ancho completo o flotando a un lado con el texto rodeándola.
+   *
+   * Misma norma que con `estiloPorDefecto`: se marca únicamente donde la
+   * plantilla pública sabe aplicarlo, y eso pide que la imagen y el texto que
+   * la rodea estén en el mismo contenedor. Una portada a sangre no lo admite.
+   */
+  permitePosicion?: boolean;
+  /** Solo en campos de tipo `opcion`. */
+  opciones?: { valor: string; etiqueta: string }[];
 }
 
 /** Un tramo de la página, tal y como se ve al bajar por ella. */
@@ -47,6 +64,87 @@ export interface PaginaEditable {
   bloques: BloquePagina[];
   relacionado: EnlaceRelacionado[];
 }
+
+/** Cómo se pintan los modelos de una subsección de papelería. */
+export const MODOS_CATALOGO = [
+  { valor: 'rejilla', etiqueta: 'Rejilla de fichas (para varios modelos)' },
+  { valor: 'bloques', etiqueta: 'Bloques grandes alternados (para uno o dos)' },
+];
+
+/**
+ * Las seis subsecciones de papelería comparten estructura.
+ *
+ * Se generan con esta función en vez de escribirlas seis veces: son idénticas
+ * salvo el nombre, el slug y el modo de partida. Los dos bloques explicativos
+ * van vacíos por defecto y no se pintan hasta que alguien los rellena, así que
+ * quien necesite contar algo antes del catálogo —seating tiene dos formas de
+ * trabajar— lo hace sin pedir código nuevo.
+ */
+function subseccionPapeleria(
+  categoria: string,
+  nombre: string,
+  modoPorDefecto: string,
+): PaginaEditable {
+  return {
+    slug: `papeleria-${categoria}`,
+    nombre: `Papelería · ${nombre}`,
+    ruta: `/papeleria-de-bodas/${categoria}`,
+    bloques: [
+      {
+        nombre: '1 · Cabecera',
+        ayuda: 'Si dejas la entradilla vacía, se escribe sola con el precio más bajo.',
+        campos: [
+          { clave: 'entradilla', etiqueta: 'Entradilla', tipo: 'parrafo', porDefecto: '' },
+        ],
+      },
+      {
+        nombre: '2 · Primer bloque explicativo',
+        ayuda: 'Opcional, encima del catálogo. Si lo dejas vacío no aparece.',
+        campos: [
+          { clave: 'bloqueUnoTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: '', estiloPorDefecto: 'titular' },
+          { clave: 'bloqueUnoImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'bloqueUnoTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
+        ],
+      },
+      {
+        nombre: '3 · Segundo bloque explicativo',
+        ayuda: 'Opcional. Sirve para contar una segunda forma de trabajar.',
+        campos: [
+          { clave: 'bloqueDosTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: '', estiloPorDefecto: 'titular' },
+          { clave: 'bloqueDosImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'bloqueDosTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
+        ],
+      },
+      {
+        nombre: '4 · Cómo se ven los modelos',
+        campos: [
+          {
+            clave: 'modoCatalogo',
+            etiqueta: 'Presentación',
+            tipo: 'opcion',
+            opciones: MODOS_CATALOGO,
+            porDefecto: modoPorDefecto,
+            pista: 'La rejilla luce con tres o más modelos; con uno solo se ve pobre.',
+          },
+          { clave: 'tituloCatalogo', etiqueta: 'Título encima de los modelos', tipo: 'texto', porDefecto: '', estiloPorDefecto: 'titular' },
+        ],
+      },
+    ],
+    relacionado: [
+      { etiqueta: 'Modelos y precios', ruta: '/panel/productos', ayuda: `Los modelos de ${nombre.toLowerCase()}, con su foto y su precio.` },
+      { etiqueta: 'Galería de trabajos', ruta: '/panel/portfolio', ayuda: 'Las fotos que salen al final de la página.' },
+    ],
+  };
+}
+
+export const SUBSECCIONES_PAPELERIA: PaginaEditable[] = [
+  subseccionPapeleria('invitaciones', 'Invitaciones', 'rejilla'),
+  subseccionPapeleria('seating', 'Seating plan y meseros', 'rejilla'),
+  subseccionPapeleria('minutas', 'Minutas', 'bloques'),
+  subseccionPapeleria('marcasitios', 'Marcasitios', 'rejilla'),
+  subseccionPapeleria('laminas', 'Láminas personalizadas', 'bloques'),
+  subseccionPapeleria('pack', 'Pack completo', 'bloques'),
+];
 
 /**
  * Qué se puede editar de cada página.
@@ -157,7 +255,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '3 · Qué es Veta',
         campos: [
           { clave: 'queEsTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Qué es Veta', estiloPorDefecto: 'titular' },
-          { clave: 'queEsImagen', etiqueta: 'Imagen', tipo: 'imagen' },
+          { clave: 'queEsImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
           { clave: 'queEsTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -165,7 +263,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '4 · Carmen y Maripepi',
         campos: [
           { clave: 'quienesTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Carmen y Maripepi', estiloPorDefecto: 'titular' },
-          { clave: 'quienesImagen', etiqueta: 'Foto', tipo: 'imagen', pista: 'Un retrato de las dos funciona mejor que dos fotos sueltas.' },
+          { clave: 'quienesImagen', etiqueta: 'Foto', tipo: 'imagen', pista: 'Un retrato de las dos funciona mejor que dos fotos sueltas.', permitePosicion: true },
           { clave: 'quienesTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -199,6 +297,8 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
     ],
   },
 
+  ...SUBSECCIONES_PAPELERIA,
+
   {
     slug: 'live-art',
     nombre: 'Live art',
@@ -213,7 +313,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · Cómo funciona',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen' },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -246,7 +346,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · Cómo funciona',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen' },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -279,7 +379,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · Cómo funciona',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen' },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -307,7 +407,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · La sección',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen' },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },

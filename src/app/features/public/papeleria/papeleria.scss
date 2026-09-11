@@ -67,3 +67,14 @@
   margin-inline: auto;
   text-align: center;
 }
+
+.vt-titulo {
+  // border: 1px solid var(--veta-terracota);
+  border-radius: var(--radio-full);
+  padding: var(--esp-2) var(--esp-4);
+  font-size: var(--txt-lg);
+  font-weight: var(--peso-medio);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--veta-terracota);
+}

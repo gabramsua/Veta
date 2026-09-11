@@ -4,21 +4,13 @@
   [entradilla]="textos()['entradilla']"
 />
 
-@if (textos()['texto'] || imagenes()['imagen']) {
+@if (tieneContenido(textos()['texto']) || imagenes()['imagen']) {
   <section class="vt-seccion">
-    <div class="vt-contenedor sec__intro">
-      @if (imagenes()['imagen']; as foto) {
-        <img
-          class="sec__imagen"
-          [src]="foto.url"
-          [alt]="foto.alt"
-          [attr.width]="foto.width"
-          [attr.height]="foto.height"
-          loading="lazy"
-          decoding="async"
-        />
-      }
-      <veta-bloque-texto [html]="textos()['texto']" />
+    <div class="vt-contenedor">
+      <veta-bloque-ilustrado
+        [imagen]="imagenes()['imagen'] ?? null"
+        [html]="textos()['texto']"
+      />
     </div>
   </section>
 }
@@ -33,7 +25,7 @@
   </section>
 }
 
-@if (textos()['proceso']) {
+@if (tieneContenido(textos()['proceso'])) {
   <section class="vt-seccion">
     <div class="vt-contenedor">
       <h2 class="vt-titulo sec__subtitulo">Cómo trabajamos</h2>

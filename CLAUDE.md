@@ -264,11 +264,13 @@ media/{id}
 mediaCategories/{id}
   nombre, slug, orden
 
-pages/{slug}                      // home, quienes-somos, live-art, ..., legal
-  textos: { clave: valor }        // los huecos de cada página, definidos en
-  imagenes: { clave: Imagen }     // core/data/textos.ts (§6b)
+pages/{slug}                      // home, quienes-somos, papeleria-invitaciones,
+  textos: { clave: valor }        // live-art, ..., legal. Los huecos de cada
+  imagenes: { clave: Imagen }     // página, definidos en core/data/textos.ts (§6b)
   estilos: { clave: 'titular'|'cuerpo'|'eslogan' }   // familia elegida por frase
   seo: { title, description, ogImage }
+  // Cada Imagen lleva además `posicion: 'completa'|'izquierda'|'derecha'`,
+  // que decide si el texto la rodea.
 
 settings/site                     // documento único
   secciones: { faq, talleres, bonos, liveart, blog, reservas }   // flags on/off
@@ -342,6 +344,52 @@ explicar. Añadir un hueco nuevo cuesta una línea en ese fichero.
 
 Si un texto está vacío, la web usa el valor por defecto del catálogo, así que
 nunca aparece un hueco en blanco.
+
+**Un bloque sin texto no se pinta.** La sección entera desaparece: nada de
+títulos huérfanos ni de avisos del tipo «texto pendiente de escribir», que son
+para el desarrollador y no para una clienta.
+
+**Para saber si un campo de Jodit está vacío hay que usar `tieneContenido()`,
+nunca la cadena a secas.** Jodit no devuelve `''` al borrar el contenido: deja
+el párrafo donde estaba el cursor, normalmente `<p><br></p>` o `<p>&nbsp;</p>`.
+Eso tiene longitud, así que un `@if (texto)` lo da por bueno y pinta la sección
+con todo su espaciado y un párrafo vacío dentro — el hueco enorme que aparecía
+entre la cabecera y el contenido siguiente. `tieneContenido()` está en
+`core/seo/quitar-html.ts`, quita las etiquetas y cuenta lo que queda, pero da
+por bueno lo que trae imagen, tabla, vídeo o `hr`. `BloqueTexto` y
+`BloqueIlustrado` ya lo aplican solos; los `@if` que envuelven una `<section>`
+tienen que llamarlo a mano, porque lo que deja el hueco es el padding de la
+sección, no el componente de dentro.
+
+Lo que decide es **el texto, no la imagen**. Son secciones de texto con una foto
+que las acompaña, así que una imagen suelta bajo un título no es una sección:
+son restos de cuando el bloque sí se usaba. Si la condición fuera «texto o
+imagen», vaciar el texto no bastaría para retirar un bloque y habría que
+acordarse de quitar también la foto. `BloqueIlustrado` cubre además el caso de
+que no llegue nada.
+
+**Colocación de la imagen.** Los campos marcados con `permitePosicion` sacan en
+el panel un desplegable con ancho completo, izquierda o derecha. En los dos
+últimos el texto rodea la imagen con `float`, no con rejilla: una rejilla deja
+el texto cortado a la altura de la foto, y lo que se busca es que las líneas
+sigan por debajo. En móvil todas vuelven a ancho completo. El valor se guarda
+dentro de la propia `Imagen`, no en un mapa aparte como `estilos`, para que se
+borre sola al quitar la imagen.
+
+Solo se marcan los campos cuya plantilla lo aplica —los que van junto a un texto
+con formato—, y todos pasan por `BloqueIlustrado`. Una portada a sangre no lo
+admite y no se marca.
+
+**Las seis subsecciones de papelería** (`papeleria-invitaciones`, `-seating`…)
+se generan con una función en `textos.ts` porque son idénticas salvo el nombre.
+Cada una trae entradilla propia, dos bloques explicativos opcionales y un campo
+`modoCatalogo` que decide si los modelos se ven en rejilla de fichas o en
+bloques grandes alternados. La rejilla es lo que pidieron para invitaciones y
+marcasitios; los bloques es como se veía todo antes.
+
+Ese `modoCatalogo` usa el tipo de campo `opcion`, un desplegable de valores
+cerrados que se guarda en `textos` como una cadena más. No necesita colección ni
+método de servicio propios.
 
 ---
 

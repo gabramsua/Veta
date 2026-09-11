@@ -8,6 +8,7 @@ import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-secci
 import { PaginasService } from '../../../core/data/paginas.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { textosPorDefecto } from '../../../core/data/textos';
+import { tieneContenido } from '../../../core/seo/quitar-html';
 
 export type TipoLegal = 'avisoLegal' | 'privacidad' | 'cookies';
 
@@ -27,6 +28,10 @@ const TITULOS: Record<TipoLegal, { titulo: string; ruta: string }> = {
 export class Legal {
   // Se fija desde la propia definición de la ruta con `data`.
   readonly tipo = input.required<TipoLegal>();
+
+  // Un texto legal a medio borrar deja `<p><br></p>`, y sin esto la página
+  // saldría en blanco en vez de avisar de que falta por redactar.
+  protected readonly tieneContenido = tieneContenido;
 
   private readonly paginas = inject(PaginasService);
   private readonly ajustesService = inject(AjustesService);

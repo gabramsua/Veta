@@ -14,7 +14,7 @@ import {
   estilosPorDefecto,
 } from '../../../core/data/textos';
 import { EditorTexto } from '../../../shared/editor-texto/editor-texto';
-import { Imagen } from '../../../core/models';
+import { Imagen, POSICIONES_IMAGEN, PosicionImagen } from '../../../core/models';
 import { PaginasService } from '../../../core/data/paginas.service';
 import { SelectorMedio } from '../../../shared/selector-medio/selector-medio';
 
@@ -39,6 +39,7 @@ export class Pagina {
   protected readonly imagenes = signal<Record<string, Imagen>>({});
 
   protected readonly familias = ESTILOS_TEXTO;
+  protected readonly posiciones = POSICIONES_IMAGEN;
 
   /**
    * La familia elegida para cada texto.
@@ -72,6 +73,29 @@ export class Pagina {
 
   protected imagen(clave: string): Imagen | null {
     return this.imagenes()[clave] ?? null;
+  }
+
+  protected posicionDe(clave: string): PosicionImagen {
+    return this.imagenes()[clave]?.posicion ?? 'completa';
+  }
+
+  /**
+   * La colocación se guarda dentro de la propia imagen, no en un mapa aparte.
+   *
+   * Así se borra sola cuando se quita la imagen: si viviera en un mapa por
+   * clave, quedaría una colocación huérfana apuntando a algo que ya no está.
+   */
+  protected cambiarPosicion(clave: string, evento: Event): void {
+    const posicion = (evento.target as HTMLSelectElement).value as PosicionImagen;
+
+    this.imagenes.update((actuales) => {
+      const imagen = actuales[clave];
+      if (!imagen) return actuales;
+
+      return { ...actuales, [clave]: { ...imagen, posicion } };
+    });
+
+    this.formulario.markAsDirty();
   }
 
   protected estiloDe(campo: CampoPagina): EstiloTexto {

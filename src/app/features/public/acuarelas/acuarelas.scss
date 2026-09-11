@@ -18,20 +18,3 @@
   text-align: center;
 }
 
-.sec__intro {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--esp-7);
-  align-items: center;
-
-  @include hasta($bp-tablet) {
-    grid-template-columns: 1fr;
-    gap: var(--esp-5);
-  }
-}
-
-.sec__imagen {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}

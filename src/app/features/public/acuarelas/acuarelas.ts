@@ -4,25 +4,30 @@ import { toSignal } from '@angular/core/rxjs-interop';
 
 import { Imagen } from '../../../core/models';
 
+import { BloqueIlustrado } from '../../../shared/bloque-ilustrado/bloque-ilustrado';
 import { BloqueTexto } from '../../../shared/bloque-texto/bloque-texto';
 import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-seccion';
 import { Galeria } from '../../../shared/galeria/galeria';
 import { PaginasService } from '../../../core/data/paginas.service';
 import { PublicoService } from '../../../core/data/publico.service';
 import { SeoService } from '../../../core/seo/seo.service';
-import { textoPlano } from '../../../core/seo/quitar-html';
+import { textoPlano, tieneContenido } from '../../../core/seo/quitar-html';
 import { textosPorDefecto } from '../../../core/data/textos';
 
 const SLUG = 'acuarelas-y-encargos';
 
 @Component({
   selector: 'veta-acuarelas',
-  imports: [RouterLink, CabeceraSeccion, BloqueTexto, Galeria],
+  imports: [RouterLink, CabeceraSeccion, BloqueTexto, BloqueIlustrado, Galeria],
   templateUrl: './acuarelas.html',
   styleUrl: './acuarelas.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Acuarelas {
+  // Jodit deja `<p><br></p>` al vaciar un campo, así que comprobar la cadena a
+  // secas dejaría la sección en pie con todo su espaciado y nada dentro.
+  protected readonly tieneContenido = tieneContenido;
+
   private readonly paginas = inject(PaginasService);
   private readonly publico = inject(PublicoService);
   private readonly seo = inject(SeoService);

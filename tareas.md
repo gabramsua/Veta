@@ -159,3 +159,13 @@
 - [x] Live art se abre en dos subpáginas editables desde el panel
 - [x] Imágenes dentro del texto, desde la biblioteca de medios, con tres anchos
 - [ ] **Pendiente de tu parte**: `npm install` para bajar las tres fuentes
+
+## Segunda tanda, con Carmen ya metiendo contenido
+
+- [x] Colocación de la imagen por bloque: ancho completo, izquierda o derecha
+- [x] `BloqueIlustrado` unifica imagen + texto en las cinco páginas que lo usaban
+- [x] Un bloque sin texto ni imagen desaparece; fuera el «texto pendiente de escribir»
+- [x] Las seis subsecciones de papelería pasan a ser páginas editables
+- [x] Modo rejilla o bloques por subsección, elegible desde el panel
+- [x] Dos bloques explicativos por subsección, para las dos formas de trabajar de seating
+- [ ] **Pendiente de tu parte**: que Carmen cree los 5 modelos de invitaciones y los de marcasitios

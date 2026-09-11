@@ -10,6 +10,7 @@ import { PublicoService } from '../../../core/data/publico.service';
 import { SeoService } from '../../../core/seo/seo.service';
 import { SLUG_POR_CATEGORIA } from '../../../core/data/categorias-papeleria';
 import { textosPorDefecto } from '../../../core/data/textos';
+import { tieneContenido } from '../../../core/seo/quitar-html';
 
 const SLUG = 'papeleria-de-bodas';
 
@@ -21,6 +22,10 @@ const SLUG = 'papeleria-de-bodas';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Papeleria {
+  // Jodit deja `<p><br></p>` al vaciar un campo, así que comprobar la cadena a
+  // secas dejaría la sección en pie con todo su espaciado y nada dentro.
+  protected readonly tieneContenido = tieneContenido;
+
   private readonly publico = inject(PublicoService);
   private readonly paginas = inject(PaginasService);
   private readonly seo = inject(SeoService);
