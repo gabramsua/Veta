@@ -7,7 +7,7 @@ export const SLUG_POR_CATEGORIA: Record<CategoriaProducto, string> = {
   seating: 'seating',
   minutas: 'minutas',
   marcasitios: 'marcasitios',
-  laminas: 'laminas',
+  paipai: 'paipai',
   pack: 'pack',
 };
 
@@ -28,7 +28,7 @@ export const PIEZAS_PAPELERIA: { valor: CategoriaProducto; etiqueta: string }[] 
   { valor: 'seating', etiqueta: 'Seating plan y meseros' },
   { valor: 'minutas', etiqueta: 'Minutas' },
   { valor: 'marcasitios', etiqueta: 'Marcasitios' },
-  { valor: 'laminas', etiqueta: 'Láminas personalizadas' },
+  { valor: 'paipai', etiqueta: 'PaiPai' },
   { valor: 'pack', etiqueta: 'Pack completo' },
 ];
 
@@ -42,6 +42,6 @@ export const SECCION_PORTFOLIO_POR_CATEGORIA: Record<CategoriaProducto, string> 
   seating: 'seating',
   minutas: 'minutas',
   marcasitios: 'marcasitios',
-  laminas: 'laminas',
+  paipai: 'paipai',
   pack: 'invitaciones',
 };

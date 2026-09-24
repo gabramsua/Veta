@@ -11,6 +11,7 @@ import { Galeria } from '../../../shared/galeria/galeria';
 import { PaginasService } from '../../../core/data/paginas.service';
 import { PublicoService } from '../../../core/data/publico.service';
 import { SeoService } from '../../../core/seo/seo.service';
+import { VideosInstagram } from '../../../shared/video-instagram/videos-instagram';
 import { textoPlano, tieneContenido } from '../../../core/seo/quitar-html';
 import { textosPorDefecto } from '../../../core/data/textos';
 
@@ -18,7 +19,7 @@ const SLUG = 'live-art';
 
 @Component({
   selector: 'veta-live-art',
-  imports: [RouterLink, CabeceraSeccion, BloqueTexto, BloqueIlustrado, Galeria],
+  imports: [RouterLink, CabeceraSeccion, BloqueTexto, BloqueIlustrado, Galeria, VideosInstagram],
   templateUrl: './live-art.html',
   styleUrl: './live-art.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

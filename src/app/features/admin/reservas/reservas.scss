@@ -25,6 +25,56 @@
   }
 }
 
+.res__alta {
+  margin-bottom: var(--esp-4);
+}
+
+.res__alta-titulo {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-md);
+  font-weight: var(--peso-fuerte);
+}
+
+.res__alta-pista {
+  margin-bottom: var(--esp-4);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.res__alta-form {
+  display: grid;
+  gap: var(--esp-4);
+}
+
+.res__alta-rejilla {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--esp-4);
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.res__alta-notas {
+  min-height: 7rem;
+}
+
+.res__alta-acciones {
+  display: flex;
+  gap: var(--esp-3);
+  justify-content: flex-end;
+}
+
+.res__manual {
+  padding: 0.1rem 0.6rem;
+  margin-left: var(--esp-2);
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+  background-color: var(--veta-arena);
+  border-radius: var(--radio-sm);
+}
+
 .res__lista {
   display: grid;
   gap: var(--esp-2);

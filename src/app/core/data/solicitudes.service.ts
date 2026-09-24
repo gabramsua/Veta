@@ -26,6 +26,18 @@ export interface EnvioReserva {
   respuestas: Record<string, string>;
 }
 
+export interface AltaManual {
+  tipo: 'taller' | 'bono';
+  sessionId: string | null;
+  bonoId: string | null;
+  nombre: string;
+  email: string;
+  telefono: string;
+  nPersonas: number;
+  notasInternas: string;
+  avisar: boolean;
+}
+
 /**
  * Altas públicas. El documento se escribe con exactamente los campos que las
  * reglas de Firestore aceptan: cualquier campo de más hace que la escritura se
@@ -75,6 +87,20 @@ export class ReservasService extends ColeccionBase<Reserva> {
     );
 
     await fn({ bookingId, status });
+  }
+
+  /**
+   * Apuntar a alguien a mano. Nace confirmada y con las plazas ya descontadas,
+   * así que va por Function: el contador de plazas no se toca desde el cliente.
+   */
+  async crearManual(datos: AltaManual): Promise<string> {
+    const fn = httpsCallable<AltaManual, { ok: boolean; bookingId: string }>(
+      this.functions,
+      'crearReservaManual',
+    );
+
+    const respuesta = await fn(datos);
+    return respuesta.data.bookingId;
   }
 
   async enviar(datos: EnvioReserva): Promise<string> {

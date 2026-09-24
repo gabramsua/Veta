@@ -109,6 +109,9 @@
           <div class="ses__datos">
             <h2 class="ses__titulo">{{ nombreTaller(sesion.workshopId) }}</h2>
             <p class="ses__fecha">{{ formatearFecha(sesion.fechaInicio) }}</p>
+            @if (porQueNoSeVe(sesion); as motivo) {
+              <p class="ses__oculta">{{ motivo }}</p>
+            }
             @if (sesion.notasInternas) {
               <p class="ses__notas-texto">{{ sesion.notasInternas }}</p>
             }

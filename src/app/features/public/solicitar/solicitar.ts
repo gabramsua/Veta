@@ -46,6 +46,15 @@ const DEFINICIONES: Record<string, Definicion> = {
     boton: 'Pedir presupuesto',
     confirmacion: 'Hemos recibido tu encargo. Te escribimos con plazos y precio.',
   },
+  'evento-privado': {
+    formulario: 'evento',
+    antetitulo: 'Talleres',
+    titulo: 'Taller privado',
+    entradilla:
+      'Despedidas, cumpleaños y regalos: montamos un taller solo para tu grupo, en el día y a la hora que os venga bien.',
+    boton: 'Contar qué queremos',
+    confirmacion: 'Hemos recibido tu propuesta. Te escribimos con fechas, precio y todo lo que haga falta.',
+  },
   contacto: {
     formulario: 'contacto',
     antetitulo: 'Hablemos',

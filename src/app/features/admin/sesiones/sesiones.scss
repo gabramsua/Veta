@@ -9,6 +9,17 @@
   margin-bottom: var(--esp-4);
 }
 
+/* En ámbar y no en rojo: no es un error, es una sesión que no se está viendo. */
+.ses__oculta {
+  padding: var(--esp-2) var(--esp-3);
+  margin-top: var(--esp-2);
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta);
+  background-color: color-mix(in srgb, var(--veta-aviso) 16%, transparent);
+  border-left: 3px solid var(--veta-aviso);
+  border-radius: var(--radio-sm);
+}
+
 .ses__form-titulo {
   margin-bottom: var(--esp-4);
   font-size: var(--txt-md);

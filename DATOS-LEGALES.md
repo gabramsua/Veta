@@ -69,12 +69,29 @@ Solo cambia si:
 - [ ] **¿Queréis Google Analytics** para ver cuánta gente entra y por dónde? Es
       útil, pero convierte esto en un caso distinto: habría que añadir banner de
       consentimiento y ampliar el texto. Decidnos si os interesa.
-- [ ] **¿Queréis incrustar algo de Instagram, un mapa de Google o un vídeo de
-      YouTube** en alguna página? Cada uno de esos mete cookies de terceros y
-      obliga también al banner.
+- [ ] **¿Queréis un mapa de Google o un vídeo de YouTube** en alguna página?
+      Cada uno de esos mete cookies de terceros y obliga también al banner.
 
 Si a las dos preguntas la respuesta es no, la web se queda sin banner. Es lo
 más limpio y lo más rápido de cargar.
+
+### Los vídeos de Instagram de live art
+
+Sí hay vídeos de Instagram en las páginas de live art, pero están montados de
+forma que **no obligan a banner**: mientras nadie los pulsa son una tarjeta con
+un botón y no se conecta con Instagram en absoluto. Solo al pulsar se carga el
+reproductor.
+
+Aun así hay que decirlo en los textos legales. Párrafo listo para pegar en la
+política de privacidad y en la de cookies:
+
+> En las páginas de live art incluimos vídeos alojados en Instagram. No se
+> carga nada de Instagram hasta que decides reproducir uno: mientras tanto solo
+> ves una tarjeta con un botón, y ni Instagram ni Meta reciben ningún dato tuyo.
+> Si pulsas para reproducirlo, tu navegador se conecta a los servidores de Meta
+> Platforms Ireland Ltd., que puede instalar sus propias cookies y registrar tu
+> dirección IP conforme a su política de privacidad. Esa conexión la decides tú
+> con el clic, y puedes seguir navegando sin hacerlo.
 
 ---
 

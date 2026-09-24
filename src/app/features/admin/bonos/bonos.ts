@@ -4,7 +4,7 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 
 import { AlertasService } from '../../../core/ui/alertas.service';
-import { Bono, CATEGORIAS_TALLER, CategoriaTaller } from '../../../core/models';
+import { Bono, CATEGORIAS_BONO, CategoriaBono } from '../../../core/models';
 import { BonosService } from '../../../core/data/contenido.services';
 import { EditorTexto } from '../../../shared/editor-texto/editor-texto';
 import { EstadoVacio } from '../../../shared/estado-vacio/estado-vacio';
@@ -24,7 +24,7 @@ export class Bonos {
   private readonly bonos = inject(BonosService);
   private readonly alertas = inject(AlertasService);
 
-  protected readonly categorias = Object.entries(CATEGORIAS_TALLER) as [CategoriaTaller, string][];
+  protected readonly categorias = Object.entries(CATEGORIAS_BONO) as [CategoriaBono, string][];
 
   protected readonly lista = toSignal(
     this.bonos.listarOrdenados().pipe(catchError(() => of([]))),
@@ -37,9 +37,11 @@ export class Bonos {
 
   protected readonly formulario = this.fb.nonNullable.group({
     titulo: ['', [Validators.required, Validators.maxLength(120)]],
-    categoria: ['ceramica' as CategoriaTaller, Validators.required],
+    // «Mixto» primero porque es el caso más común: un bono da acceso a
+    // cualquier taller salvo los eventos privados.
+    categoria: ['mixto' as CategoriaBono, Validators.required],
     descripcion: [''],
-    precioMes: [0, [Validators.required, Validators.min(0)]],
+    precio: [0, [Validators.required, Validators.min(0)]],
     sesionesMes: [4, [Validators.required, Validators.min(1), Validators.max(31)]],
     activo: [true],
   });
@@ -50,13 +52,13 @@ export class Bonos {
     return this.formulario.controls.titulo;
   }
 
-  protected nombreCategoria(categoria: CategoriaTaller): string {
-    return CATEGORIAS_TALLER[categoria];
+  protected nombreCategoria(categoria: CategoriaBono): string {
+    return CATEGORIAS_BONO[categoria] ?? categoria;
   }
 
   protected precioPorSesion(bono: Bono): string {
     if (bono.sesionesMes === 0) return '—';
-    return `${(bono.precioMes / bono.sesionesMes).toFixed(2)} € por sesión`;
+    return `${(bono.precio / bono.sesionesMes).toFixed(2)} € por sesión`;
   }
 
   protected abrir(bono?: Bono): void {
@@ -64,9 +66,9 @@ export class Bonos {
 
     this.formulario.reset({
       titulo: bono?.titulo ?? '',
-      categoria: bono?.categoria ?? 'ceramica',
+      categoria: bono?.categoria ?? 'mixto',
       descripcion: bono?.descripcion ?? '',
-      precioMes: bono?.precioMes ?? 0,
+      precio: bono?.precio ?? 0,
       sesionesMes: bono?.sesionesMes ?? 4,
       activo: bono?.activo ?? true,
     });

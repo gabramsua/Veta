@@ -3,7 +3,7 @@ export const SECCIONES_PORTFOLIO = [
   { valor: 'seating', etiqueta: 'Seating plan y meseros' },
   { valor: 'minutas', etiqueta: 'Minutas' },
   { valor: 'marcasitios', etiqueta: 'Marcasitios' },
-  { valor: 'laminas', etiqueta: 'Láminas personalizadas' },
+  { valor: 'paipai', etiqueta: 'PaiPai' },
   { valor: 'liveart', etiqueta: 'Live art' },
   { valor: 'acuarelas', etiqueta: 'Acuarelas y encargos' },
   { valor: 'talleres', etiqueta: 'Talleres' },

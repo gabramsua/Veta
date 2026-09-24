@@ -102,6 +102,15 @@
   margin-bottom: var(--esp-6);
 }
 
+.tal__medida-entradilla {
+  max-width: 62ch;
+  margin-bottom: var(--esp-6);
+}
+
+.tal__medida-cta {
+  margin-top: var(--esp-6);
+}
+
 .tal__medida {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));

@@ -56,7 +56,6 @@ export class Talleres {
 
   protected readonly formulario = this.fb.nonNullable.group({
     titulo: ['', [Validators.required, Validators.maxLength(120)]],
-    slug: ['', [Validators.required, Validators.pattern(/^[a-z0-9-]+$/)]],
     categoria: ['ceramica' as CategoriaTaller, Validators.required],
     descripcion: [''],
     precio: [0, [Validators.required, Validators.min(0)]],
@@ -72,8 +71,50 @@ export class Talleres {
     return this.formulario.controls.titulo;
   }
 
-  protected get slug() {
-    return this.formulario.controls.slug;
+  protected get duracion() {
+    return this.formulario.controls.duracionMin;
+  }
+
+  /**
+   * Duraciones habituales de un taller, para no obligar a teclear minutos.
+   *
+   * Cubren el 95 % de los casos; para el resto queda el campo numérico, que
+   * solo aparece si la duración no es ninguna de estas.
+   */
+  protected readonly duracionesFrecuentes = [
+    { minutos: 60, etiqueta: '1 h' },
+    { minutos: 90, etiqueta: '1 h 30' },
+    { minutos: 120, etiqueta: '2 h' },
+    { minutos: 150, etiqueta: '2 h 30' },
+    { minutos: 180, etiqueta: '3 h' },
+  ];
+
+  private readonly duracionElegida = toSignal(this.formulario.controls.duracionMin.valueChanges, {
+    initialValue: this.formulario.controls.duracionMin.value,
+  });
+
+  protected readonly duracionALaCarta = computed(
+    () => !this.duracionesFrecuentes.some((d) => d.minutos === this.duracionElegida()),
+  );
+
+  protected esDuracion(minutos: number): boolean {
+    return this.duracionElegida() === minutos;
+  }
+
+  protected ponerDuracion(minutos: number): void {
+    this.duracion.setValue(minutos);
+    this.duracion.markAsDirty();
+  }
+
+  /** «1 h 30», no «90 minutos»: nadie piensa la duración de un taller en minutos. */
+  protected enHoras(minutos: number): string {
+    const horas = Math.floor(minutos / 60);
+    const resto = minutos % 60;
+
+    if (horas === 0) return `${resto} min`;
+    if (resto === 0) return `${horas} h`;
+
+    return `${horas} h ${resto} min`;
   }
 
   protected sesionesDe(workshopId: string): number {
@@ -90,7 +131,6 @@ export class Talleres {
 
     this.formulario.reset({
       titulo: taller?.titulo ?? '',
-      slug: taller?.slug ?? '',
       categoria: taller?.categoria ?? 'ceramica',
       descripcion: taller?.descripcion ?? '',
       precio: taller?.precio ?? 0,
@@ -106,17 +146,34 @@ export class Talleres {
     this.editando.set(null);
   }
 
-  protected generarSlug(): void {
-    if (this.editando()) return;
-
-    this.slug.setValue(
-      this.titulo
-        .value.toLowerCase()
+  /**
+   * La direcci\u00f3n se genera sola a partir del t\u00edtulo.
+   *
+   * Antes era un campo del formulario, pero no lo lee nadie: ninguna ruta
+   * p\u00fablica usa el slug de un taller. Ped\u00edrselo a Carmen era una pregunta sin
+   * consecuencias, y una m\u00e1s en un formulario ya largo.
+   *
+   * Se sigue guardando por si alg\u00fan d\u00eda hay una p\u00e1gina por taller, y se le
+   * a\u00f1ade un sufijo si dos talleres coinciden en t\u00edtulo.
+   */
+  private slugDesdeTitulo(titulo: string, idActual?: string): string {
+    const base =
+      titulo
+        .toLowerCase()
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')
         .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$/g, ''),
-    );
+        .replace(/^-|-$/g, '') || 'taller';
+
+    const ocupado = (valor: string) =>
+      this.lista().some((t) => t.slug === valor && t.id !== idActual);
+
+    if (!ocupado(base)) return base;
+
+    let sufijo = 2;
+    while (ocupado(`${base}-${sufijo}`)) sufijo += 1;
+
+    return `${base}-${sufijo}`;
   }
 
   protected async anadirImagen(): Promise<void> {
@@ -149,19 +206,10 @@ export class Talleres {
     this.formulario.markAllAsTouched();
     if (this.formulario.invalid) return;
 
-    const datos = this.formulario.getRawValue();
-    const repetido = this.lista().some(
-      (t) => t.slug === datos.slug && t.id !== this.editando()?.id,
-    );
-
-    if (repetido) {
-      this.slug.setErrors({ repetido: true });
-      await this.alertas.error(
-        'Esa dirección ya está en uso',
-        'Cada taller necesita una dirección distinta.',
-      );
-      return;
-    }
+    const datos = {
+      ...this.formulario.getRawValue(),
+      slug: this.slugDesdeTitulo(this.titulo.value, this.editando()?.id),
+    };
 
     this.guardando.set(true);
 

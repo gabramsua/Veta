@@ -83,24 +83,31 @@
     </div>
   </section>
 
-  @if (aMedida().length > 0) {
-    <section class="vt-seccion">
-      <div class="vt-contenedor">
-        <p class="vt-antetitulo">A medida</p>
-        <h2 class="vt-titulo tal__subtitulo">Talleres para eventos privados</h2>
+  <section class="vt-seccion">
+    <div class="vt-contenedor">
+      <p class="vt-antetitulo">A medida</p>
+      <h2 class="vt-titulo tal__subtitulo">Talleres privados</h2>
+      <p class="vt-entradilla tal__medida-entradilla">
+        Despedidas, cumpleaños y regalos: montamos un taller solo para tu grupo,
+        en el día y a la hora que os venga bien.
+      </p>
 
+      @if (aMedida().length > 0) {
         <div class="tal__medida">
           @for (taller of aMedida(); track taller.id) {
             <article class="tal__tarjeta">
               <h3 class="tal__tarjeta-titulo">{{ taller.titulo }}</h3>
               <veta-bloque-texto [html]="taller.descripcion" />
-              <a class="vt-enlace-sub" routerLink="/solicitar/encargo">Pedir presupuesto</a>
             </article>
           }
         </div>
+      }
+
+      <div class="tal__medida-cta">
+        <a class="vt-boton" routerLink="/solicitar/evento-privado">Contarnos qué queremos</a>
       </div>
-    </section>
-  }
+    </div>
+  </section>
 }
 
 @if (tieneContenido(textos()['comoReservar'])) {

@@ -1,7 +1,90 @@
 <veta-panel-seccion
   titulo="Reservas"
   descripcion="Solicitudes de plaza en talleres y de bonos mensuales. Las plazas se descuentan al confirmar."
+  accion="Apuntar a alguien"
+  (pulsada)="abrirAlta()"
 />
+
+@if (altaVisible()) {
+  <section class="vt-adm-tarjeta res__alta">
+    <h2 class="res__alta-titulo">Apuntar a alguien</h2>
+    <p class="res__alta-pista">
+      Para quien reserva por teléfono, por WhatsApp o en el estudio. Queda
+      confirmada y con la plaza ya guardada.
+    </p>
+
+    <form class="res__alta-form" [formGroup]="alta" (ngSubmit)="guardarAlta($event)" novalidate>
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="alta-que">¿A qué la apuntas?</label>
+        <select id="alta-que" class="vt-select" formControlName="que">
+          <option value="">Elige una fecha o un bono</option>
+          @if (sesionesDisponibles().length > 0) {
+            <optgroup label="Próximas fechas con plazas">
+              @for (sesion of sesionesDisponibles(); track sesion.id) {
+                <option [value]="'sesion:' + sesion.id">{{ sesion.etiqueta }}</option>
+              }
+            </optgroup>
+          }
+          @if (bonosDisponibles().length > 0) {
+            <optgroup label="Bonos">
+              @for (bono of bonosDisponibles(); track bono.id) {
+                <option [value]="'bono:' + bono.id">{{ bono.titulo }}</option>
+              }
+            </optgroup>
+          }
+        </select>
+        @if (sesionesDisponibles().length === 0) {
+          <p class="vt-campo__pista">
+            No hay ninguna fecha abierta con plazas libres. Prográmala primero en Sesiones.
+          </p>
+        }
+      </div>
+
+      <div class="res__alta-rejilla">
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="alta-nombre">Nombre</label>
+          <input id="alta-nombre" class="vt-input" type="text" formControlName="nombre" />
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="alta-personas">Personas</label>
+          <input id="alta-personas" class="vt-input" type="number" min="1" max="20" formControlName="nPersonas" />
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="alta-telefono">Teléfono</label>
+          <input id="alta-telefono" class="vt-input" type="tel" formControlName="telefono" />
+        </div>
+
+        <div class="vt-campo">
+          <label class="vt-campo__etiqueta" for="alta-email">Correo</label>
+          <input id="alta-email" class="vt-input" type="email" formControlName="email" />
+          <p class="vt-campo__pista">Si no lo tienes, con el teléfono basta.</p>
+        </div>
+      </div>
+
+      <div class="vt-campo">
+        <label class="vt-campo__etiqueta" for="alta-notas">Notas internas</label>
+        <textarea id="alta-notas" class="vt-textarea res__alta-notas" formControlName="notasInternas"></textarea>
+        <p class="vt-campo__pista">Por ejemplo: «ya ha pagado en efectivo». Solo las veis vosotras.</p>
+      </div>
+
+      <label class="vt-check">
+        <input type="checkbox" formControlName="avisar" />
+        Enviarle el correo de confirmación
+      </label>
+
+      <div class="res__alta-acciones">
+        <button type="button" class="vt-adm-boton vt-adm-boton--fantasma" (click)="cerrarAlta()">
+          Cancelar
+        </button>
+        <button type="submit" class="vt-adm-boton" [disabled]="guardando()">
+          {{ guardando() ? 'Apuntando…' : 'Apuntar y reservar plaza' }}
+        </button>
+      </div>
+    </form>
+  </section>
+}
 
 @if (pendientes() > 0) {
   <p class="res__pendientes">
@@ -73,7 +156,12 @@
         >
           <span class="res__persona">
             <span class="res__nombre">{{ reserva.nombre }}</span>
-            <span class="res__que">{{ queEs(reserva) }} · {{ cuando(reserva) }}</span>
+            <span class="res__que">
+              {{ queEs(reserva) }} · {{ cuando(reserva) }}
+              @if (reserva.origen === 'panel') {
+                <span class="res__manual">apuntada a mano</span>
+              }
+            </span>
           </span>
 
           <span class="res__personas">{{ reserva.nPersonas }} pers.</span>

@@ -29,12 +29,13 @@
         </div>
 
         <div class="vt-campo">
-          <label class="vt-campo__etiqueta" for="bono-precio">Precio al mes (€)</label>
-          <input id="bono-precio" class="vt-input" type="number" min="0" step="0.5" formControlName="precioMes" />
+          <label class="vt-campo__etiqueta" for="bono-precio">Precio del bono (€)</label>
+          <input id="bono-precio" class="vt-input" type="number" min="0" step="0.5" formControlName="precio" />
+          <p class="vt-campo__pista">El precio del bono completo, no de cada mes.</p>
         </div>
 
         <div class="vt-campo">
-          <label class="vt-campo__etiqueta" for="bono-sesiones">Sesiones al mes</label>
+          <label class="vt-campo__etiqueta" for="bono-sesiones">Sesiones incluidas</label>
           <input id="bono-sesiones" class="vt-input" type="number" min="1" max="31" formControlName="sesionesMes" />
         </div>
       </div>
@@ -72,7 +73,7 @@
           <h2 class="bon__titulo">{{ bono.titulo }}</h2>
           <p class="bon__meta">
             {{ nombreCategoria(bono.categoria) }} ·
-            {{ bono.precioMes }} €/mes ·
+            {{ bono.precio }} € ·
             {{ bono.sesionesMes }} sesiones ·
             {{ precioPorSesion(bono) }}
           </p>

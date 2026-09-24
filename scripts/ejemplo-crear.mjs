@@ -115,11 +115,13 @@ console.log(`  ✓ ${sesiones.length} sesiones (una llena, una casi llena)`);
 
 // --- Bonos ---
 const bonos = [
-  { categoria: 'ceramica', titulo: 'Bono cerámica', precioMes: 120, sesionesMes: 4,
-    descripcion: '<p>Cuatro sesiones al mes, un día fijo a la semana. Materiales y cocción incluidos.</p>' },
-  { categoria: 'pintura', titulo: 'Bono pintura', precioMes: 95, sesionesMes: 4,
-    descripcion: '<p>Cuatro sesiones al mes para trabajar tu propio proyecto con acompañamiento.</p>' },
-  { categoria: 'infantil', titulo: 'Bono infantil', precioMes: 70, sesionesMes: 4,
+  { categoria: 'mixto', titulo: 'Bono mixto', precio: 130, sesionesMes: 4,
+    descripcion: '<p>Cuatro sesiones para repartir entre cerámica y pintura, como te apetezca.</p>' },
+  { categoria: 'ceramica', titulo: 'Bono cerámica', precio: 120, sesionesMes: 4,
+    descripcion: '<p>Cuatro sesiones, un día fijo a la semana. Materiales y cocción incluidos.</p>' },
+  { categoria: 'pintura', titulo: 'Bono pintura', precio: 95, sesionesMes: 4,
+    descripcion: '<p>Cuatro sesiones para trabajar tu propio proyecto con acompañamiento.</p>' },
+  { categoria: 'infantil', titulo: 'Bono infantil', precio: 70, sesionesMes: 4,
     descripcion: '<p>Una tarde a la semana de arcilla, pintura y experimentación.</p>' },
 ];
 
@@ -141,8 +143,8 @@ const productos = [
     descripcion: '<p>Minuta a dos caras con orla floral en acuarela.</p>' },
   { categoria: 'marcasitios', titulo: 'Marcasitios troquelado', precioDesde: 1.1, unidad: 'unidad', destacado: false,
     descripcion: '<p>Con el nombre de cada invitado en caligrafía, troquelado a mano.</p>' },
-  { categoria: 'laminas', titulo: 'Lámina personalizada', precioDesde: 65, unidad: 'pieza', destacado: true,
-    descripcion: '<p>Acuarela original del lugar que elijáis, enmarcada o sin enmarcar.</p>' },
+  { categoria: 'paipai', titulo: 'PaiPai pintado a mano', precioDesde: 6.5, unidad: 'unidad', destacado: true,
+    descripcion: '<p>Abanico de pala en madera y papel, con acuarela original. Para bodas de verano.</p>' },
   { categoria: 'pack', titulo: 'Pack papelería completa', precioDesde: 0, unidad: 'presupuesto', destacado: false,
     descripcion: '<p>Invitaciones, seating, meseros, minutas y marcasitios con un mismo hilo conductor. <strong>Descuento por contratar el conjunto.</strong></p>' },
 ];
@@ -162,7 +164,7 @@ for (const [indice, producto] of productos.entries()) {
 console.log(`  ✓ ${productos.length} productos de papelería`);
 
 // --- Portfolio ---
-const secciones = ['invitaciones', 'seating', 'minutas', 'marcasitios', 'laminas', 'liveart', 'acuarelas', 'talleres'];
+const secciones = ['invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai', 'liveart', 'acuarelas', 'talleres'];
 let ordenPortfolio = 0;
 
 for (const seccion of secciones) {

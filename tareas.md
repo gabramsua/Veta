@@ -169,3 +169,20 @@
 - [x] Modo rejilla o bloques por subsección, elegible desde el panel
 - [x] Dos bloques explicativos por subsección, para las dos formas de trabajar de seating
 - [ ] **Pendiente de tu parte**: que Carmen cree los 5 modelos de invitaciones y los de marcasitios
+
+## Tercera tanda, tras la reunión con Carmen (24/09/2026)
+
+- [x] Láminas pasa a llamarse PaiPai en toda la web, el panel y los datos ya metidos
+- [x] Bonos: fuera «Eventos privados», entra «Mixto»; el precio es por bono, no por mes
+- [x] La página de bonos se edita desde el panel, como el resto
+- [x] El alta de un taller ya no pide la URL: se escribe sola desde el título
+- [x] La duración se elige con botones (1 h, 1 h 30…) en vez de con la rueda de minutos
+- [x] Cada sesión dice por qué no se ve en la web, si es que no se ve
+- [x] Vídeos de Instagram en live art, configurables desde el panel y sin cookies
+      hasta que la visitante pulsa
+- [x] Formulario de taller privado (despedidas, cumpleaños, regalos)
+- [x] Alta manual de reservas desde el panel, en un solo formulario
+- [ ] **Pendiente de tu parte**: `npm run migrar:renombrados`, y después desplegar
+      reglas, functions y hosting
+- [ ] **Pendiente de Carmen**: pegar los enlaces de los vídeos de live art
+- [ ] El segundo formulario de talleres puntuales sigue sin definir

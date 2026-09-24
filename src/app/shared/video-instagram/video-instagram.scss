@@ -1,0 +1,63 @@
+:host {
+  display: block;
+}
+
+.vig {
+  display: flex;
+  gap: var(--esp-4);
+  align-items: center;
+  width: 100%;
+  padding: var(--esp-5);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  background-color: var(--veta-arena);
+  border: 1px solid var(--veta-arena-osc);
+  border-radius: var(--radio-md);
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--veta-terracota);
+  }
+}
+
+.vig__play {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 4.8rem;
+  height: 4.8rem;
+  font-size: var(--txt-md);
+  color: var(--veta-blanco);
+  background-color: var(--veta-terracota);
+  border-radius: 50%;
+}
+
+.vig__texto {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.vig__titulo {
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-md);
+  color: var(--veta-tinta);
+}
+
+.vig__aviso {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+/**
+ * Los reels son verticales. El 9/16 evita que el marco cambie de alto cuando
+ * Instagram termina de cargar y dé un salto a media página.
+ */
+.vig__marco {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  max-height: 70rem;
+  border: 0;
+  border-radius: var(--radio-md);
+}

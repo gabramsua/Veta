@@ -5,7 +5,7 @@ export type CategoriaProducto =
   | 'seating'
   | 'minutas'
   | 'marcasitios'
-  | 'laminas'
+  | 'paipai'
   | 'pack';
 
 export const CATEGORIAS_PRODUCTO: Record<CategoriaProducto, string> = {
@@ -13,7 +13,7 @@ export const CATEGORIAS_PRODUCTO: Record<CategoriaProducto, string> = {
   seating: 'Seating plan y meseros',
   minutas: 'Minutas',
   marcasitios: 'Marcasitios',
-  laminas: 'Láminas personalizadas',
+  paipai: 'PaiPai',
   pack: 'Pack completo',
 };
 

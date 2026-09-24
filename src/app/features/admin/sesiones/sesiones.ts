@@ -57,6 +57,52 @@ export class Sesiones {
     notasInternas: [''],
   });
 
+  /**
+   * Por qué una sesión no aparece en la web, si es que no aparece.
+   *
+   * Para salir en `/talleres` tienen que cumplirse cuatro cosas, y hasta ahora
+   * si fallaba una no había forma de saber cuál: la sesión seguía viéndose
+   * normal en el panel. El caso que más despista es el de vacaciones, porque un
+   * periodo sin talleres marcados cierra el estudio entero y tapa fechas que
+   * nadie recuerda haber tocado.
+   *
+   * Devuelve cadena vacía cuando la sesión sí se ve.
+   */
+  protected porQueNoSeVe(sesion: Sesion): string {
+    if (!sesion.activa) {
+      return 'No aparece en la web: está cerrada.';
+    }
+
+    if (sesion.fechaInicio.toMillis() < Date.now()) {
+      return 'No aparece en la web: la fecha ya ha pasado.';
+    }
+
+    const taller = this.listaTalleres().find((t) => t.id === sesion.workshopId);
+
+    if (!taller) {
+      return 'No aparece en la web: su taller ya no existe.';
+    }
+
+    if (!taller.activo) {
+      return `No aparece en la web: el taller «${taller.titulo}» está desactivado.`;
+    }
+
+    const periodo = estaBloqueado(
+      this.periodos(),
+      sesion.workshopId,
+      sesion.fechaInicio,
+      sesion.fechaFin,
+    );
+
+    if (periodo) {
+      return periodo.workshopIds.length === 0
+        ? 'No aparece en la web: cae en un periodo de vacaciones que cierra todo el estudio.'
+        : 'No aparece en la web: cae en un periodo de vacaciones de este taller.';
+    }
+
+    return '';
+  }
+
   protected readonly filtradas = computed(() => {
     const taller = this.filtroTaller();
     const ahora = Date.now();

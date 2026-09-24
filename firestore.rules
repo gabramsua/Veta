@@ -98,7 +98,7 @@ service cloud.firestore {
         request.resource.data.status == 'nueva'
         && request.resource.data.notasInternas == ''
         && request.resource.data.createdAt == request.time
-        && request.resource.data.tipo in ['papeleria', 'liveart', 'encargo', 'contacto']
+        && request.resource.data.tipo in ['papeleria', 'liveart', 'encargo', 'evento', 'contacto']
         && texto(request.resource.data.nombre, 120)
         && emailValido(request.resource.data.email)
         && request.resource.data.telefono is string
@@ -112,7 +112,7 @@ service cloud.firestore {
         && request.resource.data.piezas is list
         && request.resource.data.piezas.size() <= 6
         && request.resource.data.piezas.hasOnly([
-             'invitaciones', 'seating', 'minutas', 'marcasitios', 'laminas', 'pack'
+             'invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai', 'pack'
            ])
         && request.resource.data.keys().hasOnly([
              'tipo', 'piezas', 'nombre', 'email', 'telefono', 'respuestas',

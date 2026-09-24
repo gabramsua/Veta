@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+.vig-lista__titulo {
+  margin-bottom: var(--esp-6);
+  text-align: center;
+}
+
+/**
+ * Los marcos son verticales y altos, así que caben tres en fila en escritorio
+ * y bajan solos a una columna. El máximo de la pista es fijo y no `1fr`: con un
+ * solo vídeo, `1fr` lo estiraría a todo el ancho y un reel a pantalla completa
+ * queda desproporcionado.
+ */
+.vig-lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(26rem, 34rem));
+  gap: var(--esp-5);
+  align-items: start;
+  justify-content: center;
+}

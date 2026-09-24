@@ -238,7 +238,7 @@ describe('Solicitudes de presupuesto', () => {
       addDoc(
         collection(anonimo(), 'requests'),
         solicitudValida({
-          piezas: ['invitaciones', 'seating', 'minutas', 'marcasitios', 'laminas', 'pack', 'pack'],
+          piezas: ['invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai', 'pack', 'pack'],
         }),
       ),
     );

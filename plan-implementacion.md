@@ -217,3 +217,27 @@ funcionalidad nueva. Lo que apareció:
 
 Lo demás que salió en la revisión automática eran falsos positivos: propiedades
 en notación abreviada que el análisis no reconocía, y rutas con parámetro.
+
+---
+
+## Tercera tanda de cambios con las clientas · 24/09/2026
+
+Reunión con Carmen, ya con contenido real metido. Nueve cambios, ninguno de
+estructura. La consigna que los ordena a todos la puso Gabriel al final: *«la web
+ya se está convirtiendo en una bola para sus condiciones de usuario base»*. Está
+recogida en `CLAUDE.md` §7 como regla permanente.
+
+| Cambio | Cómo se ha resuelto |
+|---|---|
+| Láminas → PaiPai | Renombrado en los 16 sitios donde aparecía, más `npm run migrar:renombrados` para lo que Carmen ya había metido |
+| Vídeos de Instagram en live art | Tres huecos por página, con carga bajo clic para no meter cookies de Meta sin permiso |
+| Fuera la URL al crear un taller | Se escribe sola desde el título, con sufijo si choca |
+| La rueda de minutos | Botones de duración (1 h, 1 h 30…) y un «otra» para lo raro |
+| Taller privado | Formulario propio de presupuesto, no una reserva: no hay fecha ni plazas que descontar |
+| «No hay fechas programadas» sin explicación | Cada sesión dice ahora por qué no se ve, si es que no se ve |
+| Bonos | Fuera «Eventos privados», entra «Mixto»; el precio es por bono |
+| La página de bonos no era editable | Ya lo es, como el resto |
+| Alta manual de reservas | Un solo formulario: desplegable con fechas y bonos juntos, y nace confirmada |
+
+El segundo formulario de talleres puntuales queda sin hacer porque no está
+definido (`pendientes.md` D51).

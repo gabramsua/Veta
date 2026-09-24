@@ -14,6 +14,7 @@
     "test:reglas": "firebase emulators:exec --only firestore \"node --test tests/\"",
     "ejemplo:crear": "node scripts/ejemplo-crear.mjs",
     "ejemplo:borrar": "node scripts/ejemplo-borrar.mjs",
+    "migrar:renombrados": "node scripts/migrar-renombrados.mjs",
     "correo:vaciar": "node scripts/vaciar-cola-correo.mjs",
     "correo:ver": "node scripts/ver-cola-correo.mjs"
   },

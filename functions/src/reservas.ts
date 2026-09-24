@@ -16,12 +16,14 @@ interface DatosReserva {
   nPersonas: number;
   respuestas: Record<string, string>;
   status: 'pendiente' | 'confirmada' | 'cancelada';
+  origen?: 'web' | 'panel';
 }
 
 const ETIQUETAS_TIPO: Record<string, string> = {
   papeleria: 'papelería de bodas',
   liveart: 'live art',
   encargo: 'encargo',
+  evento: 'taller privado',
   contacto: 'contacto',
 };
 
@@ -32,7 +34,7 @@ const ETIQUETAS_PIEZA: Record<string, string> = {
   seating: 'Seating plan y meseros',
   minutas: 'Minutas',
   marcasitios: 'Marcasitios',
-  laminas: 'Láminas personalizadas',
+  paipai: 'PaiPai',
   pack: 'Pack completo',
 };
 
@@ -68,7 +70,7 @@ async function contexto(
     return {
       taller: (bono.data()?.['titulo'] as string) ?? 'Bono mensual',
       fecha: '',
-      precio: (bono.data()?.['precioMes'] as number) ?? 0,
+      precio: (bono.data()?.['precio'] as number) ?? 0,
       etiqueta: 'Bono',
     };
   }
@@ -119,6 +121,12 @@ export const onBookingCreated = onDocumentCreated(
   async (evento) => {
     const datos = evento.data?.data() as DatosReserva | undefined;
     if (!datos) return;
+
+    // Las que apunta Carmen a mano no han solicitado nada: mandarles un «hemos
+    // recibido tu solicitud» sería mentira, y el aviso interno se lo enviaría a
+    // sí misma un segundo después de escribirlo. `crearReservaManual` ya se
+    // ocupa de avisar a la clienta si hace falta.
+    if (datos.origen === 'panel') return;
 
     const { taller, fecha, etiqueta } = await contexto(datos);
 
@@ -250,3 +258,131 @@ export const confirmBooking = onCall<{ bookingId: string; status: 'confirmada' |
     });
   },
 );
+
+/**
+ * Apuntar a alguien a mano desde el panel.
+ *
+ * Nace ya confirmada y descuenta plazas en el mismo paso. Es lo que espera
+ * quien apunta a una clienta que ha llamado por teléfono: ya está hablado, no
+ * hay nada que confirmar después. Crearla pendiente y obligar a un segundo clic
+ * sería repetir el flujo de la web para un caso que no lo necesita.
+ *
+ * Va en Function y no en cliente por lo mismo que `confirmBooking`: mover el
+ * contador de plazas tiene carrera, y las reglas de Firestore impiden —a
+ * propósito— que nadie lo toque desde el navegador.
+ *
+ * El correo es opcional: muchas de estas reservas se apuntan con la clienta
+ * delante o al teléfono, y a veces no hay ni dirección que usar.
+ */
+export const crearReservaManual = onCall<{
+  tipo: 'taller' | 'bono';
+  sessionId: string | null;
+  bonoId: string | null;
+  nombre: string;
+  email: string;
+  telefono: string;
+  nPersonas: number;
+  notasInternas: string;
+  avisar: boolean;
+}>({ region: REGION }, async (peticion) => {
+  exigirAdmin(peticion);
+
+  const datos = peticion.data ?? ({} as Record<string, never>);
+  const tipo = datos.tipo;
+
+  if (tipo !== 'taller' && tipo !== 'bono') {
+    throw new HttpsError('invalid-argument', 'Hay que decir si es un taller o un bono.');
+  }
+
+  const nombre = textoObligatorio(datos.nombre, 'nombre', 120);
+  const email = typeof datos.email === 'string' ? datos.email.trim() : '';
+  const telefono = typeof datos.telefono === 'string' ? datos.telefono.trim().slice(0, 30) : '';
+  const notasInternas =
+    typeof datos.notasInternas === 'string' ? datos.notasInternas.trim().slice(0, 2000) : '';
+
+  if (email && !email.includes('@')) {
+    throw new HttpsError('invalid-argument', 'Ese correo no parece válido.');
+  }
+
+  // Sin ninguna de las dos no hay forma de volver a contactar con la persona, y
+  // una reserva a la que no se puede avisar de un cambio de fecha no sirve.
+  if (!email && !telefono) {
+    throw new HttpsError('invalid-argument', 'Hace falta al menos un teléfono o un correo.');
+  }
+
+  const nPersonas = Number(datos.nPersonas);
+
+  if (!Number.isInteger(nPersonas) || nPersonas < 1 || nPersonas > 20) {
+    throw new HttpsError('invalid-argument', 'El número de personas tiene que estar entre 1 y 20.');
+  }
+
+  const sessionId = tipo === 'taller' ? textoObligatorio(datos.sessionId, 'sesión', 128) : null;
+  const bonoId = tipo === 'bono' ? textoObligatorio(datos.bonoId, 'bono', 128) : null;
+
+  const documento = {
+    tipo,
+    sessionId,
+    bonoId,
+    nombre,
+    email,
+    telefono,
+    nPersonas,
+    respuestas: {},
+    status: 'confirmada' as const,
+    origen: 'panel' as const,
+    createdAt: FieldValue.serverTimestamp(),
+    confirmadaAt: FieldValue.serverTimestamp(),
+    notasInternas,
+  };
+
+  const refReserva = db.collection('bookings').doc();
+
+  if (tipo === 'bono') {
+    // Los bonos no consumen plazas, así que no hace falta transacción.
+    await refReserva.set(documento);
+  } else {
+    await db.runTransaction(async (tx) => {
+      const refSesion = db.doc(`sessions/${sessionId}`);
+      const sesion = await tx.get(refSesion);
+
+      if (!sesion.exists) {
+        throw new HttpsError('not-found', 'Esa sesión ya no existe.');
+      }
+
+      const totales = (sesion.data()?.['plazasTotales'] as number) ?? 0;
+      const confirmadas = (sesion.data()?.['plazasConfirmadas'] as number) ?? 0;
+
+      if (confirmadas + nPersonas > totales) {
+        throw new HttpsError(
+          'failed-precondition',
+          `No caben: quedan ${totales - confirmadas} plaza(s) y estás apuntando ${nPersonas}.`,
+        );
+      }
+
+      tx.update(refSesion, { plazasConfirmadas: confirmadas + nPersonas });
+      tx.set(refReserva, documento);
+    });
+  }
+
+  logger.info('Reserva creada desde el panel', { bookingId: refReserva.id, tipo, nPersonas });
+
+  if (datos.avisar && email) {
+    // `contexto` solo mira el tipo y el identificador; el resto no le hace falta.
+    const { taller, fecha, precio, etiqueta } = await contexto({
+      tipo,
+      sessionId,
+      bonoId,
+    } as DatosReserva);
+
+    await encolarCorreo(email, 'reserva-confirmada', {
+      nombre,
+      taller,
+      fecha,
+      etiqueta,
+      nPersonas,
+      importe: precio * nPersonas,
+    });
+  }
+
+  return { ok: true, bookingId: refReserva.id };
+});

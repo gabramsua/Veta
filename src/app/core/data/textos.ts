@@ -65,6 +65,42 @@ export interface PaginaEditable {
   relacionado: EnlaceRelacionado[];
 }
 
+/**
+ * Vídeos de Instagram, para las tres páginas de live art.
+ *
+ * Tres huecos fijos y no una lista que crezca: un repetidor con añadir, quitar
+ * y ordenar es otro tipo de formulario y otro tipo de panel. Con tres basta
+ * para enseñar el servicio, y el que sobre se queda vacío sin aparecer.
+ */
+const BLOQUE_VIDEOS: BloquePagina[] = [
+  {
+    nombre: 'Vídeos de Instagram',
+    ayuda:
+      'Pega el enlace de la publicación o el reel. Se ve una miniatura con un botón, y el vídeo ' +
+      'carga solo si la visitante lo pulsa: así la web no manda datos a Instagram sin permiso.',
+    campos: [
+      {
+        clave: 'videoUnoUrl',
+        etiqueta: 'Enlace del primer vídeo',
+        tipo: 'texto',
+        porDefecto: '',
+        pista: 'Ej. https://www.instagram.com/reel/CxxxxxxxxxX/ · Si lo dejas vacío, ese vídeo no aparece.',
+      },
+      {
+        clave: 'videoUnoTitulo',
+        etiqueta: 'Texto del botón',
+        tipo: 'texto',
+        porDefecto: '',
+        pista: 'Opcional. Si lo dejas vacío pone «Ver el vídeo».',
+      },
+      { clave: 'videoDosUrl', etiqueta: 'Enlace del segundo vídeo', tipo: 'texto', porDefecto: '' },
+      { clave: 'videoDosTitulo', etiqueta: 'Texto del botón', tipo: 'texto', porDefecto: '' },
+      { clave: 'videoTresUrl', etiqueta: 'Enlace del tercer vídeo', tipo: 'texto', porDefecto: '' },
+      { clave: 'videoTresTitulo', etiqueta: 'Texto del botón', tipo: 'texto', porDefecto: '' },
+    ],
+  },
+];
+
 /** Cómo se pintan los modelos de una subsección de papelería. */
 export const MODOS_CATALOGO = [
   { valor: 'rejilla', etiqueta: 'Rejilla de fichas (para varios modelos)' },
@@ -142,7 +178,7 @@ export const SUBSECCIONES_PAPELERIA: PaginaEditable[] = [
   subseccionPapeleria('seating', 'Seating plan y meseros', 'rejilla'),
   subseccionPapeleria('minutas', 'Minutas', 'bloques'),
   subseccionPapeleria('marcasitios', 'Marcasitios', 'rejilla'),
-  subseccionPapeleria('laminas', 'Láminas personalizadas', 'bloques'),
+  subseccionPapeleria('paipai', 'PaiPai', 'bloques'),
   subseccionPapeleria('pack', 'Pack completo', 'bloques'),
 ];
 
@@ -321,6 +357,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '3 · Qué incluye',
         campos: [{ clave: 'incluye', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' }],
       },
+      ...BLOQUE_VIDEOS,
     ],
     relacionado: [
       { etiqueta: 'Galería de live art', ruta: '/panel/portfolio', ayuda: 'Elige la sección «Live art» dentro del portfolio.' },
@@ -354,6 +391,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '3 · Qué incluye',
         campos: [{ clave: 'incluye', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' }],
       },
+      ...BLOQUE_VIDEOS,
     ],
     relacionado: [
       { etiqueta: 'Portfolio de live art', ruta: '/panel/portfolio', ayuda: 'La galería sale de la sección «Live art».' },
@@ -387,6 +425,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '3 · Qué incluye',
         campos: [{ clave: 'incluye', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' }],
       },
+      ...BLOQUE_VIDEOS,
     ],
     relacionado: [
       { etiqueta: 'Portfolio de live art', ruta: '/panel/portfolio', ayuda: 'La galería sale de la sección «Live art».' },
@@ -443,6 +482,37 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       { etiqueta: 'Los talleres', ruta: '/panel/talleres', ayuda: 'Título, precio, duración, descripción y fotos de cada uno.' },
       { etiqueta: 'Fechas y plazas', ruta: '/panel/sesiones', ayuda: 'Cada fecha concreta, con sus plazas.' },
       { etiqueta: 'Bonos mensuales', ruta: '/panel/bonos', ayuda: 'Salen en su propia página, enlazada desde aquí.' },
+    ],
+  },
+
+  {
+    slug: 'talleres-bonos',
+    nombre: 'Talleres · Bonos',
+    ruta: '/talleres/bonos',
+    bloques: [
+      {
+        nombre: '1 · Cabecera',
+        campos: [
+          {
+            clave: 'entradilla',
+            etiqueta: 'Entradilla',
+            tipo: 'parrafo',
+            porDefecto: 'Ven cada semana. Los bonos no tienen calendario: nos escribes, lo hablamos y reservamos tu sitio.',
+          },
+          { clave: 'texto', etiqueta: 'Texto de la sección', tipo: 'rico', porDefecto: '' },
+        ],
+      },
+      {
+        nombre: '2 · Cierre',
+        ayuda: 'El bloque del final, debajo de los bonos.',
+        campos: [
+          { clave: 'cierreTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: '¿Prefieres probar antes?', estiloPorDefecto: 'titular' },
+          { clave: 'cierreTexto', etiqueta: 'Texto', tipo: 'parrafo', porDefecto: 'Apúntate a un taller suelto y, si te gusta, luego pasas a bono.' },
+        ],
+      },
+    ],
+    relacionado: [
+      { etiqueta: 'Los bonos', ruta: '/panel/bonos', ayuda: 'Título, precio, sesiones y descripción de cada bono.' },
     ],
   },
 

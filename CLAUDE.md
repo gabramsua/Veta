@@ -163,7 +163,7 @@ Todos los bloques leen su contenido de `pages/home` y son ocultables desde el pa
 
 ## 4. Flujos
 
-**Presupuesto (papelería, live art, encargos)**
+**Presupuesto (papelería, live art, encargos, talleres privados)**
 1. Cliente rellena el cuestionario de la sección.
 2. Se crea `requests` con `status: "nueva"`.
 3. La Function `onRequestCreated` escribe en `mail/` → email a Veta + acuse al cliente.
@@ -181,13 +181,28 @@ Todos los bloques leen su contenido de `pages/home` y son ocultables desde el pa
 
 **Bono mensual** — igual pero sin calendario: cuestionario + email.
 
+**Taller privado** (despedidas, cumpleaños, regalos) — no es una reserva aunque
+salga desde Talleres: no hay fecha en el calendario ni plazas que descontar,
+porque la sesión se monta a medida. Va por el flujo de presupuesto, con
+`requests.tipo: "evento"`.
+
+**Alta manual de una reserva** — para quien llama por teléfono o se apunta en el
+estudio. La Function `crearReservaManual` crea la reserva **ya confirmada** y
+descuenta las plazas en la misma transacción: quien apunta ya lo ha hablado con
+la clienta, y obligar a un segundo clic de confirmación sería repetir el flujo de
+la web para un caso que no lo necesita. Marca `origen: "panel"`, y por eso
+`onBookingCreated` se calla: mandar un «hemos recibido tu solicitud» a quien
+nunca solicitó nada sería mentira. El correo de confirmación es opcional —a veces
+no hay ni dirección de correo— y lo encola la propia Function.
+
 ### Qué va en Cloud Functions y por qué
 
-Todo lo demás es cliente contra Firestore. Estas cinco cosas no pueden serlo:
+Todo lo demás es cliente contra Firestore. Estas cosas no pueden serlo:
 
 | Function | Motivo |
 |---|---|
 | `confirmBooking` | Decrementar plazas debe ser una transacción servidor. Si no, dos admins confirmando a la vez sobrevenden la sesión. |
+| `crearReservaManual` | Lo mismo, en el alta a mano: nace confirmada y descuenta plazas en el mismo paso. Las reglas de Firestore prohíben —a propósito— que el cliente toque `plazasConfirmadas`. |
 | `onRequestCreated` / `onBookingWrite` | Componer el documento de `mail/` con la plantilla correcta. Si el cliente escribiera en `mail/`, cualquiera podría enviar correos desde el dominio de Veta. |
 | `createAdminUser` | Crear usuarios y asignar custom claims requiere Admin SDK. |
 | `resetPasswordAdmin` | Generar un enlace de cambio de contraseña requiere Admin SDK. Auth solo guarda un hash, así que no existe forma de leer la contraseña: solo de sustituirla. |
@@ -236,15 +251,16 @@ bookings/{id}
   nombre, email, telefono, nPersonas, respuestas: {}
   status: 'pendiente'|'confirmada'|'cancelada'
   createdAt, confirmadaAt, notasInternas
+  origen?: 'panel'   // solo las que se apuntan a mano; ausente = vino de la web
 
 requests/{id}                     // presupuestos
-  tipo: 'papeleria'|'liveart'|'encargo'|'contacto'
+  tipo: 'papeleria'|'liveart'|'encargo'|'evento'|'contacto'
   nombre, email, telefono, respuestas: {}
   status: 'nueva'|'en-curso'|'respondida'|'cerrada'
   createdAt, notasInternas
 
 formQuestions/{id}                // preguntas extra por formulario (§6)
-  formulario: 'papeleria'|'liveart'|'encargo'|'taller'|'bono'|'contacto'
+  formulario: 'papeleria'|'liveart'|'encargo'|'evento'|'taller'|'bono'|'contacto'
   etiqueta, tipo: 'texto'|'textarea'|'opciones'|'fecha', opciones[]
   obligatoria, orden, activa
 
@@ -438,6 +454,16 @@ nunca de contenido**: ignora sus textos, su nombre de producto y sus secciones
 Usuarias objetivo: dos diseñadoras, no perfiles técnicos. Prioriza claridad
 sobre densidad: pocas opciones por pantalla, etiquetas en español natural,
 confirmación visible en cada acción.
+
+**Cada función nueva tiene que caber sin engordar el panel.** Es la regla que
+manda sobre las demás desde septiembre de 2026: la web ya es grande para lo que
+necesitan dos personas. Antes de añadir una pantalla, mirar si la función cabe
+en una que ya existe; antes de añadir un campo, si se puede deducir; antes de
+partir una decisión en dos pasos, si de verdad son dos. El alta manual de
+reservas es el ejemplo: un solo desplegable con las fechas y los bonos juntos en
+vez de «¿taller o bono?» y luego otro selector, porque en la cabeza de quien
+apunta eso es una sola decisión —«la del sábado»—, y nace confirmada en vez de
+pendiente porque ya está hablado.
 
 ---
 

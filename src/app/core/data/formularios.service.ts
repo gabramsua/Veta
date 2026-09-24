@@ -8,6 +8,7 @@ import { PreguntaFormulario, TipoFormulario } from '../models';
 export const FORMULARIOS: { valor: TipoFormulario; etiqueta: string; descripcion: string }[] = [
   { valor: 'taller', etiqueta: 'Reserva de taller', descripcion: 'Cuando alguien pide plaza en una sesión.' },
   { valor: 'bono', etiqueta: 'Bono mensual', descripcion: 'Solicitud de bono de cerámica, pintura o infantil.' },
+  { valor: 'evento', etiqueta: 'Taller privado', descripcion: 'Despedidas, cumpleaños y regalos: un taller solo para ese grupo.' },
   { valor: 'papeleria', etiqueta: 'Papelería de bodas', descripcion: 'Presupuesto de invitaciones, seating, minutas…' },
   { valor: 'liveart', etiqueta: 'Live art', descripcion: 'Acuarela en directo para un evento.' },
   { valor: 'encargo', etiqueta: 'Acuarelas y encargos', descripcion: 'Piezas por encargo.' },

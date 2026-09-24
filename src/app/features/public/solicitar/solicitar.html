@@ -31,7 +31,7 @@
               <option value="">Elige un bono</option>
               @for (item of bonos(); track item.id) {
                 <option [value]="item.id">
-                  {{ item.titulo }} · {{ item.precioMes }} €/mes
+                  {{ item.titulo }} · {{ item.precio }} €
                 </option>
               }
             </select>

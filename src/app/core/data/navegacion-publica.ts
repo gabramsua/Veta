@@ -18,7 +18,7 @@ const TODOS: EnlaceNav[] = [
       { etiqueta: 'Seating plan y meseros', ruta: '/papeleria-de-bodas/seating' },
       { etiqueta: 'Minutas', ruta: '/papeleria-de-bodas/minutas' },
       { etiqueta: 'Marcasitios', ruta: '/papeleria-de-bodas/marcasitios' },
-      { etiqueta: 'Láminas personalizadas', ruta: '/papeleria-de-bodas/laminas' },
+      { etiqueta: 'PaiPai', ruta: '/papeleria-de-bodas/paipai' },
       { etiqueta: 'Pack completo', ruta: '/papeleria-de-bodas/pack' },
     ],
   },

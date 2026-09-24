@@ -24,6 +24,7 @@ const TIPOS: Record<TipoSolicitud, string> = {
   papeleria: 'Papelería de bodas',
   liveart: 'Live art',
   encargo: 'Acuarelas y encargos',
+  evento: 'Taller privado',
   contacto: 'Contacto general',
 };
 

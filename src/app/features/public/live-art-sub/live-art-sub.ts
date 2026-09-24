@@ -10,6 +10,7 @@ import { BloqueTexto } from '../../../shared/bloque-texto/bloque-texto';
 import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-seccion';
 import { PaginasService } from '../../../core/data/paginas.service';
 import { SeoService } from '../../../core/seo/seo.service';
+import { VideosInstagram } from '../../../shared/video-instagram/videos-instagram';
 import { textoPlano, tieneContenido } from '../../../core/seo/quitar-html';
 import { paginaEditable, textosPorDefecto } from '../../../core/data/textos';
 
@@ -25,7 +26,7 @@ import { paginaEditable, textosPorDefecto } from '../../../core/data/textos';
  */
 @Component({
   selector: 'veta-live-art-sub',
-  imports: [RouterLink, CabeceraSeccion, BloqueTexto, BloqueIlustrado],
+  imports: [RouterLink, CabeceraSeccion, BloqueTexto, BloqueIlustrado, VideosInstagram],
   templateUrl: './live-art-sub.html',
   styleUrl: './live-art-sub.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
