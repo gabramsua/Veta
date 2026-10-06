@@ -2,6 +2,8 @@ import { DOCUMENT, isPlatformServer } from '@angular/common';
 import { Injectable, PLATFORM_ID, inject } from '@angular/core';
 import { Meta, Title } from '@angular/platform-browser';
 
+import { DatosContacto, RedesSociales } from '../models';
+
 export interface DatosSeo {
   titulo: string;
   descripcion: string;
@@ -13,6 +15,24 @@ export interface DatosSeo {
 
 const ID_JSONLD = 'veta-datos-estructurados';
 const NOMBRE = 'Veta · Estudio Creativo';
+
+/**
+ * Dónde trabajan, para el `areaServed` de la ficha del negocio.
+ *
+ * Son los municipios del área de Sevilla donde de verdad hacen bodas, no una
+ * lista larga para aparecer en todas partes: declarar zonas en las que no se
+ * trabaja no engaña a Google y sí a quien llame desde allí.
+ */
+const ZONAS_DE_SERVICIO = [
+  'Sevilla',
+  'Dos Hermanas',
+  'Alcalá de Guadaíra',
+  'Mairena del Aljarafe',
+  'Tomares',
+  'Bormujos',
+  'Carmona',
+  'Utrera',
+];
 
 @Injectable({ providedIn: 'root' })
 export class SeoService {
@@ -88,24 +108,76 @@ export class SeoService {
     cabeza.appendChild(script);
   }
 
-  negocioLocal(contacto: { email: string; telefono: string; direccion: string }): object {
+  /**
+   * La ficha del negocio, que es la pieza que sostiene el SEO local.
+   *
+   * Google la cruza con el Perfil de Empresa para decidir si la web y la ficha
+   * del mapa son el mismo negocio. Por eso el nombre, la dirección y el teléfono
+   * que salen aquí tienen que ser **idénticos** a los de la ficha, letra por
+   * letra: es lo que en SEO local llaman NAP consistente, y es más determinante
+   * que cualquier palabra clave que metamos en un título.
+   *
+   * Todo sale de `settings/site`, editable desde el panel, para que cuando
+   * cambien el teléfono no haya que desplegar.
+   */
+  negocioLocal(contacto: DatosContacto, redes?: RedesSociales): object {
+    const perfiles = Object.values(redes ?? {}).filter((url) => url.trim().length > 0);
+
+    // El valor de partida de `direccion` es «Sevilla», que es la ciudad y no una
+    // calle. Mandarlo como `streetAddress` sería decirle a Google que el estudio
+    // está en la calle Sevilla de Sevilla. Hasta que pongan la dirección real,
+    // mejor no decir nada.
+    const calle = contacto.direccion.trim();
+    const esCalle = calle.length > 0 && calle.toLowerCase() !== 'sevilla';
+
     return {
       '@context': 'https://schema.org',
       '@type': 'LocalBusiness',
+      // Un identificador estable permite referenciar el negocio desde otros
+      // bloques (los talleres, sin ir más lejos) en vez de repetir la ficha.
+      '@id': `${this.origen}/#negocio`,
       name: NOMBRE,
       description:
-        'Estudio creativo en Sevilla. Papelería de bodas, acuarela en directo y talleres presenciales.',
+        'Estudio creativo en Sevilla. Papelería de bodas, acuarela en directo y talleres de cerámica y pintura.',
       url: this.origen,
       image: `${this.origen}/assets/marca/veta-og.png`,
+      logo: `${this.origen}/assets/marca/veta-logo.png`,
       email: contacto.email || undefined,
       telephone: contacto.telefono || undefined,
       address: {
         '@type': 'PostalAddress',
         addressLocality: 'Sevilla',
+        addressRegion: 'Sevilla',
         addressCountry: 'ES',
-        streetAddress: contacto.direccion || undefined,
+        streetAddress: esCalle ? calle : undefined,
       },
-      areaServed: 'Sevilla',
+      openingHours: contacto.horario || undefined,
+      // Los talleres son presenciales, pero la papelería y los encargos se
+      // mandan, así que la zona no se limita a la ciudad.
+      areaServed: ZONAS_DE_SERVICIO.map((nombre) => ({ '@type': 'City', name: nombre })),
+      sameAs: perfiles.length > 0 ? perfiles : undefined,
+      priceRange: '€€',
+      currenciesAccepted: 'EUR',
+    };
+  }
+
+  /**
+   * Migas de pan para las páginas que cuelgan de otra.
+   *
+   * Google las usa para sustituir la URL cruda del resultado por la ruta legible
+   * («Veta › Papelería de bodas › Invitaciones»), que se lee mejor y se pulsa
+   * más. La home no lleva: una miga de un solo nivel no dice nada.
+   */
+  migasDePan(ruta: { nombre: string; url: string }[]): object {
+    return {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: ruta.map((paso, indice) => ({
+        '@type': 'ListItem',
+        position: indice + 1,
+        name: paso.nombre,
+        item: `${this.origen}${paso.url}`,
+      })),
     };
   }
 

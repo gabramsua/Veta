@@ -126,6 +126,58 @@ firebase functions:log --only onBookingCreated
 
 ---
 
+## Analítica
+
+Dos herramientas, las dos gratuitas y **las dos sin cookies**, que es lo que
+permite que la web siga sin banner de consentimiento. Si alguna vez se cambia
+por Google Analytics o Firebase Analytics, el banner deja de ser opcional y hay
+que rehacer los textos legales: son el mismo producto por debajo y ponen cookies
+de Google.
+
+### Cloudflare Web Analytics · cuántas visitas y de dónde vienen
+
+1. Crear cuenta gratuita en `dash.cloudflare.com`. No hace falta mover el
+   dominio a Cloudflare ni tocar DNS.
+2. Menú **Analytics & Logs → Web Analytics → Add a site**, y poner
+   `veta-estudio-creativo.web.app`.
+3. Cloudflare da un fragmento con un `token`. Copiar **solo el token** (una
+   cadena larga de letras y números).
+4. Pegarlo en `src/index.html`, en la constante `TOKEN` del script del final.
+5. `firebase deploy --only hosting`.
+
+Mientras `TOKEN` esté vacío no se carga nada y no se pide nada a Cloudflare. El
+script tampoco se ejecuta en `localhost`, para que las recargas de desarrollo no
+descuadren las cifras del mes.
+
+Qué se ve: visitas y visitantes por día, páginas más vistas, de dónde llegan
+(Instagram, Google, directo), país, tipo de dispositivo y los Core Web Vitals
+reales.
+
+### Google Search Console · qué se busca para llegar
+
+1. Entrar en `search.google.com/search-console` y crear una propiedad de tipo
+   **Prefijo de URL** con `https://veta-estudio-creativo.web.app/`. La de tipo
+   Dominio no sirve: exige tocar el DNS de `web.app`, que es de Google.
+2. Elegir el método de verificación **Etiqueta HTML**. Google da una línea
+   `<meta name="google-site-verification" content="...">`; va en el `<head>` de
+   `src/index.html`.
+3. `firebase deploy --only hosting` y pulsar «Verificar».
+4. Ya dentro, **Sitemaps → añadir** `sitemap.xml`.
+
+Qué se ve: qué escribió la gente en Google para llegar, en qué posición sale la
+web, cuántas veces aparece y cuántas la pulsan, y qué páginas ha indexado Google
+o por qué no ha indexado alguna. No usa cookies ni carga ningún script: los
+datos son de Google, no de la visitante.
+
+### Al cambiar de dominio
+
+El historial no se hereda. Search Console tratará el dominio nuevo como un sitio
+distinto y hay que crear otra propiedad y volver a enviar el sitemap; en
+Cloudflare hay que añadir el sitio nuevo. No es grave —hoy no hay historial que
+perder—, pero conviene saberlo antes de acostumbrarse a los números.
+
+---
+
 ## Dominio propio
 
 Consola de Firebase → Hosting → Añadir dominio personalizado, y seguir los pasos
@@ -134,6 +186,7 @@ de verificación DNS. Después hay que actualizar en el código:
 - `src/app/core/seo/seo.service.ts` → constante del origen en servidor.
 - `public/robots.txt` → línea `Sitemap:`.
 - `public/sitemap.xml` → todas las URL.
+- Search Console y Cloudflare: propiedad y sitio nuevos (ver «Analítica»).
 
 Está anotado como `pendientes.md` C3.
 

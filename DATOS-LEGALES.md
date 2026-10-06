@@ -66,14 +66,38 @@ falta el banner molesto de aceptar cookies**.
 
 Solo cambia si:
 
-- [ ] **¿Queréis Google Analytics** para ver cuánta gente entra y por dónde? Es
-      útil, pero convierte esto en un caso distinto: habría que añadir banner de
-      consentimiento y ampliar el texto. Decidnos si os interesa.
 - [ ] **¿Queréis un mapa de Google o un vídeo de YouTube** en alguna página?
-      Cada uno de esos mete cookies de terceros y obliga también al banner.
+      Cada uno de esos mete cookies de terceros y obliga al banner.
 
-Si a las dos preguntas la respuesta es no, la web se queda sin banner. Es lo
-más limpio y lo más rápido de cargar.
+Si la respuesta es no, la web se queda sin banner. Es lo más limpio y lo más
+rápido de cargar.
+
+**Google Analytics queda descartado a propósito**, aunque sea lo que todo el
+mundo usa: pone cookies, manda datos a Google y obligaría al banner. En su lugar
+llevamos una analítica sin cookies, que se explica más abajo y da prácticamente
+la misma información.
+
+### La analítica de visitas
+
+Para saber cuánta gente entra y qué mira usamos **Cloudflare Web Analytics**,
+que no pone cookies, no identifica a nadie y no sigue a la visitante por otras
+webs. Se ven cifras agregadas —cuántas visitas, qué páginas, si llegaron desde
+Instagram o desde Google, desde qué país y con qué tipo de móvil—, nunca
+personas concretas.
+
+Usamos además **Google Search Console**, que no carga nada en la web: solo nos
+dice qué escribió la gente en Google para encontrarnos.
+
+Párrafo listo para pegar en la política de privacidad y en la de cookies:
+
+> Para saber cuántas personas visitan la web usamos Cloudflare Web Analytics, un
+> servicio de analítica que **no utiliza cookies**, no almacena información en tu
+> dispositivo, no crea perfiles y no te sigue por otros sitios web. Solo
+> recogemos datos agregados y anónimos: número de visitas, páginas consultadas,
+> desde qué web o buscador has llegado, país y tipo de dispositivo. No es posible
+> identificarte a partir de esa información. El servicio lo presta Cloudflare,
+> Inc.; para prestarlo, tu navegador se conecta a sus servidores y les transmite
+> tu dirección IP, que Cloudflare no almacena ni asocia a tu visita.
 
 ### Los vídeos de Instagram de live art
 
@@ -92,6 +116,11 @@ política de privacidad y en la de cookies:
 > Platforms Ireland Ltd., que puede instalar sus propias cookies y registrar tu
 > dirección IP conforme a su política de privacidad. Esa conexión la decides tú
 > con el clic, y puedes seguir navegando sin hacerlo.
+>
+> Para no tener que pedírtelo una y otra vez, guardamos esa decisión en tu
+> navegador y, a partir de entonces, los vídeos de Instagram se cargan solos.
+> Puedes revocarla cuando quieras con el enlace «Dejar de cargarlos» que aparece
+> bajo los vídeos.
 
 ---
 

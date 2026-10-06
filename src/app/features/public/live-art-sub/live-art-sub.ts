@@ -75,7 +75,7 @@ export class LiveArtSub {
       const def = this.definicion();
 
       this.seo.aplicar({
-        titulo: propio.title || `${def?.nombre ?? 'Live art'} · Veta Estudio Creativo`,
+        titulo: propio.title || `${def?.nombre ?? 'Live art'} en Sevilla · Veta Estudio Creativo`,
         descripcion:
           propio.description ||
           textoPlano(this.valor()('entradilla') || this.valor()('texto')) ||
@@ -83,7 +83,14 @@ export class LiveArtSub {
         ruta: def?.ruta ?? '/live-art',
         imagen: propio.ogImage,
       });
-      this.seo.datosEstructurados(null);
+
+      this.seo.datosEstructurados(
+        this.seo.migasDePan([
+          { nombre: 'Inicio', url: '/' },
+          { nombre: 'Live art', url: '/live-art' },
+          { nombre: def?.nombre ?? 'Live art', url: def?.ruta ?? '/live-art' },
+        ]),
+      );
     });
   }
 }

@@ -8,6 +8,8 @@ import {
 } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
+import { ConsentimientoInstagram } from '../../core/privacidad/consentimiento-instagram.service';
+
 /**
  * Un vídeo de Instagram que no carga nada hasta que alguien lo pide.
  *
@@ -26,12 +28,12 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'veta-video-instagram',
   template: `
-    @if (!activo()) {
+    @if (!visible()) {
       <button type="button" class="vig" (click)="activar()">
         <span class="vig__play" aria-hidden="true">▶</span>
         <span class="vig__texto">
           <span class="vig__titulo">{{ titulo() || 'Ver el vídeo' }}</span>
-          <span class="vig__aviso">Se abre desde Instagram al pulsar</span>
+          <span class="vig__aviso">Se carga desde Instagram al pulsar</span>
         </span>
       </button>
     } @else if (incrustable()) {
@@ -52,8 +54,17 @@ export class VideoInstagram {
   readonly titulo = input<string>('');
 
   private readonly sanitizer = inject(DomSanitizer);
+  private readonly consentimiento = inject(ConsentimientoInstagram);
 
-  protected readonly activo = signal(false);
+  private readonly pulsado = signal(false);
+
+  /**
+   * Se ve el vídeo si esta visitante lo ha pedido, ahora o en otra visita.
+   *
+   * El primer clic vale para todos los demás: quien ya ha dicho que sí no tiene
+   * que repetirlo vídeo a vídeo ni cada vez que entra.
+   */
+  protected readonly visible = computed(() => this.pulsado() || this.consentimiento.concedido());
 
   /**
    * La dirección del reproductor, a partir del enlace que pega Carmen.
@@ -84,6 +95,7 @@ export class VideoInstagram {
   });
 
   protected activar(): void {
-    this.activo.set(true);
+    this.pulsado.set(true);
+    this.consentimiento.conceder();
   }
 }

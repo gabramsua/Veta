@@ -10,7 +10,7 @@ import { tieneContenido } from '../../core/seo/quitar-html';
   imports: [HtmlSeguroPipe],
   template: `
     @if (hayContenido()) {
-      <div class="bt" [innerHTML]="html() | htmlSeguro"></div>
+      <div class="bt" [class.bt--compacto]="compacto()" [innerHTML]="html() | htmlSeguro"></div>
     }
   `,
   styles: `
@@ -66,6 +66,24 @@ import { tieneContenido } from '../../core/seo/quitar-html';
       margin-inline: auto;
     }
 
+    /**
+     * Variante para texto dentro de una tarjeta, no a lo ancho de una página.
+     *
+     * La foto principal de la tarjeta no llega hasta aquí: quien la usa la saca
+     * antes con separarPrimeraImagen() y la coloca por rejilla. Lo que queda
+     * son las imágenes de más, si Carmen pone varias, y en una ficha estrecha
+     * los tres anchos de página no tienen sentido: van todas a ancho completo
+     * y con menos aire alrededor.
+     */
+    .bt--compacto {
+      font-size: var(--txt-base);
+    }
+
+    .bt--compacto .bt__imagen {
+      width: 100%;
+      margin-block: var(--esp-3);
+    }
+
     /* En móvil no hay sitio para medias tintas: todas a ancho completo. */
     @media (max-width: 599.98px) {
       .bt__imagen--media,
@@ -91,6 +109,9 @@ import { tieneContenido } from '../../core/seo/quitar-html';
 })
 export class BloqueTexto {
   readonly html = input<string>('');
+
+  /** Para el texto que va dentro de una tarjeta, no a lo ancho de una página. */
+  readonly compacto = input(false);
 
   // Jodit deja `<p><br></p>` al vaciar un campo. Sin esta comprobación se
   // pintaría un contenedor con un párrafo vacío dentro.

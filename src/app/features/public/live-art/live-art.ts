@@ -53,7 +53,7 @@ export class LiveArt {
       const t = this.textos();
 
       this.seo.aplicar({
-        titulo: propio.title || 'Live art · Veta Estudio Creativo',
+        titulo: propio.title || 'Live art y acuarela en directo para bodas en Sevilla · Veta',
         descripcion:
           propio.description || textoPlano(t['entradilla'] || t['texto'] || '') || 'Acuarelas en directo durante tu celebración, en Sevilla y alrededores.',
         ruta: '/live-art',

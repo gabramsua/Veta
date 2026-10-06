@@ -186,3 +186,40 @@
       reglas, functions y hosting
 - [ ] **Pendiente de Carmen**: pegar los enlaces de los vídeos de live art
 - [ ] El segundo formulario de talleres puntuales sigue sin definir
+
+## Analítica sin cookies
+
+- [x] Cloudflare Web Analytics cargado desde `index.html`, sin ejecutarse en local
+- [x] Pasos de Cloudflare y de Search Console en `DESPLIEGUE.md`
+- [x] Párrafo de analítica para los textos legales, en `DATOS-LEGALES.md`
+- [x] Token de Cloudflare y `<meta>` de Search Console puestos
+- [ ] **Pendiente de tu parte**: desplegar hosting, pulsar «Verificar» en Search
+      Console y enviar `sitemap.xml`
+
+## SEO local
+
+- [x] `LocalBusiness` completo: horario, redes, zonas de servicio, rango de
+      precios e identificador estable, todo desde los ajustes del panel
+- [x] Migas de pan en las subpáginas de papelería y de live art
+- [x] La localidad en los títulos y descripciones por defecto
+- [x] `SEO-LOCAL.md`, con lo que falta y por qué la mitad no es código
+- [ ] **Pendiente de Carmen**: rellenar el Perfil de Empresa de Google, que está
+      vacío, y los datos de contacto del panel, que alimentan la ficha
+- [ ] **Pendiente de preguntar**: si las zonas de servicio que he supuesto son
+      las buenas
+
+## Retoques del 25/09/2026
+
+- [x] El número de personas ya no se descuadra respecto al teléfono: era la
+      celda de la rejilla estirándose, y pasaba igual con cualquier campo que
+      enseñara un error al lado de otro que no
+- [x] Bonos en una sola columna y más estrechos, con el precio en la línea del título
+- [x] Las imágenes que Carmen inserte en la descripción de un bono se van a la
+      derecha y el texto las rodea; en móvil vuelven a ancho completo
+
+## Vídeos de Instagram · consentimiento recordado
+
+- [x] El primer clic vale como consentimiento y se guarda en el navegador
+- [x] Los demás vídeos, y los de visitas siguientes, cargan solos
+- [x] Enlace para revocarlo bajo el bloque de vídeos
+- [x] Sigue sin banner de cookies, y en servidor nunca se pinta el marco

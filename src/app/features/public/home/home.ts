@@ -110,7 +110,9 @@ export class Home {
         imagen: personalizado.ogImage || undefined,
       });
 
-      this.seo.datosEstructurados(this.seo.negocioLocal(this.ajustes().contacto));
+      this.seo.datosEstructurados(
+        this.seo.negocioLocal(this.ajustes().contacto, this.ajustes().redes),
+      );
     });
   }
 }

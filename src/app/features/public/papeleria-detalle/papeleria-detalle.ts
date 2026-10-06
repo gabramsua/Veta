@@ -136,15 +136,24 @@ export class PapeleriaDetalle {
 
       const primero = this.deLaCategoria()[0];
 
+      const ruta = `/papeleria-de-bodas/${this.categoria()}`;
+
       this.seo.aplicar({
-        titulo: `${this.etiqueta()} de boda · Veta Estudio Creativo`,
+        titulo: `${this.etiqueta()} de boda en Sevilla · Veta Estudio Creativo`,
         descripcion:
           textoPlano(primero?.descripcion ?? '') ||
           `${this.etiqueta()} para bodas, hechas a mano en Sevilla. Precios orientativos y diseño a medida.`,
-        ruta: `/papeleria-de-bodas/${this.categoria()}`,
+        ruta,
         imagen: primero?.imagenes[0]?.url,
       });
-      this.seo.datosEstructurados(null);
+
+      this.seo.datosEstructurados(
+        this.seo.migasDePan([
+          { nombre: 'Inicio', url: '/' },
+          { nombre: 'Papelería de bodas', url: '/papeleria-de-bodas' },
+          { nombre: this.etiqueta(), url: ruta },
+        ]),
+      );
     });
   }
 }

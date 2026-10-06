@@ -13,6 +13,23 @@
  * solo vídeo, `1fr` lo estiraría a todo el ancho y un reel a pantalla completa
  * queda desproporcionado.
  */
+.vig-lista__nota {
+  margin-top: var(--esp-5);
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+  text-align: center;
+}
+
+.vig-lista__revocar {
+  padding: 0;
+  font: inherit;
+  color: var(--veta-terracota);
+  text-decoration: underline;
+  cursor: pointer;
+  background: none;
+  border: 0;
+}
+
 .vig-lista {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(26rem, 34rem));

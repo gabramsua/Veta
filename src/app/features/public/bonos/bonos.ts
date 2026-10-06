@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, effect, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -9,6 +9,7 @@ import { Fuente } from '../../../shared/fuente/fuente';
 import { PaginasService } from '../../../core/data/paginas.service';
 import { PublicoService } from '../../../core/data/publico.service';
 import { SeoService } from '../../../core/seo/seo.service';
+import { separarPrimeraImagen } from '../../../core/seo/separar-imagen';
 import { textoPlano, tieneContenido } from '../../../core/seo/quitar-html';
 import { estilosPorDefecto, textosPorDefecto } from '../../../core/data/textos';
 
@@ -30,7 +31,20 @@ export class Bonos {
   private readonly paginas = inject(PaginasService);
   private readonly seo = inject(SeoService);
 
-  protected readonly bonos = toSignal(this.publico.bonosActivos(), { initialValue: [] });
+  private readonly lista = toSignal(this.publico.bonosActivos(), { initialValue: [] });
+
+  /**
+   * La foto sale del texto y pasa a ser un dato de la tarjeta.
+   *
+   * Así la ficha la coloca en su columna de la derecha, sin que dependa de en
+   * qué punto de la descripción la pegara Carmen.
+   */
+  protected readonly bonos = computed(() =>
+    this.lista().map((bono) => {
+      const { imagen, texto } = separarPrimeraImagen(bono.descripcion);
+      return { ...bono, foto: imagen, descripcionSinFoto: texto };
+    }),
+  );
 
   protected readonly textos = toSignal(this.paginas.textos(SLUG), {
     initialValue: textosPorDefecto(SLUG),

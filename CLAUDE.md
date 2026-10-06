@@ -558,7 +558,28 @@ Referencias: trantan.es y labahiacreativa.com.
 - Textos de interfaz en español. Nombres de código en inglés salvo los términos
   de dominio ya fijados (`bonos`, `meseros`, `minutas`).
 - SEO en la parte pública: títulos y meta por ruta, datos estructurados
-  `LocalBusiness` y `Event` en las sesiones de taller, sitemap y canonical.
+  `LocalBusiness`, `Event`, `FAQPage` y `BreadcrumbList`, sitemap y canonical.
+  El negocio es local, así que los títulos y descripciones por defecto nombran
+  la localidad, y la ficha `LocalBusiness` se alimenta entera de
+  `settings/site.contacto` y `.redes` para que **el nombre, la dirección y el
+  teléfono se puedan cuadrar letra por letra con el Perfil de Empresa de Google
+  sin desplegar**. Ese cuadre —el NAP consistente— pesa más que cualquier
+  palabra clave. Detalle y qué falta, en `SEO-LOCAL.md`.
+- **Nada de terceros que pongan cookies.** Es la regla que sostiene que la web no
+  lleve banner de consentimiento, y por la que las fuentes se autoalojan con
+  Fontsource en vez de pedirlas al CDN de Google. Por eso la analítica es
+  Cloudflare Web Analytics y no Google Analytics —ni Firebase Analytics, que es
+  el mismo producto—, y por eso los vídeos de Instagram no cargan hasta que
+  alguien los pulsa. Añadir un mapa de Google o un vídeo de YouTube incrustado
+  rompería esto y obligaría a rehacer los textos legales (`DATOS-LEGALES.md`).
+  Cuando haga falta cargar algo de un tercero, la salida es **consentimiento por
+  elemento y recordado**, no un banner de sitio: el propio clic en el elemento
+  es el consentimiento, `ConsentimientoInstagram` lo guarda y a partir de ahí
+  ese tercero carga solo. Vale legalmente —es un acto afirmativo, informado y
+  revocable— y no le enseña una ventana a todo el que entra, incluida la gente
+  que nunca pisa esa página. En servidor el consentimiento siempre responde que
+  no: no hay `localStorage`, y pintar el marco en el HTML del servidor cargaría
+  al tercero antes de poder comprobar nada.
 - Reutilizar componentes antes que duplicarlos.
 - Código legible por encima de código corto. Comentarios mínimos.
 - No romper funcionalidad ya entregada.

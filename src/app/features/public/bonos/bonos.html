@@ -24,18 +24,38 @@
     <div class="vt-contenedor">
       <ul class="bon__rejilla">
         @for (bono of bonos(); track bono.id) {
-          <li class="bon__tarjeta">
-            <p class="vt-antetitulo">{{ nombreCategoria(bono.categoria) }}</p>
-            <h2 class="bon__titulo">{{ bono.titulo }}</h2>
+          <li class="bon__tarjeta" [class.bon__tarjeta--con-foto]="bono.foto">
+            <p class="vt-antetitulo bon__categoria">{{ nombreCategoria(bono.categoria) }}</p>
 
-            <p class="bon__precio">{{ bono.precio }} €</p>
-            <p class="bon__detalle">
-              {{ bono.sesionesMes }} sesiones · {{ porSesion(bono.precio, bono.sesionesMes) }}
-            </p>
+            <div class="bon__cuerpo">
+              <h2 class="bon__titulo">{{ bono.titulo }}</h2>
 
-            <veta-bloque-texto [html]="bono.descripcion" />
+              <p class="bon__detalle">
+                {{ bono.sesionesMes }} sesiones · {{ porSesion(bono.precio, bono.sesionesMes) }}
+              </p>
 
-            <a class="vt-boton bon__cta" routerLink="/solicitar/bono" [queryParams]="{ bono: bono.id }">Me interesa</a>
+              <veta-bloque-texto [html]="bono.descripcionSinFoto" [compacto]="true" />
+
+              <a class="vt-boton bon__cta" routerLink="/solicitar/bono" [queryParams]="{ bono: bono.id }">
+                Me interesa
+              </a>
+            </div>
+
+            <div class="bon__lateral">
+              <p class="bon__precio">{{ bono.precio }} €</p>
+
+              @if (bono.foto; as foto) {
+                <img
+                  class="bon__foto"
+                  [src]="foto.src"
+                  [alt]="foto.alt"
+                  [attr.width]="foto.width"
+                  [attr.height]="foto.height"
+                  loading="lazy"
+                  decoding="async"
+                />
+              }
+            </div>
           </li>
         }
       </ul>

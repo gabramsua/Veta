@@ -7,8 +7,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#B0592B" />
     <link rel="icon" type="image/png" href="favicon.png" />
+
+    <!--
+      Verificación de Google Search Console. No carga nada ni pone cookies: solo
+      demuestra que el sitio es nuestro. Quitarla desverifica la propiedad, así
+      que se queda aunque parezca que no hace nada.
+    -->
+    <meta
+      name="google-site-verification"
+      content="tuMtu18COg70v9m37Q0AD6Y3w9k7A-x5WzTP0jaR1UA"
+    />
   </head>
   <body>
     <veta-root></veta-root>
+
+    <!--
+      Analítica de Cloudflare: sin cookies, sin huella digital y sin seguimiento
+      entre sitios. Por eso la web sigue sin banner de consentimiento, igual que
+      con las fuentes autoalojadas. Si algún día se cambia por Google Analytics,
+      el banner deja de ser opcional. Ver `pendientes.md` C4.
+
+      Se carga a mano en vez de pegar el fragmento que da Cloudflare para poder
+      hacer dos cosas: no contar las visitas de desarrollo —con el tráfico que
+      va a tener la web, unas cuantas recargas en local descuadran el mes— y no
+      pedir nada a Cloudflare mientras no haya token, que es el estado en el que
+      nace esto.
+    -->
+    <script>
+      (function () {
+        var TOKEN = '718272f5ed724c04a9e9c954661df585';
+
+        if (!TOKEN) return;
+        if (/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) return;
+
+        var beacon = document.createElement('script');
+        beacon.type = 'module';
+        beacon.defer = true;
+        beacon.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+        beacon.setAttribute('data-cf-beacon', JSON.stringify({ token: TOKEN }));
+        document.head.appendChild(beacon);
+      })();
+    </script>
   </body>
 </html>

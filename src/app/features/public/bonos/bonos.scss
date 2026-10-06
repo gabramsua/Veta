@@ -14,41 +14,123 @@
   text-align: center;
 }
 
+/**
+ * Una sola columna y ancho acotado, no una rejilla.
+ *
+ * Los bonos son pocos —cuatro categorías— y con `auto-fit` una lista de dos o
+ * tres dejaba una fila coja y tarjetas de anchos distintos según cuántos
+ * hubiera activos. En columna la lista se lee de un vistazo y cada ficha queda
+ * estrecha, que es lo que se buscaba.
+ */
 .bon__rejilla {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
-  gap: var(--esp-5);
+  gap: var(--esp-4);
+  max-width: 72rem;
   padding: 0;
-  margin: 0;
+  margin-inline: auto;
   list-style: none;
 }
 
+/**
+ * La categoría cruza la ficha entera y debajo arrancan a la vez el nombre, el
+ * precio y la foto.
+ *
+ * Es lo que hace que la columna derecha se lea como parte de la ficha y no como
+ * algo pegado encima: el precio y la foto empiezan en la misma línea que el
+ * nombre del bono. Por eso la categoría es un hijo directo de la tarjeta y no
+ * va dentro del cuerpo — si estuviera dentro, la columna derecha arrancaría más
+ * arriba que el título.
+ *
+ * La foto va además en su propia columna y no flotada dentro del texto: con
+ * `float` solo la rodea lo que va después en el HTML, y Carmen la inserta donde
+ * tiene el cursor, casi siempre al final. `separarPrimeraImagen()` la saca del
+ * texto para poder colocarla aquí, que no depende del orden.
+ */
 .bon__tarjeta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0 var(--esp-5);
+  align-items: start;
+  padding: var(--esp-5) var(--esp-6);
+  background-color: var(--veta-blanco);
+  border: 1px solid var(--veta-arena);
+  border-radius: var(--radio-lg);
+}
+
+.bon__categoria {
+  grid-column: 1 / -1;
+  margin-bottom: var(--esp-2);
+}
+
+.bon__cuerpo {
   display: grid;
   gap: var(--esp-3);
   align-content: start;
   justify-items: start;
-  padding: var(--esp-6);
-  background-color: var(--veta-blanco);
-  border: 1px solid var(--veta-arena);
-  border-radius: var(--radio-lg);
+  min-width: 0;
+}
+
+.bon__cuerpo veta-bloque-texto {
+  width: 100%;
+}
+
+.bon__lateral {
+  display: grid;
+  gap: var(--esp-4);
+  justify-items: end;
+}
+
+.bon__foto {
+  width: 18rem;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: var(--radio-md);
+}
+
+/* Sin foto, el precio no necesita una columna entera para él solo. */
+.bon__tarjeta--con-foto {
+  grid-template-columns: 1fr auto;
+}
+
+/**
+ * En columna estrecha no caben dos: la foto sube y el precio vuelve a la línea
+ * del título, que es donde se lee mejor cuando no hay sitio para un lateral.
+ */
+@include hasta($bp-tablet) {
+  .bon__tarjeta--con-foto {
+    grid-template-columns: 1fr;
+  }
+
+  .bon__lateral {
+    grid-row: 2;
+    gap: var(--esp-3);
+    justify-items: start;
+    width: 100%;
+  }
+
+  .bon__foto {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+  }
 }
 
 .bon__titulo {
   font-size: var(--txt-lg);
 }
 
+/**
+ * Un escalón por debajo del tamaño anterior.
+ *
+ * A la altura de la categoría el precio podía ser enorme porque no competía con
+ * nada. Puesto en la línea del nombre del bono, al mismo cuerpo le robaba el
+ * protagonismo al título, que es lo primero que hay que leer.
+ */
 .bon__precio {
   font-family: var(--fuente-titular);
-  font-size: var(--txt-2xl);
-  line-height: 1;
+  font-size: var(--txt-xl);
+  line-height: 1.1;
   color: var(--veta-terracota);
-}
-
-.bon__mes {
-  font-family: var(--fuente-cuerpo);
-  font-size: var(--txt-base);
-  color: var(--veta-tinta-suave);
 }
 
 .bon__detalle {

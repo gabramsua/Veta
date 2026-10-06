@@ -53,7 +53,9 @@ export class Contacto {
         ruta: '/contacto',
       });
 
-      this.seo.datosEstructurados(this.seo.negocioLocal(this.ajustes().contacto));
+      this.seo.datosEstructurados(
+        this.seo.negocioLocal(this.ajustes().contacto, this.ajustes().redes),
+      );
     });
   }
 

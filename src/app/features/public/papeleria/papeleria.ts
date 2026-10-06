@@ -68,10 +68,10 @@ export class Papeleria {
       const propio = this.seoPagina();
 
       this.seo.aplicar({
-        titulo: propio.title || 'Papelería de bodas · Veta Estudio Creativo',
+        titulo: propio.title || 'Papelería de bodas en Sevilla · Veta Estudio Creativo',
         descripcion:
           propio.description ||
-          'Invitaciones, seating plan, meseros, minutas, marcasitios y láminas personalizadas, hechas a mano en Sevilla.',
+          'Invitaciones, seating plan, meseros, minutas, marcasitios y paipáis personalizados, hechos a mano en Sevilla.',
         ruta: '/papeleria-de-bodas',
         imagen: propio.ogImage || undefined,
       });

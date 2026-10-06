@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 
+import { ConsentimientoInstagram } from '../../core/privacidad/consentimiento-instagram.service';
 import { VideoInstagram } from './video-instagram';
 
 /**
@@ -23,6 +24,15 @@ import { VideoInstagram } from './video-instagram';
               <veta-video-instagram [url]="video.url" [titulo]="video.titulo" />
             }
           </div>
+
+          @if (consentimiento.concedido()) {
+            <p class="vig-lista__nota">
+              Los vídeos se cargan desde Instagram porque diste tu permiso.
+              <button type="button" class="vig-lista__revocar" (click)="consentimiento.revocar()">
+                Dejar de cargarlos
+              </button>
+            </p>
+          }
         </div>
       </section>
     }
@@ -31,6 +41,8 @@ import { VideoInstagram } from './video-instagram';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VideosInstagram {
+  protected readonly consentimiento = inject(ConsentimientoInstagram);
+
   readonly textos = input<Record<string, string>>({});
   readonly titulo = input<string>('En vídeo');
   readonly fondo = input<'blanco' | 'crema'>('blanco');

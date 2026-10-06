@@ -139,7 +139,7 @@ export const routes: Routes = [
         path: 'papeleria-de-bodas',
         loadComponent: () =>
           import('./features/public/papeleria/papeleria').then((m) => m.Papeleria),
-        title: 'Papelería de bodas · Veta',
+        title: 'Papelería de bodas en Sevilla · Veta',
       },
       {
         path: 'papeleria-de-bodas/:categoria',
@@ -151,7 +151,7 @@ export const routes: Routes = [
       {
         path: 'live-art',
         loadComponent: () => import('./features/public/live-art/live-art').then((m) => m.LiveArt),
-        title: 'Live art · Acuarelas en directo · Veta',
+        title: 'Live art y acuarela en directo para bodas en Sevilla · Veta',
       },
       {
         // El slug viaja en `data`: Angular lo enlaza al input del componente
@@ -160,7 +160,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/public/live-art-sub/live-art-sub').then((m) => m.LiveArtSub),
         data: { slug: 'live-art-directo' },
-        title: 'Acuarelas en directo · Live art · Veta',
+        title: 'Acuarelas en directo en Sevilla · Live art · Veta',
       },
       {
         path: 'live-art/previo',
@@ -172,12 +172,12 @@ export const routes: Routes = [
       {
         path: 'acuarelas-y-encargos',
         loadComponent: () => import('./features/public/acuarelas/acuarelas').then((m) => m.Acuarelas),
-        title: 'Acuarelas y encargos · Veta',
+        title: 'Acuarelas por encargo en Sevilla · Veta',
       },
       {
         path: 'talleres',
         loadComponent: () => import('./features/public/talleres/talleres').then((m) => m.Talleres),
-        title: 'Talleres · Veta',
+        title: 'Talleres de cerámica y pintura en Sevilla · Veta',
       },
       {
         path: 'talleres/bonos',

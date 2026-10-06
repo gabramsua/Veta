@@ -20,8 +20,22 @@
   grid-template-columns: 1fr;
 }
 
+/**
+ * `align-content: start` no es un detalle: es lo que mantiene alineados los
+ * campos que van en la misma fila.
+ *
+ * Una celda de la rejilla se estira hasta la altura de la más alta, y una
+ * rejilla estirada reparte ese hueco de más entre sus filas automáticas. Así,
+ * «Teléfono» —que solo tiene etiqueta e input— crecía para igualar a «Número de
+ * personas», que lleva además su pista debajo, y su input acababa más alto que
+ * el de al lado. Pasa igual en cuanto un campo enseña un error y el vecino no.
+ *
+ * Con `start`, la etiqueta y el input conservan su altura natural y el hueco
+ * sobrante se queda abajo, que es donde no se ve.
+ */
 .fs__campo {
   display: grid;
+  align-content: start;
   gap: var(--esp-2);
 }
 

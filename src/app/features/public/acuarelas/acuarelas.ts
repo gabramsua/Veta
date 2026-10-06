@@ -52,7 +52,7 @@ export class Acuarelas {
       const t = this.textos();
 
       this.seo.aplicar({
-        titulo: propio.title || 'Acuarelas y encargos · Veta Estudio Creativo',
+        titulo: propio.title || 'Acuarelas por encargo en Sevilla · Veta Estudio Creativo',
         descripcion:
           propio.description || textoPlano(t['entradilla'] || t['texto'] || '') || 'Acuarelas por encargo pintadas a mano en Sevilla.',
         ruta: '/acuarelas-y-encargos',
