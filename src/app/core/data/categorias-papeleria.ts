@@ -8,6 +8,8 @@ export const SLUG_POR_CATEGORIA: Record<CategoriaProducto, string> = {
   minutas: 'minutas',
   marcasitios: 'marcasitios',
   paipai: 'paipai',
+  misal: 'misal',
+  'libro-testigos': 'libro-de-testigos',
   pack: 'pack',
 };
 
@@ -29,6 +31,8 @@ export const PIEZAS_PAPELERIA: { valor: CategoriaProducto; etiqueta: string }[] 
   { valor: 'minutas', etiqueta: 'Minutas' },
   { valor: 'marcasitios', etiqueta: 'Marcasitios' },
   { valor: 'paipai', etiqueta: 'PaiPai' },
+  { valor: 'misal', etiqueta: 'Misal' },
+  { valor: 'libro-testigos', etiqueta: 'Libro de testigos' },
   { valor: 'pack', etiqueta: 'Pack completo' },
 ];
 
@@ -36,12 +40,21 @@ export const ETIQUETA_POR_PIEZA: Record<string, string> = Object.fromEntries(
   PIEZAS_PAPELERIA.map(({ valor, etiqueta }) => [valor, etiqueta]),
 );
 
-// Cada subsección alimenta su propia galería del portfolio.
+/**
+ * Cada subsección alimenta su propia galería del portfolio.
+ *
+ * `pack` apuntaba a `invitaciones`, y eso hacía que la galería del Pack
+ * completo fueran en realidad las fotos de Invitaciones: no se podían quitar de
+ * una página sin vaciarlas de la otra. Ahora cada subsección tiene su sección,
+ * con el mismo nombre que la categoría, y la correspondencia es uno a uno.
+ */
 export const SECCION_PORTFOLIO_POR_CATEGORIA: Record<CategoriaProducto, string> = {
   invitaciones: 'invitaciones',
   seating: 'seating',
   minutas: 'minutas',
   marcasitios: 'marcasitios',
   paipai: 'paipai',
-  pack: 'invitaciones',
+  misal: 'misal',
+  'libro-testigos': 'libro-testigos',
+  pack: 'pack',
 };

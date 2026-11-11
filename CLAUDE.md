@@ -81,7 +81,8 @@ sin duplicar las custom properties.
 - Formularios de presupuesto y de reserva
 
 ### Panel (`/panel`, requiere login)
-- Inicio con resumen y estadísticas
+- Inicio con resumen y avisos de lo que requiere atención
+- Estadísticas: números del estudio por periodo y visitas de la web
 - Calendario de sesiones de taller
 - Reservas: listado paginado con filtros, alta, edición, borrado
 - Solicitudes de presupuesto: bandeja con estados
@@ -126,11 +127,14 @@ Papelería de bodas
   · Seating plan y meseros → colección disponible + diseño a medida
   · Minutas
   · Marcasitios
-  · Láminas personalizadas
+  · PaiPai
+  · Misal
+  · Libro de testigos
   · Pack completo — OFERTA (descuento por papelería completa)
 Live art
   · Acuarelas en directo
   · Live art previo
+  · Retratos personalizados
 Acuarelas y encargos
 Talleres
   · Talleres puntuales → Cerámica · Pintura · Infantil · Eventos privados
@@ -208,6 +212,7 @@ Todo lo demás es cliente contra Firestore. Estas cosas no pueden serlo:
 | `resetPasswordAdmin` | Generar un enlace de cambio de contraseña requiere Admin SDK. Auth solo guarda un hash, así que no existe forma de leer la contraseña: solo de sustituirla. |
 | `enviarCorreo` | Consume la cola `mail/` y envía por SMTP. Las credenciales no pueden estar en el cliente. |
 | `getPlantillasPorDefecto` | Devuelve al panel las plantillas de serie. Viven en el código de Functions y el editor necesita enseñarlas; copiarlas al cliente las separaría al primer cambio. |
+| `estadisticasWeb` | Consulta las visitas a la API de Cloudflare. El token da acceso de lectura a toda la cuenta, así que no puede viajar al navegador. |
 
 **La extensión *Trigger Email* se descartó.** Hacía exactamente lo que hace
 `enviarCorreo`, pero el servicio de extensiones de Firebase se apaga el 31 de
@@ -240,7 +245,9 @@ bonos/{id}
   categoria, titulo, descripcion (HTML), precioMes, sesionesMes, activo, orden
 
 products/{id}                     // papelería de bodas
-  categoria: 'invitaciones'|'seating'|'minutas'|'marcasitios'|'laminas'|'pack'
+  categoria: 'invitaciones'|'seating'|'minutas'|'marcasitios'|'paipai'|'misal'|'libro-testigos'|'pack'
+  // El tipo `CategoriaProducto` manda: todo mapa indexado por él es exhaustivo,
+  // así que añadir una subsección empieza ahí y el compilador señala el resto.
   titulo, descripcion (HTML), precioDesde, unidad, imagenes[], destacado, orden, activo
 
 portfolio/{id}
@@ -396,8 +403,8 @@ Solo se marcan los campos cuya plantilla lo aplica —los que van junto a un tex
 con formato—, y todos pasan por `BloqueIlustrado`. Una portada a sangre no lo
 admite y no se marca.
 
-**Las seis subsecciones de papelería** (`papeleria-invitaciones`, `-seating`…)
-se generan con una función en `textos.ts` porque son idénticas salvo el nombre.
+**Las subsecciones de papelería** (`papeleria-invitaciones`, `-seating`…) se
+generan con una función en `textos.ts` porque son idénticas salvo el nombre.
 Cada una trae entradilla propia, dos bloques explicativos opcionales y un campo
 `modoCatalogo` que decide si los modelos se ven en rejilla de fichas o en
 bloques grandes alternados. La rejilla es lo que pidieron para invitaciones y

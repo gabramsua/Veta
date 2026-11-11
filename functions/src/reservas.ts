@@ -27,14 +27,16 @@ const ETIQUETAS_TIPO: Record<string, string> = {
   contacto: 'contacto',
 };
 
-// Las piezas se guardan por su clave. Las reglas de Firestore solo admiten estas
-// seis, así que cualquier otra cosa que llegue aquí es un dato viejo.
+// Las piezas se guardan por su clave. Las reglas de Firestore solo admiten
+// estas, así que cualquier otra cosa que llegue aquí es un dato viejo.
 const ETIQUETAS_PIEZA: Record<string, string> = {
   invitaciones: 'Invitaciones',
   seating: 'Seating plan y meseros',
   minutas: 'Minutas',
   marcasitios: 'Marcasitios',
   paipai: 'PaiPai',
+  misal: 'Misal',
+  'libro-testigos': 'Libro de testigos',
   pack: 'Pack completo',
 };
 

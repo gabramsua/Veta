@@ -169,6 +169,73 @@ web, cuántas veces aparece y cuántas la pulsan, y qué páginas ha indexado Go
 o por qué no ha indexado alguna. No usa cookies ni carga ningún script: los
 datos son de Google, no de la visitante.
 
+### Estadísticas de la web dentro del panel
+
+El panel tiene una sección «Estadísticas» que, además de los números del
+estudio, enseña las visitas. Esos datos los pide una Cloud Function a la API de
+Cloudflare: **el token no puede ir en el navegador**, porque da acceso de
+lectura a toda la cuenta y cualquiera podría leerlo del código de la página.
+
+Mientras esto no se configure, la sección funciona igual y avisa de que las
+visitas no están conectadas. No rompe nada.
+
+Son tres valores. Dos se sacan de Cloudflare en un minuto; **el tercero lo
+descubre el propio panel**, así que no hay que adivinarlo.
+
+#### 1 · El token de API
+
+`dash.cloudflare.com` → arriba a la derecha, tu perfil → **API Tokens** →
+*Create Token* → **Create Custom Token** (el botón de abajo, no una plantilla).
+
+- Nombre: `Veta · analítica`
+- Permisos: una sola línea, **Account** · **Account Analytics** · **Read**
+- Account Resources: solo la cuenta de Veta
+- TTL: sin caducidad, o te tocará rehacerlo
+
+Al crearlo lo enseña **una única vez**. Cópialo ya.
+
+#### 2 · El identificador de cuenta
+
+En el mismo panel, `Ctrl` + `K` → escribe `Copy account ID` → se copia solo.
+También sale en Workers & Pages, en «Account Details», y es la cadena que va
+justo después de `dash.cloudflare.com/` en la barra de direcciones.
+
+#### 3 · Guardarlos y desplegar
+
+```bash
+# El token va a Secret Manager. Lo pide por teclado: no lo pegues en ningún fichero.
+firebase functions:secrets:set CLOUDFLARE_API_TOKEN
+
+# El identificador de cuenta no es secreto.
+echo "CLOUDFLARE_ACCOUNT_TAG=pega-aqui-el-id" >> functions/.env
+
+firebase deploy --only functions
+```
+
+#### 4 · El identificador del sitio, sin buscarlo
+
+Entra en **Panel → Estadísticas**. Como `CLOUDFLARE_SITE_TAG` todavía está
+vacío, la pantalla le pregunta a Cloudflare qué sitios ve ese token y **te los
+enseña en una lista**. Copia el que corresponda:
+
+```bash
+echo "CLOUDFLARE_SITE_TAG=el-que-te-ha-salido" >> functions/.env
+firebase deploy --only functions
+```
+
+Recarga Estadísticas y ya salen las visitas.
+
+> Se hace así porque el identificador del sitio es el dato que más se presta a
+> confusión: parte de la documentación dice que es el `token` del beacon de
+> `index.html` y otra parte dice que es un valor distinto. En vez de elegir una
+> y cruzar los dedos, se lo preguntamos a la API. Si el que configures no
+> devuelve nada, la pantalla vuelve a enseñarte la lista.
+
+**Los números no cuadran al dígito con el panel de Cloudflare, y es normal:**
+Cloudflare mide sobre una muestra y redondea. Sirven para ver la tendencia.
+
+---
+
 ### Al cambiar de dominio
 
 El historial no se hereda. Search Console tratará el dominio nuevo como un sitio

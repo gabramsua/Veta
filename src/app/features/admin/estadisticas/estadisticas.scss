@@ -1,0 +1,169 @@
+@use 'tokens' as *;
+
+:host {
+  display: block;
+}
+
+.est__periodo {
+  max-width: 32rem;
+  margin-bottom: var(--esp-6);
+}
+
+.est__titulo {
+  margin-bottom: var(--esp-4);
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-md);
+  font-weight: var(--peso-fuerte);
+}
+
+.est__metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(22rem, 1fr));
+  gap: var(--esp-4);
+  margin-bottom: var(--esp-5);
+}
+
+.est__metrica {
+  display: grid;
+  gap: var(--esp-1);
+}
+
+.est__metrica-etiqueta {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.est__metrica-valor {
+  font-family: var(--fuente-titular);
+  font-size: var(--txt-2xl);
+  line-height: 1;
+  color: var(--veta-terracota);
+}
+
+.est__metrica-pie {
+  font-size: var(--txt-xs);
+  color: var(--veta-tinta-suave);
+}
+
+.est__nota {
+  margin-bottom: var(--esp-7);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.est__nota--pie {
+  margin-top: var(--esp-4);
+}
+
+.est__columnas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(34rem, 1fr));
+  gap: var(--esp-4);
+  margin-bottom: var(--esp-7);
+  align-items: start;
+}
+
+.est__bloque-titulo {
+  margin-bottom: var(--esp-4);
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--txt-base);
+  font-weight: var(--peso-fuerte);
+}
+
+.est__barras,
+.est__lista {
+  display: grid;
+  gap: var(--esp-3);
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/**
+ * Barras hechas con un div y un ancho en porcentaje, no con una librería de
+ * gráficas. Son dos listas ordenadas de mayor a menor: lo que hay que ver es
+ * cuál va primero y por cuánto, y eso una barra lo dice igual de bien que un
+ * gráfico, sin traerse trescientos kilobytes al panel.
+ */
+.est__barra {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1fr) 2fr auto;
+  gap: var(--esp-3);
+  align-items: center;
+
+  @include hasta($bp-tablet) {
+    grid-template-columns: 1fr auto;
+
+    .est__barra-pista {
+      grid-column: 1 / -1;
+      order: 3;
+    }
+  }
+}
+
+.est__barra-nombre {
+  font-size: var(--txt-sm);
+  overflow-wrap: anywhere;
+}
+
+.est__barra-pista {
+  height: 0.8rem;
+  background-color: var(--veta-arena);
+  border-radius: 999px;
+}
+
+.est__barra-relleno {
+  height: 100%;
+  min-width: 0.8rem;
+  background-color: var(--veta-terracota);
+  border-radius: 999px;
+}
+
+.est__barra-valor {
+  font-size: var(--txt-sm);
+  font-weight: var(--peso-fuerte);
+  text-align: right;
+}
+
+.est__fila {
+  display: flex;
+  gap: var(--esp-4);
+  justify-content: space-between;
+  font-size: var(--txt-sm);
+}
+
+.est__fila-nombre {
+  overflow-wrap: anywhere;
+  color: var(--veta-tinta-suave);
+}
+
+.est__fila-valor {
+  flex: 0 0 auto;
+  font-weight: var(--peso-fuerte);
+}
+
+.est__cargando {
+  margin-bottom: var(--esp-7);
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.est__aviso {
+  display: grid;
+  gap: var(--esp-2);
+  margin-bottom: var(--esp-7);
+  border-left: 3px solid var(--veta-aviso);
+}
+
+.est__aviso-detalle {
+  font-size: var(--txt-sm);
+  color: var(--veta-tinta-suave);
+}
+
+.est__tags {
+  display: grid;
+  gap: var(--esp-1);
+  padding-left: var(--esp-5);
+  margin: 0;
+  font-size: var(--txt-sm);
+}

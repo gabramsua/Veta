@@ -45,16 +45,13 @@
     </section>
   }
 
-  @if (deLaCategoria().length === 0) {
-    <section class="vt-seccion">
-      <div class="vt-contenedor pd__vacio">
-        <p>Todavía no hemos publicado modelos de esta sección.</p>
-        <a class="vt-boton" routerLink="/solicitar/papeleria" [queryParams]="{ sobre: categoria() }">
-          Pedir presupuesto
-        </a>
-      </div>
-    </section>
-  } @else {
+  <!--
+    Si no hay modelos, no se pinta nada: el bloque de «Cada boda es distinta»
+    que cierra la página ya ofrece el presupuesto, y dos peticiones iguales
+    seguidas quedaban pesadas. Un aviso de que la sección está vacía es
+    información para quien la gestiona, no para quien la visita.
+  -->
+  @if (deLaCategoria().length > 0) {
     <section class="vt-seccion">
       <div class="vt-contenedor">
         @if (texto('tituloCatalogo')) {

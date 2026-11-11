@@ -1,4 +1,5 @@
 export { enviarCorreo } from './enviar-correo.js';
+export { estadisticasWeb } from './estadisticas-web.js';
 export { getPlantillasPorDefecto } from './plantillas-api.js';
 export { createAdminUser, resetPasswordAdmin, setAdminEnabled } from './admins.js';
 export {

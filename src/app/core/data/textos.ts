@@ -138,7 +138,7 @@ function subseccionPapeleria(
         ayuda: 'Opcional, encima del catálogo. Si lo dejas vacío no aparece.',
         campos: [
           { clave: 'bloqueUnoTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: '', estiloPorDefecto: 'titular' },
-          { clave: 'bloqueUnoImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'bloqueUnoImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
           { clave: 'bloqueUnoTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -147,7 +147,7 @@ function subseccionPapeleria(
         ayuda: 'Opcional. Sirve para contar una segunda forma de trabajar.',
         campos: [
           { clave: 'bloqueDosTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: '', estiloPorDefecto: 'titular' },
-          { clave: 'bloqueDosImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'bloqueDosImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
           { clave: 'bloqueDosTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -179,6 +179,8 @@ export const SUBSECCIONES_PAPELERIA: PaginaEditable[] = [
   subseccionPapeleria('minutas', 'Minutas', 'bloques'),
   subseccionPapeleria('marcasitios', 'Marcasitios', 'rejilla'),
   subseccionPapeleria('paipai', 'PaiPai', 'bloques'),
+  subseccionPapeleria('misal', 'Misal', 'bloques'),
+  subseccionPapeleria('libro-de-testigos', 'Libro de testigos', 'bloques'),
   subseccionPapeleria('pack', 'Pack completo', 'bloques'),
 ];
 
@@ -241,7 +243,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '4 · Live art',
         ayuda: 'El bloque a media pantalla con la acuarela en directo.',
         campos: [
-          { clave: 'liveartImagen', etiqueta: 'Imagen', tipo: 'imagen', pista: 'Vertical u horizontal, se recorta a la mitad de la pantalla.' },
+          { clave: 'liveartImagen', etiqueta: 'Imagen', tipo: 'imagen', pista: 'Vertical u horizontal, se recorta a la mitad de la pantalla. Unos 1600 × 1400 px.' },
           { clave: 'liveartTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Acuarelas en directo', estiloPorDefecto: 'titular' },
           { clave: 'liveartTexto', etiqueta: 'Texto', tipo: 'parrafo', porDefecto: '' },
         ],
@@ -291,7 +293,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '3 · Qué es Veta',
         campos: [
           { clave: 'queEsTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Qué es Veta', estiloPorDefecto: 'titular' },
-          { clave: 'queEsImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'queEsImagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
           { clave: 'queEsTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -299,7 +301,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
         nombre: '4 · Carmen y Maripepi',
         campos: [
           { clave: 'quienesTitulo', etiqueta: 'Título', tipo: 'texto', porDefecto: 'Carmen y Maripepi', estiloPorDefecto: 'titular' },
-          { clave: 'quienesImagen', etiqueta: 'Foto', tipo: 'imagen', pista: 'Un retrato de las dos funciona mejor que dos fotos sueltas.', permitePosicion: true },
+          { clave: 'quienesImagen', etiqueta: 'Foto', tipo: 'imagen', pista: 'Un retrato de las dos funciona mejor que dos fotos sueltas. No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.', permitePosicion: true },
           { clave: 'quienesTexto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -315,7 +317,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '1 · Cabecera',
         campos: [
-          { clave: 'entradilla', etiqueta: 'Entradilla', tipo: 'parrafo', porDefecto: 'Invitaciones, seating, minutas, marcasitios y láminas. Todo hecho a mano y a medida.' },
+          { clave: 'entradilla', etiqueta: 'Entradilla', tipo: 'parrafo', porDefecto: 'Invitaciones, seating, minutas, marcasitios, paipáis, misales y libros de testigos. Todo hecho a mano y a medida.' },
           { clave: 'texto', etiqueta: 'Texto de la sección', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -349,7 +351,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · Cómo funciona',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -383,7 +385,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · Cómo funciona',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -417,7 +419,41 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · Cómo funciona',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
+          { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
+        ],
+      },
+      {
+        nombre: '3 · Qué incluye',
+        campos: [{ clave: 'incluye', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' }],
+      },
+      ...BLOQUE_VIDEOS,
+    ],
+    relacionado: [
+      { etiqueta: 'Portfolio de live art', ruta: '/panel/portfolio', ayuda: 'La galería sale de la sección «Live art».' },
+    ],
+  },
+
+  {
+    slug: 'live-art-retratos',
+    nombre: 'Retratos personalizados',
+    ruta: '/live-art/retratos',
+    bloques: [
+      {
+        nombre: '1 · Cabecera',
+        campos: [
+          {
+            clave: 'entradilla',
+            etiqueta: 'Entradilla',
+            tipo: 'parrafo',
+            porDefecto: 'Retratos en acuarela pintados a mano, por encargo y a partir de vuestras fotos.',
+          },
+        ],
+      },
+      {
+        nombre: '2 · Cómo funciona',
+        campos: [
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },
@@ -446,7 +482,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
       {
         nombre: '2 · La sección',
         campos: [
-          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true },
+          { clave: 'imagen', etiqueta: 'Imagen', tipo: 'imagen', permitePosicion: true, pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.' },
           { clave: 'texto', etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
         ],
       },

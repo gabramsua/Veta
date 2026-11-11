@@ -223,3 +223,31 @@
 - [x] Los demás vídeos, y los de visitas siguientes, cargan solos
 - [x] Enlace para revocarlo bajo el bloque de vídeos
 - [x] Sigue sin banner de cookies, y en servidor nunca se pinta el marco
+
+## Cuarta tanda (29/10/2026)
+
+- [x] El Pack completo tiene por fin su propia galería: apuntaba a la de
+      Invitaciones, por eso no se podían quitar sus fotos
+- [x] Dos subsecciones nuevas de papelería: Misal y Libro de testigos, con
+      página editable, catálogo, galería propia y pieza en el presupuesto
+- [x] Tercera subpágina de Live art: Retratos personalizados
+- [x] `CLAUDE.md` ya no dice «Láminas personalizadas» en el menú ni en el modelo
+- [ ] **Pendiente de tu parte, y bloquea lo de PaiPai**: `npm run migrar:renombrados`
+- [ ] **Pendiente de tu parte**: desplegar reglas (la lista de piezas ha cambiado)
+- [x] El menú ya se cierra al navegar: el submenú se quedaba abierto porque el
+      enlace pulsado conservaba el foco y lo abría con `:focus-within`
+- [x] Fuera el aviso de «todavía no hemos publicado modelos», que dejaba dos
+      peticiones de presupuesto seguidas
+- [x] `TAMANOS-IMAGEN.md` con la proporción y el tamaño de cada hueco, y las
+      medidas también como pista en el panel donde se suben las fotos
+
+## Estadísticas en el panel (08/11/2026)
+
+- [x] Sección propia «Estadísticas», con selector de periodo
+- [x] Números del estudio: reservas, personas, cancelaciones, conversión,
+      qué taller llena más y de dónde vienen los presupuestos
+- [x] Visitas de la web desde Cloudflare, por una Function con el token
+      guardado como secreto
+- [ ] **Pendiente de tu parte**: los tres valores de Cloudflare
+      (`DESPLIEGUE.md` § Estadísticas de la web) y desplegar functions
+- [x] El identificador de sitio de Cloudflare lo descubre el propio panel

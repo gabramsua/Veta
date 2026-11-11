@@ -21,6 +21,7 @@ export const NAV_PANEL: GrupoMenuAdmin[] = [
   { etiqueta: 'Calendario', icono: 'calendar-days', ruta: '/panel/calendario' },
   { etiqueta: 'Reservas', icono: 'clipboard-list', ruta: '/panel/reservas' },
   { etiqueta: 'Solicitudes', icono: 'inbox', ruta: '/panel/solicitudes' },
+  { etiqueta: 'Estadísticas', icono: 'chart-line', ruta: '/panel/estadisticas' },
   {
     etiqueta: 'La web',
     icono: 'browser',

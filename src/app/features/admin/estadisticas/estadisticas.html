@@ -1,0 +1,193 @@
+<veta-panel-seccion
+  titulo="Estadísticas"
+  descripcion="Cómo va el estudio y cuánta gente entra en la web."
+/>
+
+<section class="vt-adm-tarjeta est__periodo">
+  <div class="vt-campo">
+    <label class="vt-campo__etiqueta" for="est-periodo">Periodo</label>
+    <select
+      id="est-periodo"
+      class="vt-select"
+      [value]="periodo()"
+      (change)="periodo.set($any($event.target).value)"
+    >
+      @for (p of periodos; track p.valor) {
+        <option [value]="p.valor">{{ p.etiqueta }}</option>
+      }
+    </select>
+  </div>
+</section>
+
+<h2 class="est__titulo">El estudio</h2>
+
+<div class="est__metricas">
+  @for (m of resumen(); track m.etiqueta) {
+    <div class="vt-adm-tarjeta est__metrica">
+      <p class="est__metrica-etiqueta">{{ m.etiqueta }}</p>
+      <p class="est__metrica-valor">{{ m.valor }}</p>
+      <p class="est__metrica-pie">{{ m.pie }}</p>
+    </div>
+  }
+</div>
+
+@if (conversion(); as porcentaje) {
+  <p class="est__nota">
+    De cada 100 reservas que llegan, <strong>{{ porcentaje }}</strong> acaban confirmadas.
+  </p>
+}
+
+<h2 class="est__titulo">Qué se llena</h2>
+
+<div class="est__columnas">
+  <section class="vt-adm-tarjeta est__bloque">
+    <h3 class="est__bloque-titulo">Talleres y bonos, por personas</h3>
+
+    @if (porTaller().length === 0) {
+      <veta-estado-vacio
+        titulo="Sin reservas confirmadas en este periodo"
+        pista="Prueba a ampliar el periodo con el desplegable de arriba."
+      />
+    } @else {
+      <ul class="est__barras">
+        @for (fila of porTaller(); track fila.nombre) {
+          <li class="est__barra">
+            <p class="est__barra-nombre">{{ fila.nombre }}</p>
+            <div class="est__barra-pista">
+              <div class="est__barra-relleno" [style.width.%]="fila.porcentaje"></div>
+            </div>
+            <p class="est__barra-valor">{{ fila.personas }}</p>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+
+  <section class="vt-adm-tarjeta est__bloque">
+    <h3 class="est__bloque-titulo">De dónde vienen los presupuestos</h3>
+
+    @if (porTipoSolicitud().length === 0) {
+      <veta-estado-vacio
+        titulo="Sin solicitudes en este periodo"
+        pista="Prueba a ampliar el periodo con el desplegable de arriba."
+      />
+    } @else {
+      <ul class="est__barras">
+        @for (fila of porTipoSolicitud(); track fila.nombre) {
+          <li class="est__barra">
+            <p class="est__barra-nombre">{{ fila.nombre }}</p>
+            <div class="est__barra-pista">
+              <div class="est__barra-relleno" [style.width.%]="fila.porcentaje"></div>
+            </div>
+            <p class="est__barra-valor">{{ fila.cuantas }}</p>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</div>
+
+<h2 class="est__titulo">La web</h2>
+
+@if (webLista(); as datos) {
+  <div class="est__metricas">
+    <div class="vt-adm-tarjeta est__metrica">
+      <p class="est__metrica-etiqueta">Visitas</p>
+      <p class="est__metrica-valor">{{ visitas() }}</p>
+      <p class="est__metrica-pie">Personas distintas que han entrado</p>
+    </div>
+
+    <div class="vt-adm-tarjeta est__metrica">
+      <p class="est__metrica-etiqueta">Páginas vistas</p>
+      <p class="est__metrica-valor">{{ paginasVistas() }}</p>
+      <p class="est__metrica-pie">Incluye recargas y navegación interna</p>
+    </div>
+  </div>
+
+  <div class="est__columnas">
+    <section class="vt-adm-tarjeta est__bloque">
+      <h3 class="est__bloque-titulo">Páginas más vistas</h3>
+
+      @if (datos.paginas.length === 0) {
+        <p class="est__cargando">Todavía no hay visitas en este periodo.</p>
+      } @else {
+        <ul class="est__lista">
+          @for (pagina of datos.paginas; track pagina.ruta) {
+            <li class="est__fila">
+              <span class="est__fila-nombre">{{ pagina.ruta || '/' }}</span>
+              <span class="est__fila-valor">{{ pagina.paginasVistas }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+
+    <section class="vt-adm-tarjeta est__bloque">
+      <h3 class="est__bloque-titulo">Desde dónde llegan</h3>
+
+      @if (datos.origenes.length === 0) {
+        <p class="est__cargando">Todavía no hay visitas en este periodo.</p>
+      } @else {
+        <ul class="est__lista">
+          @for (origen of datos.origenes; track origen.origen) {
+            <li class="est__fila">
+              <span class="est__fila-nombre">{{ origen.origen || 'Directo o marcadores' }}</span>
+              <span class="est__fila-valor">{{ origen.paginasVistas }}</span>
+            </li>
+          }
+        </ul>
+      }
+    </section>
+  </div>
+
+  @if (datos.sitios.length > 0) {
+    <section class="vt-adm-tarjeta est__aviso">
+      <p>El identificador del sitio configurado no ha devuelto ninguna visita.</p>
+      <p class="est__aviso-detalle">
+        Puede ser que no haya tráfico en este periodo, o que el identificador no
+        sea el bueno. Estos son los que ve el token:
+      </p>
+      <ul class="est__tags">
+        @for (tag of datos.sitios; track tag) {
+          <li><code>{{ tag }}</code></li>
+        }
+      </ul>
+    </section>
+  }
+
+  <p class="est__nota est__nota--pie">
+    Cloudflare cuenta sin cookies y sobre una muestra, así que redondea: los
+    números sirven para ver la tendencia, no para cuadrarlos al dígito.
+  </p>
+} @else if (cargandoWeb()) {
+  <p class="est__cargando">Pidiendo los datos a Cloudflare…</p>
+} @else if (errorWeb()) {
+  <section class="vt-adm-tarjeta est__aviso">
+    <p>No hemos podido traer las visitas.</p>
+    <p class="est__aviso-detalle">{{ errorWeb() }}</p>
+  </section>
+} @else {
+  <section class="vt-adm-tarjeta est__aviso">
+    <p>Las visitas todavía no están conectadas.</p>
+    <p class="est__aviso-detalle">
+      Hace falta crear un token de lectura en Cloudflare y configurarlo en el
+      servidor. Los pasos están en <code>DESPLIEGUE.md</code>, apartado
+      «Estadísticas de la web».
+    </p>
+
+    @if (web()?.sitios?.length) {
+      <p class="est__aviso-detalle">
+        Cloudflare sí responde. Falta el identificador del sitio, y estos son
+        los que ve este token:
+      </p>
+      <ul class="est__tags">
+        @for (tag of web()!.sitios; track tag) {
+          <li><code>{{ tag }}</code></li>
+        }
+      </ul>
+      <p class="est__aviso-detalle">
+        Ponlo en <code>CLOUDFLARE_SITE_TAG</code> y vuelve a desplegar functions.
+      </p>
+    }
+  </section>
+}

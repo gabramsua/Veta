@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { addDoc, collection, limit, orderBy, serverTimestamp } from '@angular/fire/firestore';
+import { Timestamp, addDoc, collection, limit, orderBy, serverTimestamp, where } from '@angular/fire/firestore';
 import { Functions, httpsCallable } from '@angular/fire/functions';
 import { Observable } from 'rxjs';
 
@@ -52,6 +52,17 @@ export class SolicitudesService extends ColeccionBase<Solicitud> {
     return this.listar(orderBy('createdAt', 'desc'), limit(cuantas));
   }
 
+  /**
+   * Todo lo recibido desde una fecha, para las estadísticas.
+   *
+   * Sin `limit`, a diferencia de la bandeja: un recuento que se deja fuera lo
+   * que no cabe en la primera página no es un recuento. El filtro va en la
+   * consulta y no en memoria para no leer años enteros por mirar un mes.
+   */
+  listarDesde(desde: Date): Observable<Solicitud[]> {
+    return this.listar(where('createdAt', '>=', Timestamp.fromDate(desde)), orderBy('createdAt', 'desc'));
+  }
+
   async enviar(datos: EnvioSolicitud): Promise<string> {
     const referencia = await addDoc(collection(this.firestore, 'requests'), {
       tipo: datos.tipo,
@@ -77,6 +88,11 @@ export class ReservasService extends ColeccionBase<Reserva> {
 
   listarRecientes(cuantas = 25): Observable<Reserva[]> {
     return this.listar(orderBy('createdAt', 'desc'), limit(cuantas));
+  }
+
+  /** Todas las del periodo, sin recortar: ver la nota en `SolicitudesService`. */
+  listarDesde(desde: Date): Observable<Reserva[]> {
+    return this.listar(where('createdAt', '>=', Timestamp.fromDate(desde)), orderBy('createdAt', 'desc'));
   }
 
   // Cambiar el estado mueve plazas, así que va por Function en transacción.

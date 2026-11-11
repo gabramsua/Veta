@@ -22,6 +22,12 @@ export const routes: Routes = [
         title: 'Panel · Veta',
       },
       {
+        path: 'estadisticas',
+        loadComponent: () =>
+          import('./features/admin/estadisticas/estadisticas').then((m) => m.Estadisticas),
+        title: 'Estadísticas · Veta',
+      },
+      {
         path: 'administradoras',
         loadComponent: () =>
           import('./features/admin/administradoras/administradoras').then((m) => m.Administradoras),
@@ -168,6 +174,13 @@ export const routes: Routes = [
           import('./features/public/live-art-sub/live-art-sub').then((m) => m.LiveArtSub),
         data: { slug: 'live-art-previo' },
         title: 'Live art previo · Veta',
+      },
+      {
+        path: 'live-art/retratos',
+        loadComponent: () =>
+          import('./features/public/live-art-sub/live-art-sub').then((m) => m.LiveArtSub),
+        data: { slug: 'live-art-retratos' },
+        title: 'Retratos personalizados en acuarela · Sevilla · Veta',
       },
       {
         path: 'acuarelas-y-encargos',

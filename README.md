@@ -178,5 +178,6 @@ Los pasos y la lista de comprobaciones previas están en `DESPLIEGUE.md`.
 - `pendientes.md` — dudas abiertas y deuda técnica.
 - `DESPLIEGUE.md` — cómo publicar y qué comprobar antes.
 - `SEO-LOCAL.md` — qué falta para que las encuentren en Sevilla. La mitad no es código.
+- `TAMANOS-IMAGEN.md` — qué proporción y qué tamaño tiene que tener cada foto. Para Carmen.
 - `DATOS-LEGALES.md` — qué hay que pedirle a Carmen para los textos legales.
 - `CORREOS.md` — cómo configurar los correos automáticos.

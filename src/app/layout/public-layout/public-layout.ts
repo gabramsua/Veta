@@ -1,6 +1,8 @@
-import { ChangeDetectionStrategy, Component, HostListener, computed, inject, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, HostListener, PLATFORM_ID, computed, inject, signal } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { filter } from 'rxjs';
 
 import { AJUSTES_POR_DEFECTO } from '../../core/models';
 import { AjustesService } from '../../core/data/ajustes.service';
@@ -15,6 +17,9 @@ import { navegacionVisible } from '../../core/data/navegacion-publica';
 })
 export class PublicLayout {
   private readonly ajustesService = inject(AjustesService);
+  private readonly router = inject(Router);
+  private readonly documento = inject(DOCUMENT);
+  private readonly esNavegador = isPlatformBrowser(inject(PLATFORM_ID));
 
   protected readonly ajustes = toSignal(this.ajustesService.ajustes$, {
     initialValue: AJUSTES_POR_DEFECTO,
@@ -42,6 +47,39 @@ export class PublicLayout {
   protected readonly mostrarAviso = computed(
     () => this.ajustes().avisoGlobal.activo && !this.avisoCerrado(),
   );
+
+  constructor() {
+    this.router.events
+      .pipe(
+        filter((evento) => evento instanceof NavigationEnd),
+        takeUntilDestroyed(),
+      )
+      .subscribe(() => this.alNavegar());
+  }
+
+  /**
+   * Cierra el menú al cambiar de página.
+   *
+   * El desplegable de escritorio se abre con `:hover` y con `:focus-within`, y
+   * el foco es el que lo dejaba abierto: al pulsar un enlace el navegador se lo
+   * queda, la navegación no se lo quita, y el submenú seguía visible aunque el
+   * ratón se hubiera ido a otra parte.
+   *
+   * Por eso se quita el foco a mano, y solo si está dentro de la navegación:
+   * quitárselo a cualquier otra cosa sería robárselo a quien esté usando la
+   * página con el teclado.
+   */
+  private alNavegar(): void {
+    this.cerrarMenu();
+
+    if (!this.esNavegador) return;
+
+    const activo = this.documento.activeElement;
+
+    if (activo instanceof HTMLElement && activo.closest('.cab__nav')) {
+      activo.blur();
+    }
+  }
 
   @HostListener('window:scroll')
   protected alHacerScroll(): void {

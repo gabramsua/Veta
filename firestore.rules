@@ -106,13 +106,16 @@ service cloud.firestore {
         && request.resource.data.respuestas is map
         // Cada respuesta guarda también su etiqueta, por eso el doble de claves.
         && request.resource.data.respuestas.keys().size() <= 60
-        // Piezas de papelería. Solo se admiten las seis categorías reales: si no
-        // se validaran, el campo sería texto libre escribible desde fuera del
+        // Piezas de papelería. Solo se admiten las categorías reales: si no se
+        // validaran, el campo sería texto libre escribible desde fuera del
         // formulario, y acabaría en el correo que leen Carmen y Maripepi.
+        // El tamaño máximo es el número de categorías, porque no tiene sentido
+        // marcar una dos veces.
         && request.resource.data.piezas is list
-        && request.resource.data.piezas.size() <= 6
+        && request.resource.data.piezas.size() <= 8
         && request.resource.data.piezas.hasOnly([
-             'invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai', 'pack'
+             'invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai',
+             'misal', 'libro-testigos', 'pack'
            ])
         && request.resource.data.keys().hasOnly([
              'tipo', 'piezas', 'nombre', 'email', 'telefono', 'respuestas',

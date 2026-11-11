@@ -19,6 +19,8 @@ const TODOS: EnlaceNav[] = [
       { etiqueta: 'Minutas', ruta: '/papeleria-de-bodas/minutas' },
       { etiqueta: 'Marcasitios', ruta: '/papeleria-de-bodas/marcasitios' },
       { etiqueta: 'PaiPai', ruta: '/papeleria-de-bodas/paipai' },
+      { etiqueta: 'Misal', ruta: '/papeleria-de-bodas/misal' },
+      { etiqueta: 'Libro de testigos', ruta: '/papeleria-de-bodas/libro-de-testigos' },
       { etiqueta: 'Pack completo', ruta: '/papeleria-de-bodas/pack' },
     ],
   },
@@ -29,6 +31,7 @@ const TODOS: EnlaceNav[] = [
     hijos: [
       { etiqueta: 'Acuarelas en directo', ruta: '/live-art/acuarelas-en-directo' },
       { etiqueta: 'Live art previo', ruta: '/live-art/previo' },
+      { etiqueta: 'Retratos personalizados', ruta: '/live-art/retratos' },
     ],
   },
   { etiqueta: 'Acuarelas y encargos', ruta: '/acuarelas-y-encargos' },

@@ -1,11 +1,18 @@
 import { Imagen } from './comunes';
 
+/**
+ * El orden es el del menú público, y mandar lo manda este tipo: cualquier mapa
+ * de `CategoriaProducto` que se deje una fuera no compila. Añadir una
+ * subsección empieza aquí y el compilador va señalando lo que falta.
+ */
 export type CategoriaProducto =
   | 'invitaciones'
   | 'seating'
   | 'minutas'
   | 'marcasitios'
   | 'paipai'
+  | 'misal'
+  | 'libro-testigos'
   | 'pack';
 
 export const CATEGORIAS_PRODUCTO: Record<CategoriaProducto, string> = {
@@ -14,6 +21,8 @@ export const CATEGORIAS_PRODUCTO: Record<CategoriaProducto, string> = {
   minutas: 'Minutas',
   marcasitios: 'Marcasitios',
   paipai: 'PaiPai',
+  misal: 'Misal',
+  'libro-testigos': 'Libro de testigos',
   pack: 'Pack completo',
 };
 
