@@ -130,6 +130,7 @@ Papelería de bodas
   · PaiPai
   · Misal
   · Libro de testigos
+  · Portalianzas
   · Pack completo — OFERTA (descuento por papelería completa)
 Live art
   · Acuarelas en directo
@@ -245,7 +246,7 @@ bonos/{id}
   categoria, titulo, descripcion (HTML), precioMes, sesionesMes, activo, orden
 
 products/{id}                     // papelería de bodas
-  categoria: 'invitaciones'|'seating'|'minutas'|'marcasitios'|'paipai'|'misal'|'libro-testigos'|'pack'
+  categoria: 'invitaciones'|'seating'|'minutas'|'marcasitios'|'paipai'|'misal'|'libro-testigos'|'portalianzas'|'pack'
   // El tipo `CategoriaProducto` manda: todo mapa indexado por él es exhaustivo,
   // así que añadir una subsección empieza ahí y el compilador señala el resto.
   titulo, descripcion (HTML), precioDesde, unidad, imagenes[], destacado, orden, activo
@@ -413,6 +414,21 @@ marcasitios; los bloques es como se veía todo antes.
 Ese `modoCatalogo` usa el tipo de campo `opcion`, un desplegable de valores
 cerrados que se guarda en `textos` como una cadena más. No necesita colección ni
 método de servicio propios.
+
+**El slug del documento lo calcula `slugPaginaPapeleria()` y nadie más.** La
+categoría y la dirección no siempre coinciden —`libro-testigos` vive en
+`libro-de-testigos`—, y mientras el catálogo de textos usaba una y la página
+pública la otra, el panel guardaba en un documento y la web leía otro: sin
+error, con su «guardado correctamente», y sin que se viera nada. Cualquier sitio
+que necesite ese slug tiene que llamar a esa función.
+
+**Los bloques explicativos de más se piden por parámetro.** `subseccionPapeleria`
+admite un número de bloques extra que se pintan debajo del catálogo; hoy solo
+los usa el pack completo, para el testimonio de una pareja real. Dárselos a
+todas alargaría nueve formularios para que ocho no los usen.
+
+**Todas las subsecciones llevan los tres huecos de vídeo de Instagram**, los
+mismos que live art. Si están vacíos no se pinta nada.
 
 ---
 

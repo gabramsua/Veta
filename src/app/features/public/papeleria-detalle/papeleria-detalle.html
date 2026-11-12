@@ -125,6 +125,26 @@
     </section>
   }
 
+  @for (extra of bloquesExtra(); track extra.clave) {
+    @if (texto(extra.clave + 'Titulo') || tieneContenido(texto(extra.clave + 'Texto')) || imagenes()[extra.clave + 'Imagen']) {
+      <section class="vt-seccion" [class.vt-seccion--crema]="extra.alterno">
+        <div class="vt-contenedor">
+          @if (texto(extra.clave + 'Titulo')) {
+            <h2 class="vt-titulo pd__bloque-titulo" [vetaFuente]="estilos()[extra.clave + 'Titulo']">
+              {{ texto(extra.clave + 'Titulo') }}
+            </h2>
+          }
+          <veta-bloque-ilustrado
+            [imagen]="imagenes()[extra.clave + 'Imagen'] ?? null"
+            [html]="texto(extra.clave + 'Texto')"
+          />
+        </div>
+      </section>
+    }
+  }
+
+  <veta-videos-instagram [textos]="textos()" titulo="En Instagram" fondo="crema" />
+
   @if (galeria().length > 0) {
     <section class="vt-seccion vt-seccion--crema">
       <div class="vt-contenedor">

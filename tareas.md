@@ -251,3 +251,16 @@
 - [ ] **Pendiente de tu parte**: los tres valores de Cloudflare
       (`DESPLIEGUE.md` § Estadísticas de la web) y desplegar functions
 - [x] El identificador de sitio de Cloudflare lo descubre el propio panel
+
+## Quinta tanda (12/11/2026)
+
+- [x] **Bug**: Libro de testigos guardaba en `papeleria-libro-de-testigos` y la
+      web leía `papeleria-libro-testigos`. El slug lo calcula ahora un solo sitio
+- [x] Dos bloques de texto con imagen más en el Pack completo, para el
+      testimonio de una pareja real
+- [x] Vídeos de Instagram en las nueve subsecciones de papelería
+- [x] Subsección nueva: Portalianzas
+- [ ] **Pendiente**: confirmar qué pasa en Acuarelas en directo, que no tiene
+      desajuste de slug
+- [x] Las tres subpáginas de Live art llevan prefijo en el menú del panel, para
+      no confundirlas entre sí

@@ -10,12 +10,26 @@ export const SLUG_POR_CATEGORIA: Record<CategoriaProducto, string> = {
   paipai: 'paipai',
   misal: 'misal',
   'libro-testigos': 'libro-de-testigos',
+  portalianzas: 'portalianzas',
   pack: 'pack',
 };
 
 export const CATEGORIA_POR_SLUG: Record<string, CategoriaProducto> = Object.fromEntries(
   Object.entries(SLUG_POR_CATEGORIA).map(([categoria, slug]) => [slug, categoria]),
 ) as Record<string, CategoriaProducto>;
+
+/**
+ * El documento de `pages` donde vive el contenido editable de cada subsección.
+ *
+ * Existe para que el slug lo calcule **un solo sitio**. Cuando lo calculaban
+ * dos, pasó lo que tenía que pasar: la categoría `libro-testigos` tiene la
+ * dirección `libro-de-testigos`, el catálogo de textos usaba la dirección y la
+ * página pública usaba la categoría, así que Carmen guardaba en un documento y
+ * la web leía otro. Guardaba bien, no daba error y no se veía nada.
+ */
+export function slugPaginaPapeleria(categoria: CategoriaProducto): string {
+  return `papeleria-${SLUG_POR_CATEGORIA[categoria]}`;
+}
 
 /**
  * Las piezas que se pueden pedir en el formulario de papelería.
@@ -33,6 +47,7 @@ export const PIEZAS_PAPELERIA: { valor: CategoriaProducto; etiqueta: string }[] 
   { valor: 'paipai', etiqueta: 'PaiPai' },
   { valor: 'misal', etiqueta: 'Misal' },
   { valor: 'libro-testigos', etiqueta: 'Libro de testigos' },
+  { valor: 'portalianzas', etiqueta: 'Portalianzas' },
   { valor: 'pack', etiqueta: 'Pack completo' },
 ];
 
@@ -56,5 +71,6 @@ export const SECCION_PORTFOLIO_POR_CATEGORIA: Record<CategoriaProducto, string> 
   paipai: 'paipai',
   misal: 'misal',
   'libro-testigos': 'libro-testigos',
+  portalianzas: 'portalianzas',
   pack: 'pack',
 };

@@ -28,7 +28,7 @@ export const NAV_PANEL: GrupoMenuAdmin[] = [
     ayuda: 'Por orden de aparición en el menú',
     hijos: [
       ...PAGINAS_EDITABLES.filter((p) => p.slug !== 'legal').map((p) => ({
-        etiqueta: p.nombre,
+        etiqueta: p.nombrePanel ?? p.nombre,
         ruta: `/panel/web/${p.slug}`,
       })),
       { etiqueta: 'Preguntas frecuentes', ruta: '/panel/faq' },

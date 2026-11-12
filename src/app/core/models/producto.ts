@@ -13,6 +13,7 @@ export type CategoriaProducto =
   | 'paipai'
   | 'misal'
   | 'libro-testigos'
+  | 'portalianzas'
   | 'pack';
 
 export const CATEGORIAS_PRODUCTO: Record<CategoriaProducto, string> = {
@@ -23,6 +24,7 @@ export const CATEGORIAS_PRODUCTO: Record<CategoriaProducto, string> = {
   paipai: 'PaiPai',
   misal: 'Misal',
   'libro-testigos': 'Libro de testigos',
+  portalianzas: 'Portalianzas',
   pack: 'Pack completo',
 };
 

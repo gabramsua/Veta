@@ -164,7 +164,7 @@ for (const [indice, producto] of productos.entries()) {
 console.log(`  ✓ ${productos.length} productos de papelería`);
 
 // --- Portfolio ---
-const secciones = ['invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai', 'misal', 'libro-testigos', 'pack', 'liveart', 'acuarelas', 'talleres'];
+const secciones = ['invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai', 'misal', 'libro-testigos', 'portalianzas', 'pack', 'liveart', 'acuarelas', 'talleres'];
 let ordenPortfolio = 0;
 
 for (const seccion of secciones) {

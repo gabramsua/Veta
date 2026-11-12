@@ -4,6 +4,9 @@
  * Se guarda en `textos` como cualquier otro campo, así que no necesita ni
  * colección ni método de servicio propios: para Firestore es una cadena más.
  */
+import { CategoriaProducto } from '../models';
+import { SLUG_POR_CATEGORIA, slugPaginaPapeleria } from './categorias-papeleria';
+
 export type TipoCampo = 'texto' | 'parrafo' | 'rico' | 'imagen' | 'opcion';
 
 /** Las tres familias de la marca. Ver §8 de CLAUDE.md. */
@@ -59,7 +62,18 @@ export interface EnlaceRelacionado {
 
 export interface PaginaEditable {
   slug: string;
+  /** El título que se ve en la web. */
   nombre: string;
+  /**
+   * Cómo se llama en el menú del panel, si ahí conviene otra cosa.
+   *
+   * Las tres subpáginas de live art se llaman «Acuarelas en directo», «Live art
+   * previo» y «Retratos personalizados»: en la web se entienden, pero en una
+   * lista de veintidós entradas no se ve que las tres cuelgan de Live art, y es
+   * fácil editar una creyendo que es otra. Con el prefijo quedan juntas y
+   * ordenadas, igual que las de papelería.
+   */
+  nombrePanel?: string;
   ruta: string;
   bloques: BloquePagina[];
   relacionado: EnlaceRelacionado[];
@@ -117,14 +131,20 @@ export const MODOS_CATALOGO = [
  * trabajar— lo hace sin pedir código nuevo.
  */
 function subseccionPapeleria(
-  categoria: string,
+  categoria: CategoriaProducto,
   nombre: string,
   modoPorDefecto: string,
+  bloquesExtra = 0,
 ): PaginaEditable {
+  const direccion = SLUG_POR_CATEGORIA[categoria];
+
   return {
-    slug: `papeleria-${categoria}`,
+    // El slug sale de `slugPaginaPapeleria` y no de una plantilla escrita aquí:
+    // calcularlo en dos sitios es lo que hizo que el panel guardara en un
+    // documento y la web leyera otro.
+    slug: slugPaginaPapeleria(categoria),
     nombre: `Papelería · ${nombre}`,
-    ruta: `/papeleria-de-bodas/${categoria}`,
+    ruta: `/papeleria-de-bodas/${direccion}`,
     bloques: [
       {
         nombre: '1 · Cabecera',
@@ -165,12 +185,46 @@ function subseccionPapeleria(
           { clave: 'tituloCatalogo', etiqueta: 'Título encima de los modelos', tipo: 'texto', porDefecto: '', estiloPorDefecto: 'titular' },
         ],
       },
+      ...bloquesExplicativos(bloquesExtra, 5),
+      ...BLOQUE_VIDEOS,
     ],
     relacionado: [
       { etiqueta: 'Modelos y precios', ruta: '/panel/productos', ayuda: `Los modelos de ${nombre.toLowerCase()}, con su foto y su precio.` },
       { etiqueta: 'Galería de trabajos', ruta: '/panel/portfolio', ayuda: 'Las fotos que salen al final de la página.' },
     ],
   };
+}
+
+/**
+ * Bloques de «título + imagen + texto» numerados, para las subsecciones que
+ * necesitan contar más de dos cosas.
+ *
+ * El pack completo quiere enseñar el testimonio de una pareja real, y eso no
+ * cabe en los dos bloques de serie. Se generan solo donde se piden: dárselos a
+ * todas alargaría el formulario de ocho páginas para que seis no los usen.
+ */
+function bloquesExplicativos(cuantos: number, desde: number): BloquePagina[] {
+  const ORDINALES = ['Tercer', 'Cuarto', 'Quinto', 'Sexto'];
+
+  return Array.from({ length: cuantos }, (_, i) => {
+    const clave = `bloqueExtra${i + 1}`;
+
+    return {
+      nombre: `${desde + i} · ${ORDINALES[i] ?? `Bloque ${i + 3}`} bloque`,
+      ayuda: 'Opcional, debajo del catálogo. Si lo dejas vacío no aparece.',
+      campos: [
+        { clave: `${clave}Titulo`, etiqueta: 'Título', tipo: 'texto', porDefecto: '', estiloPorDefecto: 'titular' },
+        {
+          clave: `${clave}Imagen`,
+          etiqueta: 'Imagen',
+          tipo: 'imagen',
+          permitePosicion: true,
+          pista: 'No se recorta: se respeta la forma que traiga. Sube al menos 1200 px de ancho.',
+        },
+        { clave: `${clave}Texto`, etiqueta: 'Texto', tipo: 'rico', porDefecto: '' },
+      ],
+    };
+  });
 }
 
 export const SUBSECCIONES_PAPELERIA: PaginaEditable[] = [
@@ -180,8 +234,10 @@ export const SUBSECCIONES_PAPELERIA: PaginaEditable[] = [
   subseccionPapeleria('marcasitios', 'Marcasitios', 'rejilla'),
   subseccionPapeleria('paipai', 'PaiPai', 'bloques'),
   subseccionPapeleria('misal', 'Misal', 'bloques'),
-  subseccionPapeleria('libro-de-testigos', 'Libro de testigos', 'bloques'),
-  subseccionPapeleria('pack', 'Pack completo', 'bloques'),
+  subseccionPapeleria('libro-testigos', 'Libro de testigos', 'bloques'),
+  subseccionPapeleria('portalianzas', 'Portalianzas', 'bloques'),
+  // Dos bloques de más para el testimonio de una pareja real.
+  subseccionPapeleria('pack', 'Pack completo', 'bloques', 2),
 ];
 
 /**
@@ -369,6 +425,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
   {
     slug: 'live-art-directo',
     nombre: 'Acuarelas en directo',
+    nombrePanel: 'Live art · Acuarelas en directo',
     ruta: '/live-art/acuarelas-en-directo',
     bloques: [
       {
@@ -403,6 +460,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
   {
     slug: 'live-art-previo',
     nombre: 'Live art previo',
+    nombrePanel: 'Live art · Previo',
     ruta: '/live-art/previo',
     bloques: [
       {
@@ -437,6 +495,7 @@ export const PAGINAS_EDITABLES: PaginaEditable[] = [
   {
     slug: 'live-art-retratos',
     nombre: 'Retratos personalizados',
+    nombrePanel: 'Live art · Retratos personalizados',
     ruta: '/live-art/retratos',
     bloques: [
       {

@@ -19,6 +19,7 @@ const RUTAS_PAPELERIA: Record<CategoriaProducto, string> = {
   paipai: '/papeleria-de-bodas/paipai',
   misal: '/papeleria-de-bodas/misal',
   'libro-testigos': '/papeleria-de-bodas/libro-de-testigos',
+  portalianzas: '/papeleria-de-bodas/portalianzas',
   pack: '/papeleria-de-bodas/pack',
 };
 

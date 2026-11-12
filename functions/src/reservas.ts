@@ -37,6 +37,7 @@ const ETIQUETAS_PIEZA: Record<string, string> = {
   paipai: 'PaiPai',
   misal: 'Misal',
   'libro-testigos': 'Libro de testigos',
+  portalianzas: 'Portalianzas',
   pack: 'Pack completo',
 };
 

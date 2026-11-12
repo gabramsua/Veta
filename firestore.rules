@@ -112,10 +112,10 @@ service cloud.firestore {
         // El tamaño máximo es el número de categorías, porque no tiene sentido
         // marcar una dos veces.
         && request.resource.data.piezas is list
-        && request.resource.data.piezas.size() <= 8
+        && request.resource.data.piezas.size() <= 9
         && request.resource.data.piezas.hasOnly([
              'invitaciones', 'seating', 'minutas', 'marcasitios', 'paipai',
-             'misal', 'libro-testigos', 'pack'
+             'misal', 'libro-testigos', 'portalianzas', 'pack'
            ])
         && request.resource.data.keys().hasOnly([
              'tipo', 'piezas', 'nombre', 'email', 'telefono', 'respuestas',

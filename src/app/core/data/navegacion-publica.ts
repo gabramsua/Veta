@@ -21,6 +21,7 @@ const TODOS: EnlaceNav[] = [
       { etiqueta: 'PaiPai', ruta: '/papeleria-de-bodas/paipai' },
       { etiqueta: 'Misal', ruta: '/papeleria-de-bodas/misal' },
       { etiqueta: 'Libro de testigos', ruta: '/papeleria-de-bodas/libro-de-testigos' },
+      { etiqueta: 'Portalianzas', ruta: '/papeleria-de-bodas/portalianzas' },
       { etiqueta: 'Pack completo', ruta: '/papeleria-de-bodas/pack' },
     ],
   },

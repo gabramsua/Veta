@@ -6,6 +6,7 @@ export const SECCIONES_PORTFOLIO = [
   { valor: 'paipai', etiqueta: 'PaiPai' },
   { valor: 'misal', etiqueta: 'Misal' },
   { valor: 'libro-testigos', etiqueta: 'Libro de testigos' },
+  { valor: 'portalianzas', etiqueta: 'Portalianzas' },
   { valor: 'pack', etiqueta: 'Pack completo' },
   { valor: 'liveart', etiqueta: 'Live art' },
   { valor: 'acuarelas', etiqueta: 'Acuarelas y encargos' },

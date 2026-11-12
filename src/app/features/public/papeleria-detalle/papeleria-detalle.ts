@@ -9,10 +9,12 @@ import { CATEGORIAS_PRODUCTO, Imagen } from '../../../core/models';
 import {
   CATEGORIA_POR_SLUG,
   SECCION_PORTFOLIO_POR_CATEGORIA,
+  slugPaginaPapeleria,
 } from '../../../core/data/categorias-papeleria';
 import { CabeceraSeccion } from '../../../shared/cabecera-seccion/cabecera-seccion';
 import { Fuente } from '../../../shared/fuente/fuente';
 import { Galeria } from '../../../shared/galeria/galeria';
+import { VideosInstagram } from '../../../shared/video-instagram/videos-instagram';
 import { PaginasService } from '../../../core/data/paginas.service';
 import { PublicoService } from '../../../core/data/publico.service';
 import { SeoService } from '../../../core/seo/seo.service';
@@ -21,7 +23,15 @@ import { estilosPorDefecto, textosPorDefecto } from '../../../core/data/textos';
 
 @Component({
   selector: 'veta-papeleria-detalle',
-  imports: [RouterLink, CabeceraSeccion, BloqueTexto, BloqueIlustrado, Fuente, Galeria],
+  imports: [
+    RouterLink,
+    CabeceraSeccion,
+    BloqueTexto,
+    BloqueIlustrado,
+    Fuente,
+    Galeria,
+    VideosInstagram,
+  ],
   templateUrl: './papeleria-detalle.html',
   styleUrl: './papeleria-detalle.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -48,10 +58,12 @@ export class PapeleriaDetalle {
    * Antes no tenían ninguno: el único texto de la página se generaba solo a
    * partir del precio más bajo, así que Carmen no podía escribir nada aquí.
    */
-  private readonly slugPagina = computed(() => `papeleria-${this.clave() ?? 'invitaciones'}`);
+  private readonly slugPagina = computed(() =>
+    slugPaginaPapeleria(this.clave() ?? 'invitaciones'),
+  );
   private readonly slug$ = toObservable(this.slugPagina);
 
-  private readonly textos = toSignal(
+  protected readonly textos = toSignal(
     this.slug$.pipe(switchMap((slug) => this.paginas.textos(slug))),
     { initialValue: {} as Record<string, string> },
   );
@@ -73,6 +85,22 @@ export class PapeleriaDetalle {
   }
 
   protected readonly enRejilla = computed(() => this.texto('modoCatalogo') !== 'bloques');
+
+  /**
+   * Los bloques explicativos de más, si esta subsección los tiene.
+   *
+   * Solo el pack completo los pide —para el testimonio de una pareja real—, y
+   * se sacan del catálogo en vez de escribirlos en la plantilla para que añadir
+   * un tercero a otra sección sea una línea en `textos.ts` y nada aquí.
+   */
+  protected readonly bloquesExtra = computed(() => {
+    const claves = Object.keys(textosPorDefecto(this.slugPagina()))
+      .filter((clave) => clave.startsWith('bloqueExtra') && clave.endsWith('Titulo'))
+      .map((clave) => clave.replace(/Titulo$/, ''))
+      .sort();
+
+    return claves.map((clave, i) => ({ clave, alterno: i % 2 === 0 }));
+  });
 
   protected readonly etiqueta = computed(() => {
     const clave = this.clave();
